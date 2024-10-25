@@ -9,7 +9,7 @@ builder.AddServiceDefaults();
 
 // Add services to the container.
 builder.Services.AddProblemDetails();
-
+builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 
 builder.AddMongoDBClient("MongoDb");
