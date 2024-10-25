@@ -1,6 +1,4 @@
 using ClinicaDental.ApiService.DataBase;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,21 +10,15 @@ builder.Services.AddProblemDetails();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 
-builder.AddMongoDBClient("MongoDb");
+builder.Services.AddNpgsql<AppDbContext>("ClinicaDentalDb");
 
 var app = builder.Build();
-
-var apiGroup = app.MapGroup("/api");
-
-apiGroup.MapGet("/test", () =>
-{
-    return "Hello World!";
-});
 
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.MapDefaultEndpoints();
+await app.InitializeDatabase();
 
 app.Run();
