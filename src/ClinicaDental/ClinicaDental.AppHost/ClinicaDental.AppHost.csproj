@@ -16,4 +16,25 @@
     <PackageReference Include="Aspire.Hosting.MongoDB" Version="8.2.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <NpmPackageFile Include="..\ClinicaDental.WebApp\package.json" />
+  </ItemGroup>
+
+  <Target Name="ComputeNpmPackageMetadata">
+    <ItemGroup>
+      <NpmPackageFile>
+        <StampFile>$([System.IO.Path]::Combine(%(RootDir)%(Directory), 'node_modules', '.install-stamp'))</StampFile>
+        <WorkingDirectory>%(RootDir)%(Directory)</WorkingDirectory>
+        <Command Condition="'$(RestorePackagesWithLockFile)' != 'true'">npm install</Command>
+        <Command Condition="'$(RestorePackagesWithLockFile)' == 'true'">npm ci</Command>
+      </NpmPackageFile>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="NpmInstall" DependsOnTargets="ComputeNpmPackageMetadata" Inputs="@(NpmPackageFile)" Outputs="%(NpmPackageFile.StampFile)" BeforeTargets="Build" Condition="'$(DesignTimeBuild)' != 'true'">
+    <Message Importance="High" Text="Installing npm packages for %(NpmPackageFile.RelativeDir)" />
+    <Exec Command="@(NpmPackageFile->'%(Command)')" WorkingDirectory="%(WorkingDirectory)" />
+    <Touch Files="@(NpmPackageFile->'%(StampFile)')" AlwaysCreate="true" />
+  </Target>
+
 </Project>
