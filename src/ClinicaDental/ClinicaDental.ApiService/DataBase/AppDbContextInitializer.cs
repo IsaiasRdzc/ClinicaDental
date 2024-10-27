@@ -1,12 +1,10 @@
 ﻿namespace ClinicaDental.ApiService.DataBase;
 
 using Npgsql;
-using Npgsql;
-
 using Polly;
 using Polly.Retry;
 
-public class AppDbContextInitializer
+public static class AppDbContextInitializer
 {
     public static Task<bool> EnsureCreatedAsync(AppDbContext context, Action<Exception> onException)
     {

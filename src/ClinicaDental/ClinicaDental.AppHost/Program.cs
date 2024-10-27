@@ -1,8 +1,7 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
 var postgres = builder.AddPostgres("Postgres")
-    .WithPgAdmin()
-    .WithPgWeb();
+    .WithPgAdmin();
 
 var postgresDb = postgres.AddDatabase("ClinicaDentalDb");
 
@@ -13,5 +12,4 @@ builder.AddNpmApp("WebApp", "../ClinicaDental.WebApp")
     .WithEnvironment("SERVER_URL", apiService.GetEndpoint("http"))
     .WithHttpEndpoint(targetPort: 4200);
 
-
-builder.Build().Run();
+await builder.Build().RunAsync();
