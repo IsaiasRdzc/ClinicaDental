@@ -17,5 +17,5 @@ public class Doctor
 
     public string Name { get; set; } = null!;
 
-    public List<DoctorSchedule> Schedules { get; set; } = null!;
+    public List<DoctorDaySchedule> Schedules { get; set; } = null!;
 }

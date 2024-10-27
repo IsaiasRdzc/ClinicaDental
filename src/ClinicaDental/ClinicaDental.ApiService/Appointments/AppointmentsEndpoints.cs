@@ -11,15 +11,27 @@ public static class AppointmentsEndpoints
         var group = app.MapGroup("api/appointments");
 
         group.MapPost(string.Empty, ScheduleAppointment);
+        group.MapPost("doctor", SetDoctorSchedule);
+        group.MapPost("clinicHours", SetClinicHours);
 
         group.MapGet("{id}", GetAppointment);
         group.MapGet(string.Empty, GetAppointmentsInRange);
         group.MapGet("doctor/{doctorId}", GetAppointmentsForDoctorInRange);
         group.MapGet("availableSlots", GetAvailableSlots);
+        group.MapGet("clinicHours", GetClinicHours);
 
         group.MapPut("reschedule/{id}", ReScheduleAppointment);
 
         group.MapDelete("{id}", DeleteAppointment);
+        group.MapPost("initializeDoctor", TEMP_InitializeDoctor);
+    }
+
+    public static async Task<IResult> TEMP_InitializeDoctor(
+        Doctor doctor,
+        WorkScheduleAdmin workScheduleAdmin)
+    {
+        await workScheduleAdmin.TEMP_InitializeDoctorAccount(doctor);
+        return Results.Ok();
     }
 
     public static async Task<IResult> GetAvailableSlots(
@@ -89,6 +101,29 @@ public static class AppointmentsEndpoints
     {
         await scheduler.CancelAppointment(appointmentId);
 
+        return Results.Ok();
+    }
+
+    public static async Task<IResult> SetClinicHours(
+        ClinicHours clinicHours,
+        WorkScheduleAdmin workScheduleAdmin)
+    {
+        await workScheduleAdmin.SetClinicHours(clinicHours);
+        return Results.Ok();
+    }
+
+    public static async Task<IResult> GetClinicHours(
+        WorkScheduleAdmin workScheduleAdmin)
+    {
+        var clinicHours = await workScheduleAdmin.GetClinicHours();
+        return Results.Ok(clinicHours);
+    }
+
+    public static async Task<IResult> SetDoctorSchedule(
+        DoctorDaySchedule doctorSchedule,
+        WorkScheduleAdmin workScheduleAdmin)
+    {
+        await workScheduleAdmin.SetDoctorSchedule(doctorSchedule);
         return Results.Ok();
     }
 }

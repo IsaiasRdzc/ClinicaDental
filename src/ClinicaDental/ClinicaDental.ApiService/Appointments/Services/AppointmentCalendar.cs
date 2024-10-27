@@ -163,7 +163,7 @@ public class AppointmentCalendar
         return isBetween;
     }
 
-    private async Task<DoctorSchedule?> GetDoctorschedule(int doctorId, DayOfWeek dayOfWeek)
+    private async Task<DoctorDaySchedule?> GetDoctorschedule(int doctorId, DayOfWeek dayOfWeek)
     {
         var doctor = await this.doctorRegistry.GetDoctorWithId(doctorId);
 

@@ -13,6 +13,57 @@ public class ScheduleRegistry
         this.context = context;
     }
 
+    // Doctor schedule CRUD
+    public async Task AddDoctorSchedule(DoctorDaySchedule doctorSchedule)
+    {
+        await this.context.DoctorDaySchedules.AddAsync(doctorSchedule);
+        await this.context.SaveChangesAsync();
+    }
+
+    public async Task<DoctorDaySchedule?> GetDoctorSchedule(int doctorId, DayOfWeek dayOfWeek)
+    {
+        var schedules = await this.GetDoctorSchedules(doctorId);
+
+        var schedule = schedules
+            .First(schedule => schedule.DayOfWeek == dayOfWeek);
+
+        return schedule;
+    }
+
+    public async Task<IEnumerable<DoctorDaySchedule>> GetDoctorSchedules(int doctorId)
+    {
+        return await this.context.DoctorDaySchedules
+            .Where(ds => ds.DoctorId == doctorId)
+            .ToListAsync();
+    }
+
+    public async Task UpdateDoctorSchedule(DoctorDaySchedule doctorSchedule)
+    {
+        var existingSchedule = await this.GetDoctorSchedule(doctorSchedule.DoctorId, doctorSchedule.DayOfWeek);
+
+        if (existingSchedule is null)
+        {
+            throw new KeyNotFoundException("Doctor schedule not found.");
+        }
+
+        existingSchedule.StartTime = doctorSchedule.StartTime;
+        existingSchedule.EndTime = doctorSchedule.EndTime;
+        existingSchedule.IsOff = doctorSchedule.IsOff;
+
+        this.context.DoctorDaySchedules.Update(existingSchedule);
+        await this.context.SaveChangesAsync();
+    }
+
+    public async Task DeleteDoctorSchedule(int doctorId, DayOfWeek dayOfWeek)
+    {
+        var doctorSchedule = await this.GetDoctorSchedule(doctorId, dayOfWeek);
+        if (doctorSchedule != null)
+        {
+            this.context.DoctorDaySchedules.Remove(doctorSchedule);
+            await this.context.SaveChangesAsync();
+        }
+    }
+
     // Schedule modifications CRUD
     public async Task AddScheduleModification(ScheduleModification modification)
     {
@@ -67,6 +118,11 @@ public class ScheduleRegistry
         return await this.context.ClinicHours.FindAsync(id);
     }
 
+    public async Task<IEnumerable<ClinicHours?>> GetClinicHoursList()
+    {
+        return await this.context.ClinicHours.ToListAsync();
+    }
+
     public async Task<ClinicHours?> GetClinicHoursByDay(DayOfWeek dayOfWeek)
     {
         return await this.context.ClinicHours
@@ -75,7 +131,18 @@ public class ScheduleRegistry
 
     public async Task UpdateClinicHours(ClinicHours clinicHours)
     {
-        this.context.ClinicHours.Update(clinicHours);
+        var existingSchedule = await this.GetClinicHoursByDay(clinicHours.DayOfWeek);
+
+        if (existingSchedule is null)
+        {
+            throw new KeyNotFoundException("Clinic schedule not found.");
+        }
+
+        existingSchedule.OpeningTime = clinicHours.OpeningTime;
+        existingSchedule.ClosingTime = clinicHours.ClosingTime;
+        existingSchedule.IsClosed = clinicHours.IsClosed;
+
+        this.context.ClinicHours.Update(existingSchedule);
         await this.context.SaveChangesAsync();
     }
 

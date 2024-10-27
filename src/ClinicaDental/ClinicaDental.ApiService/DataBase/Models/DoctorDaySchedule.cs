@@ -5,12 +5,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 using Microsoft.EntityFrameworkCore;
 
-public class DoctorSchedule
+public class DoctorDaySchedule
 {
     // Constructor for seeding purposes
-    public DoctorSchedule(int id)
+    public DoctorDaySchedule(int id)
     {
         this.Id = id; // Set the ID for seeding
+    }
+
+    public DoctorDaySchedule()
+    {
     }
 
     [Key]

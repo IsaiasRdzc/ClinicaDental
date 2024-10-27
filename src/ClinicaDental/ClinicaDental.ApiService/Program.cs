@@ -18,6 +18,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.AddNpgsqlDbContext<AppDbContext>("ClinicaDentalDb");
 builder.Services.AddTransient<AppointmentScheduler>();
 builder.Services.AddTransient<AppointmentCalendar>();
+builder.Services.AddTransient<WorkScheduleAdmin>();
 
 // Registries
 builder.Services.AddTransient<AppointmentRegistry>();
