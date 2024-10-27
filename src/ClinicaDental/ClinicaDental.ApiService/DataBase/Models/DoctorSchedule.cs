@@ -5,9 +5,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 using Microsoft.EntityFrameworkCore;
 
-[Owned]
 public class DoctorSchedule
 {
+    // Constructor for seeding purposes
+    public DoctorSchedule(int id)
+    {
+        this.Id = id; // Set the ID for seeding
+    }
+
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; private set; }

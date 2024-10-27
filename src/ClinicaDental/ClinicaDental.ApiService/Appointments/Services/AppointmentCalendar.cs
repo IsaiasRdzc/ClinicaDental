@@ -85,7 +85,7 @@ public class AppointmentCalendar
         var doctorAppointments = await this.appointmentRegistry.GetAppointmentsListByDoctor(doctorId);
 
         var appointmentsInRange = doctorAppointments
-            .Where(appointment => this.IsDatweBetween(appointment.Date, dateStart, dateEnd));
+            .Where(appointment => IsDatweBetween(appointment.Date, dateStart, dateEnd));
 
         return appointmentsInRange;
     }
@@ -95,9 +95,16 @@ public class AppointmentCalendar
         var appointments = await this.appointmentRegistry.GetAppointmentsList();
 
         var appointmentsInRange = appointments
-            .Where(appointment => this.IsDatweBetween(appointment.Date, dateStart, dateEnd));
+            .Where(appointment => IsDatweBetween(appointment.Date, dateStart, dateEnd));
 
         return appointmentsInRange;
+    }
+
+    private static bool IsDatweBetween(DateOnly date, DateOnly dateStart, DateOnly dateEnd)
+    {
+        var isBetween = date >= dateStart && date <= dateEnd;
+
+        return isBetween;
     }
 
     private async Task<DoctorSchedule?> GetDoctorschedule(int doctorId, DayOfWeek dayOfWeek)
@@ -115,12 +122,5 @@ public class AppointmentCalendar
         {
             return null;
         }
-    }
-
-    private bool IsDatweBetween(DateOnly date, DateOnly dateStart, DateOnly dateEnd)
-    {
-        var isBetween = date >= dateStart && date <= dateEnd;
-
-        return isBetween;
     }
 }

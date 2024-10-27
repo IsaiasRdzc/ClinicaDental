@@ -20,7 +20,9 @@ public class DoctorRegistry
 
     public async Task<Doctor?> GetDoctorWithId(int id)
     {
-        return await this.context.Doctors.FindAsync(id);
+        return await this.context.Doctors
+        .Include(doctor => doctor.Schedules)
+        .FirstOrDefaultAsync(doctor => doctor.Id == id);
     }
 
     public async Task AddDoctor(Doctor doctor)
