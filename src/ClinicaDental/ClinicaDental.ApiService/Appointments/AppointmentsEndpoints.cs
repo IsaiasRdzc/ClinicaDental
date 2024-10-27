@@ -15,6 +15,7 @@ public static class AppointmentsEndpoints
         group.MapGet("{id}", GetAppointment);
         group.MapGet(string.Empty, GetAppointmentsInRange);
         group.MapGet("doctor/{doctorId}", GetAppointmentsForDoctorInRange);
+        group.MapGet("availableSlots", GetAvailableSlots);
 
         group.MapPut("reschedule/{id}", ReScheduleAppointment);
 
