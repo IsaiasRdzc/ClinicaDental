@@ -7,7 +7,7 @@
 <!-- * * * * * * * to get started with your project! * * * * * * * -->
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 
-<style>
+<!--<style>
   :host {
     --bright-blue: oklch(51.01% 0.274 263.83);
     --electric-violet: oklch(53.18% 0.28 296.97);
@@ -323,7 +323,7 @@
     </div>
   </div>
 </main>
-
+-->
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * * -->
@@ -331,6 +331,252 @@
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+ <style>
+  /* You can add global styles to this file, and also import other style files */
+html {
+    font-size: 14px;
+  }
+  
+  @media (min-width: 768px) {
+    html {
+      font-size: 16px;
+    }
+  }
+  
+  .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+  }
+  
+  html {
+    position: relative;
+    min-height: 100%;
+  }
+  
+  body {
+    margin-bottom: 60px;
+  }
+  
+  .barra{
+    height: 100%;
+    width: 100%;
+  }
+  
+  .barra ul {
+    list-style-type: none;
+    margin: 0;
+    background-color: #08415C;
+    padding: 0;
+    text-align: center; 
+    overflow: hidden;
+    height: 70px; 
+  }
+  
+  .barra ul li {
+    float: left; 
+  }
+  
+  .barra ul li a {
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    padding: 0 20px; 
+    line-height: 70px; 
+    display: block; 
+    height: 70px; 
+  }
+  
+  
+  li a:hover{
+    background-color:#CC2936;
+  }
+  
+  
+  * {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  #logo{
+    margin: 0;
+    padding: 0;
+    height: 30px;
+  
+  }
+  
+  .cinta{
+    display: inline-block;
+    padding: 0;
+  }
+  
+  li a.active {
+    background-color: rgb(188, 108, 37);
+    color: rgb(254, 250, 224);
+  }
+  
+  h1{
+    color: rgb(40, 54, 24);
+    padding-left: 20px;
+  }
+  
+  .centrar{
+    margin: auto;
+  }
+  
+  .vision{
+    background-color: white;
+  }
+  
+  .nombrePlanta{
+    color: rgb(254, 250, 224);
+    background-color: rgb(221, 161, 94);
+    margin: 0;
+    font-family: "Cormorant Unicase", system-ui;
+    font-weight: 500;
+    font-style: normal;
+    text-align: center;
+    font-size: 100px;
+  }
+  
+  .formulariosT{
+    color: #BC6C25;
+    text-align: center;
+    font-family: "Roboto", system-ui;
+    font-weight: 900;
+    font-style: normal;
+  }
+  
+  .flowerImage{
+    float: left;
+    width: 300px;
+    height: 300px;
+    padding: 10px;
+  }
+  
+  .description{
+    float: left;
+    width: 830px;
+    padding: 10px;
+  }
+  
+  .footer{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: rgb(40, 54, 24);
+    height: 100;
+  }
+  
+  .floresFinal{
+    height: 100%;
+  }
+  
+  .contenidoCatalogo{
+    margin: auto;
+    width: 1250px;
+    height: 300px;
+  }
+  
+  .header{
+    padding: 0;
+  }
+  
+  .formArea{
+    margin: auto;
+    align-items: center;
+    width: 623px;
+    height: 420px;
+  }
+  
+  .register-container{
+    width: 500px;
+    
+  }
+  
+  .top header{
+    color: #BC6C25;
+    text-align: center;
+    padding: 20px 0px 30px 0;
+    font-size: 60px;
+  }
+  
+  
+  .submit, .volver, .comprar{
+    text-align: center;
+    margin-top: 30px;
+    font-size: 15px;
+    font-weight: 500;
+    color: white;
+    height: 45px;
+    width: 623px;
+    border: none;
+    border-radius: 30px;
+    outline: none;
+    background: rgba(40, 54, 24, 0.7);
+    cursor: pointer;
+  
+  }
+  
+  
+  .nya1 .input-field{
+    float: left;
+    width: 223px;
+    margin-right: 25px;
+  
+  }
+  
+  .nya2  .input-field{
+    float: left;
+    width: 263px;
+  }
+  
+  .input-box{
+    width: 623px;
+  }
+  
+  .input-area{
+    height: 100px;
+    font-size: 15px;
+    background: rgba(255, 255, 255, 0.6);
+    color: black;
+    width: 568px;
+    padding: 0 10px 0 45px;
+    border: none;
+    border-radius: 30px;
+    outline: none;
+    margin-top: 10px;
+  }
+  
+  .volver{
+    margin-top: 100px;
+  }
+  
+  .total{
+    border: solid 2px rgb(40, 54, 24);
+    width: 100px;
+  }
 
+  .empresa{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .empresa h1{
+    background: linear-gradient(to right, #08415C, #CC2936);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+ </style>
+<div class="barra">
+  <ul>
+    <li><a routerLink="/Citas">Agendar</a></li>
+    <li><a routerLink="/Index">Ingresar</a></li>
+  </ul>   
+</div>
+<div class="empresa">
+  <h1>Clinica Dental Integral</h1>
+</div>
+<router-outlet></router-outlet>
 
 <router-outlet />
