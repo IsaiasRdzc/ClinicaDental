@@ -87,7 +87,7 @@ public static class AppointmentsEndpoints
         int appointmentId,
         AppointmentScheduler scheduler)
     {
-        await scheduler.DeleteAppointment(appointmentId);
+        await scheduler.CancelAppointment(appointmentId);
 
         return Results.Ok();
     }

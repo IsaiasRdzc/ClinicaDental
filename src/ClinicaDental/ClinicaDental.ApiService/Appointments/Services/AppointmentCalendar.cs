@@ -22,6 +22,29 @@ public class AppointmentCalendar
         this.doctorRegistry = doctorRegistry;
     }
 
+    public async Task<bool> CheckAppointmentValidity(Appointment appointment)
+    {
+        var availableSlots = await this.GetAvailableTimeSlots(appointment.DoctorId, appointment.Date);
+        var requestedStartTime = appointment.StartTime;
+
+        if (!availableSlots.Contains(requestedStartTime))
+        {
+            return false;
+        }
+
+        // Check if the next hours are available based on the appointment's duration
+        TimeOnly endTime = requestedStartTime.AddHours(appointment.Duration);
+        for (TimeOnly currentTime = requestedStartTime; currentTime < endTime; currentTime = currentTime.AddHours(1))
+        {
+            if (!availableSlots.Contains(currentTime))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public async Task<IEnumerable<TimeOnly>> GetAvailableTimeSlots(int doctorId, DateOnly date)
     {
         var doctor = await this.doctorRegistry.GetDoctorWithId(doctorId);

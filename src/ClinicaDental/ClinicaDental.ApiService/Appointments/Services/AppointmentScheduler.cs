@@ -19,16 +19,49 @@ public class AppointmentScheduler
 
     public async Task ScheduleAppointment(Appointment appointment)
     {
-        // TODO: Implement scheduling logic
+        var appointmentCanBeScheduled = await this.appointmentCalendar.CheckAppointmentValidity(appointment);
+
+        if (!appointmentCanBeScheduled)
+        {
+            throw new InvalidOperationException("The requested appointment slot is not available.");
+        }
+
+        await this.appointmentRegistry.CreateAppointment(appointment);
     }
 
     public async Task ReScheduleAppointment(int appointmentId, DateOnly date, TimeOnly time, int duration)
     {
-        // TODO: Implement rescheduling logic
+        var existingAppointment = await this.appointmentRegistry.GetAppointmentById(appointmentId);
+        if (existingAppointment is null)
+        {
+            throw new KeyNotFoundException("Appointment not found.");
+        }
+
+        await this.CancelAppointment(appointmentId);
+
+        var newAppointment = existingAppointment;
+        newAppointment.Date = date;
+        newAppointment.StartTime = time;
+        newAppointment.Duration = duration;
+
+        var appointmentCanBeScheduled = await this.appointmentCalendar.CheckAppointmentValidity(newAppointment);
+        if (!appointmentCanBeScheduled)
+        {
+            await this.ScheduleAppointment(existingAppointment);
+            throw new InvalidOperationException("The requested appointment slot is not available.");
+        }
+
+        await this.appointmentRegistry.UpdateAppointment(appointmentId, date, time, duration);
     }
 
-    public async Task DeleteAppointment(int appointmentId)
+    public async Task CancelAppointment(int appointmentId)
     {
-        // TODO: Implement rescheduling logic
+        var existingAppointment = await this.appointmentRegistry.GetAppointmentById(appointmentId);
+        if (existingAppointment is null)
+        {
+            throw new KeyNotFoundException("Appointment not found.");
+        }
+
+        await this.appointmentRegistry.DeleteAppointment(appointmentId);
     }
 }
