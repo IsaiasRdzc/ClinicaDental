@@ -1,9 +1,9 @@
-﻿namespace ClinicaDental.ApiService.DataBase.Models;
+namespace ClinicaDental.ApiService.DataBase.Models;
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-public class Supply
+public class Doctor
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -11,5 +11,5 @@ public class Supply
 
     public string Name { get; set; } = null!;
 
-    public int Stock { get; set; }
+    public Schedule Schedule { get; set; } = null!;
 }
