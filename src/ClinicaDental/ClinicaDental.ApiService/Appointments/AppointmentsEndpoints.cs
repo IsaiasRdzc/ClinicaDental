@@ -6,8 +6,10 @@ using ClinicaDental.ApiService.DataBase.Registries;
 
 public static class AppointmentsEndpoints
 {
+    //tiene nombre de implementación
     public static void MapAppointmentsEndpoints(this IEndpointRouteBuilder app)
     {
+        //grupo de que
         var group = app.MapGroup("api/appointments");
 
         group.MapPost(string.Empty, ScheduleAppointment);
@@ -26,6 +28,7 @@ public static class AppointmentsEndpoints
         group.MapPost("initializeDoctor", TEMP_InitializeDoctor);
     }
 
+    //TEMP es una abreviatura
     public static async Task<IResult> TEMP_InitializeDoctor(
         Doctor doctor,
         WorkScheduleAdmin workScheduleAdmin)
@@ -41,6 +44,7 @@ public static class AppointmentsEndpoints
     {
         var appointments = await appointmentCalendar.GetAvailableTimeSlots(doctorId, date);
 
+    //si el método se llama GetAvailableSlots signifca que devuelve slots no appointments
         return Results.Ok(appointments);
     }
 
@@ -51,6 +55,7 @@ public static class AppointmentsEndpoints
     {
         var appointments = await appointmentCalendar.GetAppointmentsInRange(dateStart, dateEnd);
 
+        //aqui si
         return Results.Ok(appointments);
     }
 
