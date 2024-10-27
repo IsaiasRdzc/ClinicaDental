@@ -11,4 +11,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<Appointment> Appointments { get; init; }
 
     public DbSet<Doctor> Doctors { get; init; }
+
+    public DbSet<ClinicHours> ClinicHours { get; init; }
+
+    public DbSet<ScheduleModification> ScheduleModifications { get; init; }
 }

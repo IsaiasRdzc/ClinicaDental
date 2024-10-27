@@ -3,7 +3,7 @@ namespace ClinicaDental.ApiService.DataBase.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-public class Appointment
+public class ScheduleModification
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -19,16 +19,5 @@ public class Appointment
     public TimeOnly StartTime { get; set; }
 
     [Required]
-    public int Duration { get; set; }
-
-    [Required]
-    public string PatientName { get; set; } = null!;
-
-    [Required]
-    public string PatientPhone { get; set; } = null!;
-
-    public TimeOnly EndTime()
-    {
-        return this.StartTime.AddHours(this.Duration);
-    }
+    public TimeOnly EndTime { get; set; }
 }

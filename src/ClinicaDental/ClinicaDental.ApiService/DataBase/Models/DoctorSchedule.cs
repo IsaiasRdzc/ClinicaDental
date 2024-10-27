@@ -3,7 +3,10 @@ namespace ClinicaDental.ApiService.DataBase.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-public class Appointment
+using Microsoft.EntityFrameworkCore;
+
+[Owned]
+public class DoctorSchedule
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -13,22 +16,14 @@ public class Appointment
     public int DoctorId { get; set; }
 
     [Required]
-    public DateOnly Date { get; set; }
+    public DayOfWeek DayOfWeek { get; set; }
 
     [Required]
     public TimeOnly StartTime { get; set; }
 
     [Required]
-    public int Duration { get; set; }
+    public TimeOnly EndTime { get; set; }
 
     [Required]
-    public string PatientName { get; set; } = null!;
-
-    [Required]
-    public string PatientPhone { get; set; } = null!;
-
-    public TimeOnly EndTime()
-    {
-        return this.StartTime.AddHours(this.Duration);
-    }
+    public bool IsOff { get; set; } = false;
 }

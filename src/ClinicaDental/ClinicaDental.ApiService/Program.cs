@@ -1,4 +1,5 @@
 using ClinicaDental.ApiService.Appointments;
+using ClinicaDental.ApiService.Appointments.Services;
 using ClinicaDental.ApiService.DataBase;
 using ClinicaDental.ApiService.DataBase.Registries;
 
@@ -13,12 +14,15 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 
-// Scoped Services
+// Services
 builder.AddNpgsqlDbContext<AppDbContext>("ClinicaDentalDb");
+builder.Services.AddTransient<AppointmentScheduler>();
+builder.Services.AddTransient<AppointmentCalendar>();
 
 // Registries
-builder.Services.AddScoped<AppointmentRegistry>();
-builder.Services.AddScoped<DoctorRegistry>();
+builder.Services.AddTransient<AppointmentRegistry>();
+builder.Services.AddTransient<ScheduleRegistry>();
+builder.Services.AddTransient<DoctorRegistry>();
 
 var app = builder.Build();
 

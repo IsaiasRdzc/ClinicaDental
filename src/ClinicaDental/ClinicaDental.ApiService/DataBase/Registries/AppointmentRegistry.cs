@@ -15,7 +15,26 @@ public class AppointmentRegistry
 
     public async Task<IEnumerable<Appointment>> GetAppointmentsList()
     {
-        return await this.context.Appointments.ToListAsync();
+        var appointmentsList = await this.context.Appointments.ToListAsync();
+        return appointmentsList;
+    }
+
+    public async Task<IEnumerable<Appointment>> GetAppointmentsListByDate(DateOnly date)
+    {
+        var appointments = await this.context.Appointments
+        .Where(appointment => appointment.Date == date)
+        .ToListAsync();
+
+        return appointments;
+    }
+
+    public async Task<IEnumerable<Appointment>> GetAppointmentsListByDoctor(int doctorId)
+    {
+        var appointments = await this.context.Appointments
+        .Where(appointment => appointment.DoctorId == doctorId)
+        .ToListAsync();
+
+        return appointments;
     }
 
     public async Task<Appointment?> GetAppointmentById(int id)
@@ -30,7 +49,7 @@ public class AppointmentRegistry
         await this.context.SaveChangesAsync();
     }
 
-    public async Task UpdateAppointment(int id, DateOnly date, TimeSlot time)
+    public async Task UpdateAppointment(int id, DateOnly date, TimeOnly time, int duration)
     {
         var appointment = await this.GetAppointmentById(id);
 
@@ -40,7 +59,8 @@ public class AppointmentRegistry
         }
 
         appointment.Date = date;
-        appointment.Time = time;
+        appointment.StartTime = time;
+        appointment.Duration = duration;
 
         this.context.Appointments.Update(appointment);
         await this.context.SaveChangesAsync();

@@ -3,13 +3,20 @@ namespace ClinicaDental.ApiService.DataBase.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-public class Doctor
+public class ClinicHours
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; private set; }
 
-    public string Name { get; set; } = null!;
+    [Required]
+    public DayOfWeek DayOfWeek { get; set; }
 
-    public List<DoctorSchedule> Schedules { get; set; } = null!;
+    [Required]
+    public TimeOnly OpeningTime { get; set; }
+
+    [Required]
+    public TimeOnly ClosingTime { get; set; }
+
+    public bool IsClosed { get; set; } = false;
 }
