@@ -22,7 +22,7 @@ public class AppointmentCalendar
         this.doctorRegistry = doctorRegistry;
     }
 
-    public async Task<bool> CheckAppointmentValidity(Appointment appointment)
+    public async Task<bool> AppointmentCanBeScheduled(Appointment appointment)
     {
         var availableSlots = await this.GetAvailableTimeSlots(appointment.DoctorId, appointment.Date);
         var requestedStartTime = appointment.StartTime;
@@ -34,6 +34,39 @@ public class AppointmentCalendar
 
         // Check if the next hours are available based on the appointment's duration
         TimeOnly endTime = requestedStartTime.AddHours(appointment.Duration);
+        for (TimeOnly currentTime = requestedStartTime; currentTime < endTime; currentTime = currentTime.AddHours(1))
+        {
+            if (!availableSlots.Contains(currentTime))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public async Task<bool> AppointmentCanBeReScheduled(Appointment appointment)
+    {
+        var availableSlots = await this.GetAvailableTimeSlots(appointment.DoctorId, appointment.Date);
+
+        var requestedStartTime = appointment.StartTime;
+        var endTime = appointment.EndTime();
+
+        // Create a list of occupied slots
+        var slotsOccupiedByAppointment = new List<TimeOnly>();
+        for (TimeOnly currentTime = requestedStartTime; currentTime < endTime; currentTime = currentTime.AddHours(1))
+        {
+            slotsOccupiedByAppointment.Add(currentTime);
+        }
+
+        availableSlots = availableSlots.Union(slotsOccupiedByAppointment);
+
+        if (!availableSlots.Contains(requestedStartTime))
+        {
+            return false;
+        }
+
+        // Check if the next hours are available based on the appointment's duration
         for (TimeOnly currentTime = requestedStartTime; currentTime < endTime; currentTime = currentTime.AddHours(1))
         {
             if (!availableSlots.Contains(currentTime))

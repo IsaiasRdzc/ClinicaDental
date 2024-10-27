@@ -19,7 +19,7 @@ public class AppointmentScheduler
 
     public async Task ScheduleAppointment(Appointment appointment)
     {
-        var appointmentCanBeScheduled = await this.appointmentCalendar.CheckAppointmentValidity(appointment);
+        var appointmentCanBeScheduled = await this.appointmentCalendar.AppointmentCanBeScheduled(appointment);
 
         if (!appointmentCanBeScheduled)
         {
@@ -37,17 +37,13 @@ public class AppointmentScheduler
             throw new KeyNotFoundException("Appointment not found.");
         }
 
-        await this.CancelAppointment(appointmentId);
+        existingAppointment.Date = date;
+        existingAppointment.StartTime = time;
+        existingAppointment.Duration = duration;
 
-        var newAppointment = existingAppointment;
-        newAppointment.Date = date;
-        newAppointment.StartTime = time;
-        newAppointment.Duration = duration;
-
-        var appointmentCanBeScheduled = await this.appointmentCalendar.CheckAppointmentValidity(newAppointment);
-        if (!appointmentCanBeScheduled)
+        var appointmentCanBeReScheduled = await this.appointmentCalendar.AppointmentCanBeReScheduled(existingAppointment);
+        if (!appointmentCanBeReScheduled)
         {
-            await this.ScheduleAppointment(existingAppointment);
             throw new InvalidOperationException("The requested appointment slot is not available.");
         }
 
