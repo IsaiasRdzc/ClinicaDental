@@ -2,9 +2,9 @@
 
 public class Supply
 {
-    public int Id { get; set; }
+    public int Id { get; set; } // Propiedad clave
 
     public string Name { get; set; } = null!;
 
-    public int Stock { get; set; }
+    public int Quantity { get; set; }
 }
