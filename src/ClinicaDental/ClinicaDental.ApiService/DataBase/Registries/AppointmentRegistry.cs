@@ -60,7 +60,7 @@ public class AppointmentRegistry
 
         appointment.Date = date;
         appointment.StartTime = time;
-        appointment.Duration = duration;
+        appointment.DurationInHours = duration;
 
         this.context.Appointments.Update(appointment);
         await this.context.SaveChangesAsync();

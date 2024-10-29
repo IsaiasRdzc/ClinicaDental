@@ -18,7 +18,7 @@ public class Appointment
 
     public TimeOnly EndTime { get => this.CalculateEndTime(); }
 
-    public int Duration { get; set; }
+    public int DurationInHours { get; set; }
 
     public string PatientName { get; set; } = null!;
 
@@ -26,6 +26,6 @@ public class Appointment
 
     private TimeOnly CalculateEndTime()
     {
-        return this.StartTime.AddHours(this.Duration);
+        return this.StartTime.AddHours(this.DurationInHours);
     }
 }

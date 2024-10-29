@@ -28,7 +28,7 @@ public class AppointmentCalendar
         }
 
         // Check if the next hours are available based on the appointment's duration
-        TimeOnly endTime = requestedStartTime.AddHours(appointment.Duration);
+        TimeOnly endTime = requestedStartTime.AddHours(appointment.DurationInHours);
         for (TimeOnly currentTime = requestedStartTime; currentTime < endTime; currentTime = currentTime.AddHours(1))
         {
             if (!availableSlots.Contains(currentTime))

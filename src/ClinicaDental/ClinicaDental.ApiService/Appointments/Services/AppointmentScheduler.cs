@@ -39,7 +39,7 @@ public class AppointmentScheduler
 
         existingAppointment.Date = date;
         existingAppointment.StartTime = time;
-        existingAppointment.Duration = duration;
+        existingAppointment.DurationInHours = duration;
 
         var appointmentCanBeReScheduled = await this.appointmentCalendar.AppointmentCanBeReScheduled(existingAppointment);
         if (!appointmentCanBeReScheduled)
