@@ -2,6 +2,12 @@
 <h2>Schedule Appointment</h2>
 
 <form [formGroup]="appointmentsForm" (ngSubmit)="onFormSubmit()">
+  <!-- Doctor Field -->
+  <div>
+    <label for="doctorId">Doctor ID:</label> <!-- Cambiado "Date" a "Doctor ID" -->
+    <input type="text" id="doctorId" formControlName="doctorId" />
+  </div>
+  
   <!-- Date Field -->
   <div>
     <label for="date">Date:</label>
@@ -35,12 +41,11 @@
   <!-- End Time Display -->
   <div>
     <label for="endTime">End Time:</label>
-    <input type="time" id="endTime" formControlName="endTime" readonly />
+    <input type="time" id="endTime" formControlName="endTime" /> <!-- Solo `disabled` -->
   </div>
 
   <!-- Submit Button -->
   <button type="submit" [disabled]="appointmentsForm.invalid">Schedule Appointment</button>
 </form>
-
 
 <router-outlet></router-outlet>
