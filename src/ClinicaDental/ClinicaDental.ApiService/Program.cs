@@ -19,7 +19,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.AddNpgsqlDbContext<AppDbContext>("ClinicaDentalDb");
 builder.Services.AddTransient<ClinicReceptionist>();
 builder.Services.AddTransient<ClinicAgenda>();
-builder.Services.AddTransient<WorkScheduleAdmin>();
+builder.Services.AddTransient<ClinicAdmin>();
 
 // Registries
 builder.Services.AddTransient<AppointmentRegistry>();
