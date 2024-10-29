@@ -1,6 +1,7 @@
 using ClinicaDental.ApiService.Appointments;
 using ClinicaDental.ApiService.Appointments.Services;
 using ClinicaDental.ApiService.DataBase;
+using ClinicaDental.ApiService.DataBase.Models;
 using ClinicaDental.ApiService.DataBase.Registries;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,9 +17,9 @@ builder.Services.AddEndpointsApiExplorer();
 
 // Services
 builder.AddNpgsqlDbContext<AppDbContext>("ClinicaDentalDb");
-builder.Services.AddTransient<AppointmentScheduler>();
-builder.Services.AddTransient<AppointmentCalendar>();
-builder.Services.AddTransient<WorkScheduleAdmin>();
+builder.Services.AddTransient<ClinicReceptionist>();
+builder.Services.AddTransient<ClinicAgenda>();
+builder.Services.AddTransient<ClinicAdmin>();
 
 // Registries
 builder.Services.AddTransient<AppointmentRegistry>();

@@ -1,30 +1,37 @@
 namespace ClinicaDental.ApiService.Appointments.Services;
 
-using ClinicaDental.ApiService.DataBase;
 using ClinicaDental.ApiService.DataBase.Models;
 using ClinicaDental.ApiService.DataBase.Registries;
-
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Update;
 
-using Npgsql.Replication;
+/*
+    Representa una ajenda xd
 
-public class AppointmentCalendar
+    IsAppointmentSlotAvailable
+    GetAvailableTimeSlotsForDoctorInDate
+    GetAppointmentByFolio
+    GetAppointmentsForDoctorInDate
+    GetAppointmentsForDoctorInRange
+    GetAllAppointmentsInDate
+    GetAllAppointmentsInRange
+*/
+
+public class ClinicAgenda
 {
     private readonly AppointmentRegistry appointmentRegistry;
     private readonly ScheduleRegistry scheduleRegistry;
     private readonly DoctorRegistry doctorRegistry;
 
-    public AppointmentCalendar(AppointmentRegistry appointmentRegistry, ScheduleRegistry scheduleRegistry, DoctorRegistry doctorRegistry)
+    public ClinicAgenda(AppointmentRegistry appointmentRegistry, ScheduleRegistry scheduleRegistry, DoctorRegistry doctorRegistry)
     {
         this.appointmentRegistry = appointmentRegistry;
         this.scheduleRegistry = scheduleRegistry;
         this.doctorRegistry = doctorRegistry;
     }
 
-    public async Task<bool> AppointmentCanBeScheduled(Appointment appointment)
+    public async Task<bool> IsAppointmentSlotAvailable(Appointment appointment)
     {
-        var availableSlots = await this.GetAvailableTimeSlots(appointment.DoctorId, appointment.Date);
+        var availableSlots = await this.GetAvailableTimeSlotsForDoctorInDate(appointment.DoctorId, appointment.Date);
         var requestedStartTime = appointment.StartTime;
 
         if (!availableSlots.Contains(requestedStartTime))
@@ -33,7 +40,7 @@ public class AppointmentCalendar
         }
 
         // Check if the next hours are available based on the appointment's duration
-        TimeOnly endTime = requestedStartTime.AddHours(appointment.Duration);
+        TimeOnly endTime = requestedStartTime.AddHours(appointment.DurationInHours);
         for (TimeOnly currentTime = requestedStartTime; currentTime < endTime; currentTime = currentTime.AddHours(1))
         {
             if (!availableSlots.Contains(currentTime))
@@ -45,40 +52,7 @@ public class AppointmentCalendar
         return true;
     }
 
-    public async Task<bool> AppointmentCanBeReScheduled(Appointment appointment)
-    {
-        var availableSlots = await this.GetAvailableTimeSlots(appointment.DoctorId, appointment.Date);
-
-        var requestedStartTime = appointment.StartTime;
-        var endTime = appointment.EndTime();
-
-        // Create a list of occupied slots
-        var slotsOccupiedByAppointment = new List<TimeOnly>();
-        for (TimeOnly currentTime = requestedStartTime; currentTime < endTime; currentTime = currentTime.AddHours(1))
-        {
-            slotsOccupiedByAppointment.Add(currentTime);
-        }
-
-        availableSlots = availableSlots.Union(slotsOccupiedByAppointment);
-
-        if (!availableSlots.Contains(requestedStartTime))
-        {
-            return false;
-        }
-
-        // Check if the next hours are available based on the appointment's duration
-        for (TimeOnly currentTime = requestedStartTime; currentTime < endTime; currentTime = currentTime.AddHours(1))
-        {
-            if (!availableSlots.Contains(currentTime))
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public async Task<IEnumerable<TimeOnly>> GetAvailableTimeSlots(int doctorId, DateOnly date)
+    public async Task<IEnumerable<TimeOnly>> GetAvailableTimeSlotsForDoctorInDate(int doctorId, DateOnly date)
     {
         var doctor = await this.doctorRegistry.GetDoctorWithId(doctorId);
 
@@ -105,7 +79,7 @@ public class AppointmentCalendar
         while (currentTime < doctorSchedule.EndTime)
         {
             var slotIsOccupied = existingAppointments
-                .Any(appointment => currentTime.IsBetween(appointment.StartTime, appointment.EndTime()));
+                .Any(appointment => currentTime.IsBetween(appointment.StartTime, appointment.EndTime));
 
             if (slotIsOccupied)
             {
@@ -129,11 +103,21 @@ public class AppointmentCalendar
         return availableSlots;
     }
 
-    public async Task<Appointment?> GetAppointmentById(int appointmentId)
+    public async Task<Appointment?> GetAppointmentByFolio(int folio)
     {
-        var appointment = await this.appointmentRegistry.GetAppointmentById(appointmentId);
+        var appointment = await this.appointmentRegistry.GetAppointmentByFolio(folio);
 
         return appointment;
+    }
+
+    public async Task<IEnumerable<Appointment>> GetAppointmentsForDoctorInDate(int doctorId, DateOnly date)
+    {
+        var doctorAppointments = await this.appointmentRegistry.GetAppointmentsListByDoctor(doctorId);
+
+        var appointmentsInRange = doctorAppointments
+            .Where(appointment => appointment.Date == date);
+
+        return appointmentsInRange;
     }
 
     public async Task<IEnumerable<Appointment>> GetAppointmentsForDoctorInRange(int doctorId, DateOnly dateStart, DateOnly dateEnd)
@@ -141,22 +125,33 @@ public class AppointmentCalendar
         var doctorAppointments = await this.appointmentRegistry.GetAppointmentsListByDoctor(doctorId);
 
         var appointmentsInRange = doctorAppointments
-            .Where(appointment => IsDatweBetween(appointment.Date, dateStart, dateEnd));
+            .Where(appointment => IsDateBetween(appointment.Date, dateStart, dateEnd));
 
         return appointmentsInRange;
     }
 
-    public async Task<IEnumerable<Appointment>> GetAppointmentsInRange(DateOnly dateStart, DateOnly dateEnd)
+    public async Task<IEnumerable<Appointment>> GetAllAppointmentsInDate(DateOnly date)
+    {
+        var appointments = await this.appointmentRegistry.GetAppointmentsList();
+
+        var appointmentsInDate = appointments
+            .Where(appointment => appointment.Date == date);
+
+        return appointmentsInDate;
+    }
+
+    public async Task<IEnumerable<Appointment>> GetAllAppointmentsInRange(DateOnly dateStart, DateOnly dateEnd)
     {
         var appointments = await this.appointmentRegistry.GetAppointmentsList();
 
         var appointmentsInRange = appointments
-            .Where(appointment => IsDatweBetween(appointment.Date, dateStart, dateEnd));
+            .Where(appointment => IsDateBetween(appointment.Date, dateStart, dateEnd));
 
         return appointmentsInRange;
     }
 
-    private static bool IsDatweBetween(DateOnly date, DateOnly dateStart, DateOnly dateEnd)
+    // Private functions
+    private static bool IsDateBetween(DateOnly date, DateOnly dateStart, DateOnly dateEnd)
     {
         var isBetween = date >= dateStart && date <= dateEnd;
 

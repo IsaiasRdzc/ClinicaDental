@@ -1,37 +1,20 @@
 namespace ClinicaDental.ApiService.Appointments.Services;
 
-using ClinicaDental.ApiService.DataBase;
 using ClinicaDental.ApiService.DataBase.Models;
 using ClinicaDental.ApiService.DataBase.Registries;
 
-public class WorkScheduleAdmin
+public class ClinicAdmin
 {
     private readonly ScheduleRegistry scheduleRegistry;
     private readonly DoctorRegistry doctorRegistry;
 
-    public WorkScheduleAdmin(ScheduleRegistry scheduleRegistry, DoctorRegistry doctorRegistry)
+    public ClinicAdmin(ScheduleRegistry scheduleRegistry, DoctorRegistry doctorRegistry)
     {
         this.scheduleRegistry = scheduleRegistry;
         this.doctorRegistry = doctorRegistry;
     }
 
-    public async Task TEMP_InitializeDoctorAccount(Doctor doctor)
-    {
-        await this.doctorRegistry.AddDoctor(doctor);
-
-        foreach (ClinicHours? schedule in await this.GetClinicHours())
-        {
-            var defaultSchedule = new DoctorDaySchedule() {
-                DoctorId = doctor.Id,
-                StartTime = schedule.OpeningTime,
-                EndTime = schedule.ClosingTime,
-                IsOff = schedule.IsClosed,
-            };
-            await this.scheduleRegistry.AddDoctorSchedule(defaultSchedule);
-        }
-    }
-
-    public async Task<IEnumerable<ClinicHours?>> GetClinicHours()
+    public async Task<IEnumerable<ClinicDayBussinesHours?>> GetClinicBussinesHours()
     {
         var clinicHours = await this.scheduleRegistry.GetClinicHoursList();
 
@@ -43,7 +26,7 @@ public class WorkScheduleAdmin
         return clinicHours;
     }
 
-    public async Task SetClinicHours(ClinicHours clinicHours)
+    public async Task SetClinicBussinesHours(ClinicDayBussinesHours clinicHours)
     {
         var existingSchedule = await this.scheduleRegistry.GetClinicHoursByDay(clinicHours.DayOfWeek);
 
@@ -57,30 +40,53 @@ public class WorkScheduleAdmin
         }
     }
 
-    public async Task SetDoctorSchedule(DoctorDaySchedule schedule)
+    public async Task CreateDoctorAccount(Doctor doctor)
     {
-        var doctor = await this.doctorRegistry.GetDoctorWithId(schedule.DoctorId);
+        await this.doctorRegistry.AddDoctor(doctor);
+
+        foreach (ClinicDayBussinesHours? schedule in await this.GetClinicBussinesHours())
+        {
+            if (schedule is null)
+            {
+                continue;
+            }
+
+            var defaultSchedule = new DoctorDaySchedule()
+            {
+                DoctorId = doctor.Id,
+                StartTime = schedule.OpeningTime,
+                EndTime = schedule.ClosingTime,
+                IsOff = schedule.IsClosed,
+            };
+            await this.scheduleRegistry.AddDoctorSchedule(defaultSchedule);
+        }
+    }
+
+    public async Task SetDoctorDaySchedule(DoctorDaySchedule daySchedule)
+    {
+        var doctor = await this.doctorRegistry.GetDoctorWithId(daySchedule.DoctorId);
 
         if (doctor is null)
         {
             throw new KeyNotFoundException("Doctor not found.");
         }
 
-        if (!await this.IsInsideClinicHours(schedule))
+        if (!await this.IsWithinClinicHours(daySchedule))
         {
             throw new InvalidOperationException("The requested schedule is outside the available hours");
         }
 
-        if (await this.ScheduleAlreadyExists(schedule))
+        if (await this.ScheduleAlreadyExists(daySchedule))
         {
-            await this.scheduleRegistry.UpdateDoctorSchedule(schedule);
+            await this.scheduleRegistry.UpdateDoctorSchedule(daySchedule);
         }
         else
         {
-            await this.scheduleRegistry.AddDoctorSchedule(schedule);
+            await this.scheduleRegistry.AddDoctorSchedule(daySchedule);
         }
     }
 
+    // Private functions
     private async Task<bool> ScheduleAlreadyExists(DoctorDaySchedule schedule)
     {
         var doctor = await this.doctorRegistry.GetDoctorWithId(schedule.DoctorId);
@@ -96,7 +102,7 @@ public class WorkScheduleAdmin
         return scheduleAlreadyExists;
     }
 
-    private async Task<bool> IsInsideClinicHours(DoctorDaySchedule schedule)
+    private async Task<bool> IsWithinClinicHours(DoctorDaySchedule schedule)
     {
         var clinicSchedule = await this.scheduleRegistry.GetClinicHoursByDay(schedule.DayOfWeek);
 

@@ -3,10 +3,10 @@ namespace ClinicaDental.ApiService.DataBase.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-public class ClinicHours
+public class ClinicDayBussinesHours
 {
     // Constructor for seeding purposes
-    public ClinicHours(int id)
+    public ClinicDayBussinesHours(int id)
     {
         this.Id = id; // Set the ID for seeding
     }
