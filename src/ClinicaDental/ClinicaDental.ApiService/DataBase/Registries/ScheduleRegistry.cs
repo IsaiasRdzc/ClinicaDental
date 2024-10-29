@@ -107,51 +107,51 @@ public class ScheduleRegistry
     }
 
     // Clinic hours CRUD
-    public async Task AddClinicHours(ClinicHours clinicHours)
+    public async Task AddClinicHours(ClinicDayBussinesHours clinicHours)
     {
-        await this.context.ClinicHours.AddAsync(clinicHours);
+        await this.context.ClinicDayBussinesHours.AddAsync(clinicHours);
         await this.context.SaveChangesAsync();
     }
 
-    public async Task<ClinicHours?> GetClinicHours(int id)
+    public async Task<ClinicDayBussinesHours?> GetClinicHours(int id)
     {
-        return await this.context.ClinicHours.FindAsync(id);
+        return await this.context.ClinicDayBussinesHours.FindAsync(id);
     }
 
-    public async Task<IEnumerable<ClinicHours?>> GetClinicHoursList()
+    public async Task<IEnumerable<ClinicDayBussinesHours?>> GetClinicHoursList()
     {
-        return await this.context.ClinicHours.ToListAsync();
+        return await this.context.ClinicDayBussinesHours.ToListAsync();
     }
 
-    public async Task<ClinicHours?> GetClinicHoursByDay(DayOfWeek dayOfWeek)
+    public async Task<ClinicDayBussinesHours?> GetClinicHoursByDay(DayOfWeek dayOfWeek)
     {
-        return await this.context.ClinicHours
+        return await this.context.ClinicDayBussinesHours
             .FirstOrDefaultAsync(ch => ch.DayOfWeek == dayOfWeek);
     }
 
-    public async Task UpdateClinicHours(ClinicHours clinicHours)
+    public async Task UpdateClinicHours(ClinicDayBussinesHours clinicHours)
     {
-        var existingSchedule = await this.GetClinicHoursByDay(clinicHours.DayOfWeek);
+        var existingClinicHours = await this.GetClinicHoursByDay(clinicHours.DayOfWeek);
 
-        if (existingSchedule is null)
+        if (existingClinicHours is null)
         {
             throw new KeyNotFoundException("Clinic schedule not found.");
         }
 
-        existingSchedule.OpeningTime = clinicHours.OpeningTime;
-        existingSchedule.ClosingTime = clinicHours.ClosingTime;
-        existingSchedule.IsClosed = clinicHours.IsClosed;
+        existingClinicHours.OpeningTime = clinicHours.OpeningTime;
+        existingClinicHours.ClosingTime = clinicHours.ClosingTime;
+        existingClinicHours.IsClosed = clinicHours.IsClosed;
 
-        this.context.ClinicHours.Update(existingSchedule);
+        this.context.ClinicDayBussinesHours.Update(existingClinicHours);
         await this.context.SaveChangesAsync();
     }
 
     public async Task DeleteClinicHours(int id)
     {
-        var clinicHours = await this.GetClinicHours(id);
-        if (clinicHours != null)
+        var clinicDayBussinesHours = await this.GetClinicHours(id);
+        if (clinicDayBussinesHours != null)
         {
-            this.context.ClinicHours.Remove(clinicHours);
+            this.context.ClinicDayBussinesHours.Remove(clinicDayBussinesHours);
             await this.context.SaveChangesAsync();
         }
     }

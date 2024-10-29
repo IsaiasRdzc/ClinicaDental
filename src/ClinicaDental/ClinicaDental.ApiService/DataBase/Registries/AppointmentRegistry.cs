@@ -37,9 +37,9 @@ public class AppointmentRegistry
         return appointments;
     }
 
-    public async Task<Appointment?> GetAppointmentById(int id)
+    public async Task<Appointment?> GetAppointmentByFolio(int folio)
     {
-        var appointment = await this.context.Appointments.FindAsync(id);
+        var appointment = await this.context.Appointments.FindAsync(folio);
         return appointment;
     }
 
@@ -49,13 +49,13 @@ public class AppointmentRegistry
         await this.context.SaveChangesAsync();
     }
 
-    public async Task UpdateAppointment(int id, DateOnly date, TimeOnly time, int duration)
+    public async Task UpdateAppointment(int folio, DateOnly date, TimeOnly time, int duration)
     {
-        var appointment = await this.GetAppointmentById(id);
+        var appointment = await this.GetAppointmentByFolio(folio);
 
         if (appointment is null)
         {
-            throw new KeyNotFoundException($"Appointment with ID {id} not found.");
+            throw new KeyNotFoundException($"Appointment with ID {folio} not found.");
         }
 
         appointment.Date = date;
@@ -66,13 +66,13 @@ public class AppointmentRegistry
         await this.context.SaveChangesAsync();
     }
 
-    public async Task DeleteAppointment(int id)
+    public async Task DeleteAppointment(int folio)
     {
-        var appointment = await this.GetAppointmentById(id);
+        var appointment = await this.GetAppointmentByFolio(folio);
 
         if (appointment is null)
         {
-            throw new KeyNotFoundException($"Appointment with ID {id} not found.");
+            throw new KeyNotFoundException($"Appointment with folio {folio} not found.");
         }
 
         this.context.Appointments.Remove(appointment);

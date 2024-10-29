@@ -1,27 +1,24 @@
 namespace ClinicaDental.ApiService.Appointments.Services;
 
-using ClinicaDental.ApiService.DataBase;
 using ClinicaDental.ApiService.DataBase.Models;
 using ClinicaDental.ApiService.DataBase.Registries;
 
-public class AppointmentScheduler
+public class ClinicReceptionist
 {
     private readonly AppointmentRegistry appointmentRegistry;
-    private readonly AppointmentCalendar appointmentCalendar;
+    private readonly ClinicAgenda clinicAgenda;
 
-    public AppointmentScheduler(
-        AppointmentRegistry appointmentRegistry,
-        AppointmentCalendar appointmentCalendar)
+    public ClinicReceptionist(AppointmentRegistry appointmentRegistry, ClinicAgenda clinicAgenda)
     {
         this.appointmentRegistry = appointmentRegistry;
-        this.appointmentCalendar = appointmentCalendar;
+        this.clinicAgenda = clinicAgenda;
     }
 
     public async Task ScheduleAppointment(Appointment appointment)
     {
-        var appointmentCanBeScheduled = await this.appointmentCalendar.AppointmentCanBeScheduled(appointment);
+        var appointmentSlotIsAvailable = await this.clinicAgenda.IsAppointmentSlotAvailable(appointment);
 
-        if (!appointmentCanBeScheduled)
+        if (!appointmentSlotIsAvailable)
         {
             throw new InvalidOperationException("The requested appointment slot is not available.");
         }
@@ -29,9 +26,9 @@ public class AppointmentScheduler
         await this.appointmentRegistry.CreateAppointment(appointment);
     }
 
-    public async Task ReScheduleAppointment(int appointmentId, DateOnly date, TimeOnly time, int duration)
+    public async Task ReScheduleAppointment(int folio, DateOnly date, TimeOnly time, int duration)
     {
-        var existingAppointment = await this.appointmentRegistry.GetAppointmentById(appointmentId);
+        var existingAppointment = await this.appointmentRegistry.GetAppointmentByFolio(folio);
         if (existingAppointment is null)
         {
             throw new KeyNotFoundException("Appointment not found.");
@@ -41,18 +38,18 @@ public class AppointmentScheduler
         existingAppointment.StartTime = time;
         existingAppointment.DurationInHours = duration;
 
-        var appointmentCanBeReScheduled = await this.appointmentCalendar.AppointmentCanBeReScheduled(existingAppointment);
-        if (!appointmentCanBeReScheduled)
+        var appointmentSlotIsAvailable = await this.clinicAgenda.IsAppointmentSlotAvailable(existingAppointment);
+        if (!appointmentSlotIsAvailable)
         {
             throw new InvalidOperationException("The requested appointment slot is not available.");
         }
 
-        await this.appointmentRegistry.UpdateAppointment(appointmentId, date, time, duration);
+        await this.appointmentRegistry.UpdateAppointment(folio, date, time, duration);
     }
 
     public async Task CancelAppointment(int appointmentId)
     {
-        var existingAppointment = await this.appointmentRegistry.GetAppointmentById(appointmentId);
+        var existingAppointment = await this.appointmentRegistry.GetAppointmentByFolio(appointmentId);
         if (existingAppointment is null)
         {
             throw new KeyNotFoundException("Appointment not found.");

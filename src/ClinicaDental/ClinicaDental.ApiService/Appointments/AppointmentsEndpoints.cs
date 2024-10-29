@@ -13,7 +13,7 @@ public static class AppointmentsEndpoints
         group.MapPost(string.Empty, ScheduleAppointment);
         group.MapPost("doctor", SetDoctorSchedule);
         group.MapPost("clinicHours", SetClinicHours);
-        group.MapPost("initializeDoctor", TEMP_InitializeDoctor);
+        group.MapPost("initializeDoctor", CreateDoctorAccount);
 
         group.MapGet("{id}", GetAppointment);
         group.MapGet(string.Empty, GetAppointmentsInRange);
@@ -26,20 +26,20 @@ public static class AppointmentsEndpoints
         group.MapDelete("{id}", DeleteAppointment);
     }
 
-    public static async Task<IResult> TEMP_InitializeDoctor(
+    public static async Task<IResult> CreateDoctorAccount(
         Doctor doctor,
-        WorkScheduleAdmin workScheduleAdmin)
+        ClinicAdmin clinicAdmin)
     {
-        await workScheduleAdmin.TEMP_InitializeDoctorAccount(doctor);
+        await clinicAdmin.CreateDoctorAccount(doctor);
         return Results.Ok();
     }
 
     public static async Task<IResult> GetAvailableSlots(
         int doctorId,
         DateOnly date,
-        AppointmentCalendar appointmentCalendar)
+        ClinicAgenda appointmentCalendar)
     {
-        var appointments = await appointmentCalendar.GetAvailableTimeSlots(doctorId, date);
+        var appointments = await appointmentCalendar.GetAvailableTimeSlotsForDoctorInDate(doctorId, date);
 
         return Results.Ok(appointments);
     }
@@ -47,9 +47,9 @@ public static class AppointmentsEndpoints
     public static async Task<IResult> GetAppointmentsInRange(
         DateOnly dateStart,
         DateOnly dateEnd,
-        AppointmentCalendar appointmentCalendar)
+        ClinicAgenda appointmentCalendar)
     {
-        var appointments = await appointmentCalendar.GetAppointmentsInRange(dateStart, dateEnd);
+        var appointments = await appointmentCalendar.GetAllAppointmentsInRange(dateStart, dateEnd);
 
         return Results.Ok(appointments);
     }
@@ -58,7 +58,7 @@ public static class AppointmentsEndpoints
         int doctorId,
         DateOnly dateTimeStart,
         DateOnly dateTimeEnd,
-        AppointmentCalendar appointmentCalendar)
+        ClinicAgenda appointmentCalendar)
     {
         var appointments = await appointmentCalendar.GetAppointmentsForDoctorInRange(doctorId, dateTimeStart, dateTimeEnd);
 
@@ -66,17 +66,17 @@ public static class AppointmentsEndpoints
     }
 
     public static async Task<IResult> GetAppointment(
-        int appointmentId,
-        AppointmentCalendar appointmentCalendar)
+        int folio,
+        ClinicAgenda appointmentCalendar)
     {
-        var appointment = await appointmentCalendar.GetAppointmentById(appointmentId);
+        var appointment = await appointmentCalendar.GetAppointmentByFolio(folio);
 
         return Results.Ok(appointment);
     }
 
     public static async Task<IResult> ScheduleAppointment(
         Appointment appointment,
-        AppointmentScheduler scheduler)
+        ClinicReceptionist scheduler)
     {
         await scheduler.ScheduleAppointment(appointment);
 
@@ -88,7 +88,7 @@ public static class AppointmentsEndpoints
         DateOnly date,
         TimeOnly time,
         int duration,
-        AppointmentScheduler scheduler)
+        ClinicReceptionist scheduler)
     {
         await scheduler.ReScheduleAppointment(appointmentId, date, time, duration);
 
@@ -97,7 +97,7 @@ public static class AppointmentsEndpoints
 
     public static async Task<IResult> DeleteAppointment(
         int appointmentId,
-        AppointmentScheduler scheduler)
+        ClinicReceptionist scheduler)
     {
         await scheduler.CancelAppointment(appointmentId);
 
@@ -105,25 +105,25 @@ public static class AppointmentsEndpoints
     }
 
     public static async Task<IResult> SetClinicHours(
-        ClinicHours clinicHours,
-        WorkScheduleAdmin workScheduleAdmin)
+        ClinicDayBussinesHours clinicHours,
+        ClinicAdmin clinicAdmin)
     {
-        await workScheduleAdmin.SetClinicHours(clinicHours);
+        await clinicAdmin.SetClinicBussinesHours(clinicHours);
         return Results.Ok();
     }
 
     public static async Task<IResult> GetClinicHours(
-        WorkScheduleAdmin workScheduleAdmin)
+        ClinicAdmin clinicAdmin)
     {
-        var clinicHours = await workScheduleAdmin.GetClinicHours();
+        var clinicHours = await clinicAdmin.GetClinicBussinesHours();
         return Results.Ok(clinicHours);
     }
 
     public static async Task<IResult> SetDoctorSchedule(
         DoctorDaySchedule doctorSchedule,
-        WorkScheduleAdmin workScheduleAdmin)
+        ClinicAdmin clinicAdmin)
     {
-        await workScheduleAdmin.SetDoctorSchedule(doctorSchedule);
+        await clinicAdmin.SetDoctorDaySchedule(doctorSchedule);
         return Results.Ok();
     }
 }
