@@ -21,7 +21,13 @@ public class WorkScheduleAdmin
 
         foreach (ClinicHours? schedule in await this.GetClinicHours())
         {
-            var defaultSchedule = new DoctorDaySchedule() {
+            if (schedule is null)
+            {
+                continue;
+            }
+
+            var defaultSchedule = new DoctorDaySchedule()
+            {
                 DoctorId = doctor.Id,
                 StartTime = schedule.OpeningTime,
                 EndTime = schedule.ClosingTime,

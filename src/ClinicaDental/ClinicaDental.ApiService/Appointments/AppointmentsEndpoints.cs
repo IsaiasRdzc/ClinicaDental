@@ -13,6 +13,7 @@ public static class AppointmentsEndpoints
         group.MapPost(string.Empty, ScheduleAppointment);
         group.MapPost("doctor", SetDoctorSchedule);
         group.MapPost("clinicHours", SetClinicHours);
+        group.MapPost("initializeDoctor", TEMP_InitializeDoctor);
 
         group.MapGet("{id}", GetAppointment);
         group.MapGet(string.Empty, GetAppointmentsInRange);
@@ -23,7 +24,6 @@ public static class AppointmentsEndpoints
         group.MapPut("reschedule/{id}", ReScheduleAppointment);
 
         group.MapDelete("{id}", DeleteAppointment);
-        group.MapPost("initializeDoctor", TEMP_InitializeDoctor);
     }
 
     public static async Task<IResult> TEMP_InitializeDoctor(

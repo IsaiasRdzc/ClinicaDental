@@ -47,8 +47,6 @@ public class AppointmentCalendar
 
     public async Task<bool> AppointmentCanBeReScheduled(Appointment appointment)
     {
-        var availableSlots = await this.GetAvailableTimeSlots(appointment.DoctorId, appointment.Date);
-
         var requestedStartTime = appointment.StartTime;
         var endTime = appointment.EndTime();
 
@@ -59,6 +57,7 @@ public class AppointmentCalendar
             slotsOccupiedByAppointment.Add(currentTime);
         }
 
+        var availableSlots = await this.GetAvailableTimeSlots(appointment.DoctorId, appointment.Date);
         availableSlots = availableSlots.Union(slotsOccupiedByAppointment);
 
         if (!availableSlots.Contains(requestedStartTime))
