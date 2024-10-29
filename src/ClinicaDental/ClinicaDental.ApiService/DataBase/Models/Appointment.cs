@@ -7,27 +7,24 @@ public class Appointment
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; private set; }
+    public int Id { get; }
 
     [ForeignKey("Doctor")]
     public int DoctorId { get; set; }
 
-    [Required]
     public DateOnly Date { get; set; }
 
-    [Required]
     public TimeOnly StartTime { get; set; }
 
-    [Required]
+    public TimeOnly EndTime { get => this.CalculateEndTime(); }
+
     public int Duration { get; set; }
 
-    [Required]
     public string PatientName { get; set; } = null!;
 
-    [Required]
     public string PatientPhone { get; set; } = null!;
 
-    public TimeOnly EndTime()
+    private TimeOnly CalculateEndTime()
     {
         return this.StartTime.AddHours(this.Duration);
     }

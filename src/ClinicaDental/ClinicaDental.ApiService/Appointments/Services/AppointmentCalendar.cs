@@ -1,13 +1,8 @@
 namespace ClinicaDental.ApiService.Appointments.Services;
 
-using ClinicaDental.ApiService.DataBase;
 using ClinicaDental.ApiService.DataBase.Models;
 using ClinicaDental.ApiService.DataBase.Registries;
-
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Update;
-
-using Npgsql.Replication;
 
 public class AppointmentCalendar
 {
@@ -48,7 +43,7 @@ public class AppointmentCalendar
     public async Task<bool> AppointmentCanBeReScheduled(Appointment appointment)
     {
         var requestedStartTime = appointment.StartTime;
-        var endTime = appointment.EndTime();
+        var endTime = appointment.EndTime;
 
         // Create a list of occupied slots
         var slotsOccupiedByAppointment = new List<TimeOnly>();
@@ -104,7 +99,7 @@ public class AppointmentCalendar
         while (currentTime < doctorSchedule.EndTime)
         {
             var slotIsOccupied = existingAppointments
-                .Any(appointment => currentTime.IsBetween(appointment.StartTime, appointment.EndTime()));
+                .Any(appointment => currentTime.IsBetween(appointment.StartTime, appointment.EndTime));
 
             if (slotIsOccupied)
             {
