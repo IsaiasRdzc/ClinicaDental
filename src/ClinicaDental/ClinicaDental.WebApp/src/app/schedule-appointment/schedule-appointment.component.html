@@ -1,0 +1,46 @@
+<h1>AGENDAR UNA CITA</h1>
+<h2>Schedule Appointment</h2>
+
+<form [formGroup]="appointmentsForm" (ngSubmit)="onFormSubmit()">
+  <!-- Date Field -->
+  <div>
+    <label for="date">Date:</label>
+    <input type="date" id="date" formControlName="date" />
+  </div>
+
+  <!-- Start Time Field -->
+  <div>
+    <label for="startTime">Start Time:</label>
+    <input type="time" id="startTime" formControlName="startTime" />
+  </div>
+
+  <!-- Duration Field -->
+  <div>
+    <label for="duration">Duration (minutes):</label>
+    <input type="number" id="duration" formControlName="duration" min="1" />
+  </div>
+
+  <!-- Patient Name Field -->
+  <div>
+    <label for="patientName">Patient Name:</label>
+    <input type="text" id="patientName" formControlName="patientName" />
+  </div>
+
+  <!-- Patient Phone Field -->
+  <div>
+    <label for="patientPhone">Patient Phone:</label>
+    <input type="tel" id="patientPhone" formControlName="patientPhone" />
+  </div>
+
+  <!-- End Time Display -->
+  <div>
+    <label for="endTime">End Time:</label>
+    <input type="time" id="endTime" formControlName="endTime" readonly />
+  </div>
+
+  <!-- Submit Button -->
+  <button type="submit" [disabled]="appointmentsForm.invalid">Schedule Appointment</button>
+</form>
+
+
+<router-outlet></router-outlet>
