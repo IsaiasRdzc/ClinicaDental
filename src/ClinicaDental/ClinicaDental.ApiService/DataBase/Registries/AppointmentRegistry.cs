@@ -12,26 +12,26 @@ public class AppointmentRegistry
         this.context = context;
     }
 
-    public IQueryable GetAppointmentsList()
+    public IQueryable<Appointment> GetAppointmentsList()
     {
         var appointmentsList = this.context.Appointments.AsQueryable();
         return appointmentsList;
     }
 
-    public IQueryable GetAppointmentsListByDate(DateOnly date)
+    public IQueryable<Appointment> GetAppointmentsListByDate(DateOnly date)
     {
         var appointments = this.context.Appointments
-        .Where(appointment => appointment.Date == date)
-        .AsQueryable();
+        .AsQueryable()
+        .Where(appointment => appointment.Date == date);
 
         return appointments;
     }
 
-    public IQueryable GetAppointmentsListByDoctor(int doctorId)
+    public IQueryable<Appointment> GetAppointmentsListByDoctor(int doctorId)
     {
         var appointments = this.context.Appointments
-        .Where(appointment => appointment.DoctorId == doctorId)
-        .AsQueryable();
+        .AsQueryable()
+        .Where(appointment => appointment.DoctorId == doctorId);
 
         return appointments;
     }

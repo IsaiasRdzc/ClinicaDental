@@ -59,15 +59,15 @@ public class ClinicAgenda
 
         var scheduleModifications = await this.scheduleRegistry.GetScheduleModificationsForDoctorOnDate(doctorId, date);
 
-        var existingAppointments = await this.appointmentRegistry.GetAppointmentsListByDate(date);
+        var existingAppointments = this.appointmentRegistry.GetAppointmentsListByDate(date);
 
         var availableSlots = new List<TimeOnly>();
         var currentTime = doctorSchedule.StartTime;
 
         while (currentTime < doctorSchedule.EndTime)
         {
-            var slotIsOccupied = existingAppointments
-                .Any(appointment => currentTime.IsBetween(appointment.StartTime, appointment.EndTime));
+            var slotIsOccupied = await existingAppointments
+                .AnyAsync(appointment => currentTime.IsBetween(appointment.StartTime, appointment.EndTime));
 
             if (slotIsOccupied)
             {
@@ -100,40 +100,44 @@ public class ClinicAgenda
 
     public async Task<IEnumerable<Appointment>> GetAppointmentsForDoctorInDate(int doctorId, DateOnly date)
     {
-        var doctorAppointments = await this.appointmentRegistry.GetAppointmentsListByDoctor(doctorId);
+        var doctorAppointments = this.appointmentRegistry.GetAppointmentsListByDoctor(doctorId);
 
-        var appointmentsInRange = doctorAppointments
-            .Where(appointment => appointment.Date == date);
+        var appointmentsInDate = await doctorAppointments
+            .Where(appointment => appointment.Date == date)
+            .ToListAsync();
 
-        return appointmentsInRange;
+        return appointmentsInDate;
     }
 
     public async Task<IEnumerable<Appointment>> GetAppointmentsForDoctorInRange(int doctorId, DateOnly dateStart, DateOnly dateEnd)
     {
-        var doctorAppointments = await this.appointmentRegistry.GetAppointmentsListByDoctor(doctorId);
+        var doctorAppointments = this.appointmentRegistry.GetAppointmentsListByDoctor(doctorId);
 
-        var appointmentsInRange = doctorAppointments
-            .Where(appointment => IsDateBetween(appointment.Date, dateStart, dateEnd));
+        var appointmentsInRange = await doctorAppointments
+            .Where(appointment => IsDateBetween(appointment.Date, dateStart, dateEnd))
+            .ToListAsync();
 
         return appointmentsInRange;
     }
 
     public async Task<IEnumerable<Appointment>> GetAllAppointmentsInDate(DateOnly date)
     {
-        var appointments = await this.appointmentRegistry.GetAppointmentsList();
+        var appointments = this.appointmentRegistry.GetAppointmentsList();
 
-        var appointmentsInDate = appointments
-            .Where(appointment => appointment.Date == date);
+        var appointmentsInDate = await appointments
+            .Where(appointment => appointment.Date == date)
+            .ToListAsync();
 
         return appointmentsInDate;
     }
 
     public async Task<IEnumerable<Appointment>> GetAllAppointmentsInRange(DateOnly dateStart, DateOnly dateEnd)
     {
-        var appointments = await this.appointmentRegistry.GetAppointmentsList();
+        var appointments = this.appointmentRegistry.GetAppointmentsList();
 
-        var appointmentsInRange = appointments
-            .Where(appointment => IsDateBetween(appointment.Date, dateStart, dateEnd));
+        var appointmentsInRange = await appointments
+            .Where(appointment => IsDateBetween(appointment.Date, dateStart, dateEnd))
+            .ToListAsync();
 
         return appointmentsInRange;
     }
