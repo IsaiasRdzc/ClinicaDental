@@ -4,18 +4,6 @@ using ClinicaDental.ApiService.DataBase.Models;
 using ClinicaDental.ApiService.DataBase.Registries;
 using Microsoft.EntityFrameworkCore;
 
-/*
-    Representa una ajenda xd
-
-    IsAppointmentSlotAvailable
-    GetAvailableTimeSlotsForDoctorInDate
-    GetAppointmentByFolio
-    GetAppointmentsForDoctorInDate
-    GetAppointmentsForDoctorInRange
-    GetAllAppointmentsInDate
-    GetAllAppointmentsInRange
-*/
-
 public class ClinicAgenda
 {
     private readonly AppointmentRegistry appointmentRegistry;
