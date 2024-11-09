@@ -10,7 +10,7 @@ public class Appointment
     public int Folio { get; private set; }
 
     [ForeignKey("Doctor")]
-    public int DoctorId { get; set; }
+   // public int DoctorId { get; set; }
 
     public DateOnly Date { get; set; }
 

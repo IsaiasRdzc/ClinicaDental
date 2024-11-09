@@ -4,6 +4,8 @@ using ClinicaDental.ApiService.Appointments.Services;
 using ClinicaDental.ApiService.DataBase.Models;
 using ClinicaDental.ApiService.DataBase.Registries;
 
+using Microsoft.AspNetCore.Mvc;
+
 public static class AppointmentsEndpoints
 {
     public static void MapAppointmentsEndpoints(this IEndpointRouteBuilder app)
@@ -73,9 +75,11 @@ public static class AppointmentsEndpoints
 
         return Results.Ok(appointment);
     }
-
+    //esquema y 
     public static async Task<IResult> ScheduleAppointment(
+        [FromBody]
         Appointment appointment,
+        [FromServices]
         ClinicReceptionist scheduler)
     {
         await scheduler.ScheduleAppointment(appointment);
@@ -84,6 +88,7 @@ public static class AppointmentsEndpoints
     }
 
     public static async Task<IResult> ReScheduleAppointment(
+        //from body objeto
         int appointmentId,
         DateOnly date,
         TimeOnly time,

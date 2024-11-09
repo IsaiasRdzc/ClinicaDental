@@ -58,7 +58,7 @@ export class ScheduleAppointmentComponent implements OnInit {
       patientPhone: formValues.patientPhone
     };
   
-    this.http.post("http://localhost:5347/api/appointments", scheduleAppointmentRequest)
+    this.http.post("/api/appointments", scheduleAppointmentRequest)
       .subscribe({
         next: (value) => {
           console.log(value);

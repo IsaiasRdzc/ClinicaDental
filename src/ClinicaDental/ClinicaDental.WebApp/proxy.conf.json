@@ -1,0 +1,9 @@
+//ponere lo que me paso isaias
+{
+    "/api": {
+      "target": "http://localhost:5347",
+      "secure": false,
+      "changeOrigin": true
+    }
+  }
+  
