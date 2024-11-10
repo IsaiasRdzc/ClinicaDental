@@ -37,6 +37,7 @@ app.UseSwaggerUI();
 app.MapDefaultEndpoints();
 app.MapControllers();
 app.MapAppointmentsEndpoints();
+app.MapPaymentEndpoints();
 
 // Initialize the database
 await app.InitializeDatabase();
