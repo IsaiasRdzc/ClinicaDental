@@ -18,6 +18,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 
     public DbSet<ScheduleModification> ScheduleModifications { get; init; }
 
+    public DbSet<PaymentDetail> PaymentDetails { get; init; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
