@@ -1,7 +1,7 @@
 namespace ClinicaDental.ApiService.DataBase.Registries;
 
 using ClinicaDental.ApiService.DataBase;
-using ClinicaDental.ApiService,DataBase.Models;
+using ClinicaDental.ApiService.DataBase.Models;
 
 public class PaymentDetailRegistry
 {
@@ -14,7 +14,7 @@ public class PaymentDetailRegistry
 
     public IQueryable<PaymentDetail> GetPaymentDetailList()
     {
-        var paymentDetailsList = this.context.PaymentDetail.AsQueryable();
+        var paymentDetailsList = this.context.PaymentDetails.AsQueryable();
         return paymentDetailsList;
     }
 
@@ -25,7 +25,7 @@ public class PaymentDetailRegistry
     }
 
     public async Task CreatePaymentDetail (PaymentDetail paymentDetail){
-        this.context.PaymentDetails.Add(paymentDetail);+
+        this.context.PaymentDetails.Add(paymentDetail);
         await this.context.SaveChangesAsync();
     }
 
@@ -48,7 +48,7 @@ public class PaymentDetailRegistry
             throw new KeyNotFoundException($"Payment with {id} not found.");
         }
 
-        paymentDetail.id = id;
+        paymentDetail.paymentDetailId = id;
         paymentDetail.cardOwnerName = name;
         paymentDetail.cardNumber = number;
         paymentDetail.expirationDate = expiration;

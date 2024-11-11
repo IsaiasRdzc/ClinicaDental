@@ -1,5 +1,7 @@
 ﻿namespace ClinicaDental.ApiService.ReynaldoPractices;
 using ClinicaDental.ApiService.DataBase.Models;
+using ClinicaDental.ApiService.DataBase.Registries;
+using ClinicaDental.ApiService.ReynaldoPractices.Services;
 public static class PaymentEndpoints
 {
     public static void MapPaymentEndpoints(this IEndpointRouteBuilder app)
@@ -8,14 +10,14 @@ public static class PaymentEndpoints
 
         //group.MapPost("initializeDoctor", CreateDoctorAccount);
 
-        group.MapGet("paymentDetail", GetPaymentDetails);
+        //group.MapGet("paymentDetail", GetPaymentDetails);
         group.MapGet("{id}", GetPaymentDetail);
 
-        group.MapPut("{id}", PutPaymentDetail);
+        //group.MapPut("{id}", PutPaymentDetail);
 
-        group.MapPost(string.empty, PostPaymentDetail);
+        group.MapPost(string.Empty, PostPaymentDetail);
 
-        group.MapDelete("{id}", DeletePayment);
+        //group.MapDelete("{id}", DeletePayment);
 
     }
 
@@ -25,32 +27,37 @@ public static class PaymentEndpoints
         return Results.Ok();
     }*/
 
-    public static async Task<IResult> GetPaymentDetails(){
+    /*public static async Task<IResult> GetPaymentDetails(){
         //await Console.WriteLine("hola a todos");
         //return Results.Ok();
-    }
+    }*/
 
     public static async Task<IResult> GetPaymentDetail(
-        int id)
+        int id,
+        PaymentsAdmin admin)
     {
-        
+        var payment = await admin.GetPaymentDetailById(id);
+        return Results.Ok(payment);
     }
 
-    public static async Task<IResult> PutPaymentDetail(
+    /*public static async Task<IResult> PutPaymentDetail(
         int id, PaymentDetail paymentDetail)
     {
         
-    }
+    }*/
 
     public static async Task<IResult> PostPaymentDetail(
-        PaymentDetail paymentDetail)
+        PaymentDetail paymentDetail,
+        PaymentsAdmin admin)
     {
-        
+        await admin.CreatePayment(paymentDetail);
+        return Results.Ok();
     }
 
+    /*
     public static async Task<IResult> DeletePayment(
         int id)
     {
         
-    }
+    }*/
 }
