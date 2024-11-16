@@ -32,10 +32,13 @@ builder.Services.AddTransient<PaymentDetailRegistry>();
 
 var app = builder.Build();
 
+
+
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
 app.UseSwagger();
 app.UseSwaggerUI();
+
 
 // Mappings
 app.MapDefaultEndpoints();

@@ -10,6 +10,6 @@ var apiService = builder.AddProject<Projects.ClinicaDental_ApiService>("ApiServi
 
 builder.AddNpmApp("WebApp", "../ClinicaDental.WebApp")
     .WithEnvironment("SERVER_URL", apiService.GetEndpoint("http"))
-    .WithHttpEndpoint(targetPort: 4200);
+    .WithHttpEndpoint(targetPort: 5347);
 
 await builder.Build().RunAsync();
