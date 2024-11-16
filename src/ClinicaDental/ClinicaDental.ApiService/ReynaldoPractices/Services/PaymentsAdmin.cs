@@ -24,4 +24,12 @@ public class PaymentsAdmin
     {
         await this.paymentRegistry.CreatePaymentDetail(paymentDetail);
     }
+
+    public async Task<IEnumerable<PaymentDetail>> GetAllPaymentDetails()
+    {
+        var details = this.paymentRegistry.GetAllDetails();
+        var allDetails = await details.ToListAsync();
+
+        return allDetails;
+    }
 }

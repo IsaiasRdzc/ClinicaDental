@@ -19,6 +19,8 @@ public static class PaymentEndpoints
 
         //group.MapDelete("{id}", DeletePayment);
 
+        group.MapGet(string.Empty, GetAllDetailsNow);
+
     }
 
     /*public static async Task<IResult> CreateDoctorAccount(Doctor doctor,ClinicAdmin clinicAdmin)
@@ -60,4 +62,13 @@ public static class PaymentEndpoints
     {
         
     }*/
+
+    public static async Task<IResult> GetAllDetailsNow(
+        PaymentsAdmin paymentsAdmin
+    )
+    {
+        var details = await paymentsAdmin.GetAllPaymentDetails();
+
+        return Results.Ok(details);
+    }
 }

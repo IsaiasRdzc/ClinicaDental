@@ -58,4 +58,11 @@ public class PaymentDetailRegistry
         await this.context.SaveChangesAsync();
 
     }
+
+    public IQueryable<PaymentDetail> GetAllDetails(){
+        var details = this.context.PaymentDetails
+        .AsQueryable();
+        
+        return details;
+    }
 }
