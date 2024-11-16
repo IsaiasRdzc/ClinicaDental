@@ -1,58 +1,38 @@
 namespace ClinicaDental.ApiService.DataBase.Registries;
 
-using System.Xml.Linq;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 using ClinicaDental.ApiService.DataBase;
-using ClinicaDental.ApiService.DataBase.Models.Supplies;
+using ClinicaDental.ApiService.DataBase.Models;
+
 using Microsoft.EntityFrameworkCore;
 
-public class SuppliesRegistry
+public class SuppliesRegistry(AppDbContext context)
 {
-    private readonly AppDbContext context;
-
-    public SuppliesRegistry(AppDbContext context)
+    public void AddSupply(Supply supply)
     {
-        this.context = context;
+        context.Supplies.Add(supply);
     }
 
-    public async Task<IEnumerable<Supply>> GetSuppliesList()
+    public void RemoveSupply(Supply supply)
     {
-        var suppliesList = await this.context.Supplies.ToListAsync();
-        return suppliesList;
+        context.Supplies.Remove(supply);
     }
 
-    public async Task<Supply?> GetSupplyById(int id)
+    public void UpdateSupply(Supply supply)
     {
-        var supply = await this.context.Supplies.FindAsync(id);
-        return supply;
+        context.Supplies.Update(supply);
     }
 
-    public async Task AddSupply(Supply supply)
+    public IQueryable<Supply> GetSupplies()
     {
-        this.context.Supplies.Add(supply);
-        await this.context.SaveChangesAsync();
+        return context.Supplies.AsQueryable().AsNoTracking();
     }
 
-    public async Task UpdateSupply(Supply supply)
+    public void SaveChanges()
     {
-        // Marcar la entidad como modificada
-        this.context.Supplies.Update(supply);
-
-        // Guardar cambios en la base de datos
-        await this.context.SaveChangesAsync();
-    }
-
-    public async Task DeleteSupply(int id)
-    {
-        var supply = await this.GetSupplyById(id);
-
-        if (supply is null)
-        {
-            throw new KeyNotFoundException($"Supply with ID {id} not found.");
-        }
-
-        this.context.Supplies.Remove(supply);
-        await this.context.SaveChangesAsync();
+        context.SaveChanges();
     }
 
 }

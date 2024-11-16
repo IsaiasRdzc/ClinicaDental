@@ -1,7 +1,4 @@
-namespace ClinicaDental.ApiService.DataBase.Models.Supplies;
-
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+namespace ClinicaDental.ApiService.DataBase.Models;
 
 public class SurgicalSupply : Supply
 {
@@ -10,4 +7,6 @@ public class SurgicalSupply : Supply
     public required string SterilizationMethod { get; set; }
 
     public DateTime SterilizationDate { get; set; }
+
+
 }
