@@ -1,6 +1,8 @@
 ﻿namespace ClinicaDental.ApiService.DataBase;
 
 using ClinicaDental.ApiService.DataBase.Models;
+using ClinicaDental.ApiService.DataBase.Models.Appointments;
+
 using Microsoft.EntityFrameworkCore;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options)

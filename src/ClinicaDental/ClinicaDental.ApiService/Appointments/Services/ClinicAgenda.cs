@@ -1,7 +1,8 @@
 namespace ClinicaDental.ApiService.Appointments.Services;
 
-using ClinicaDental.ApiService.DataBase.Models;
+using ClinicaDental.ApiService.DataBase.Models.Appointments;
 using ClinicaDental.ApiService.DataBase.Registries;
+
 using Microsoft.EntityFrameworkCore;
 
 public class ClinicAgenda
