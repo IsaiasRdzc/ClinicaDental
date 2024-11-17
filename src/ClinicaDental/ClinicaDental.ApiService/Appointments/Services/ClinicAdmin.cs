@@ -62,6 +62,13 @@ public class ClinicAdmin
         }
     }
 
+    public async Task<IEnumerable<Doctor>> GetDoctorsList()
+    {
+        var doctors = await this.doctorRegistry.GetDoctorsList();
+
+        return doctors;
+    }
+
     public async Task SetDoctorDaySchedule(DoctorDaySchedule daySchedule)
     {
         var doctor = await this.doctorRegistry.GetDoctorWithId(daySchedule.DoctorId);

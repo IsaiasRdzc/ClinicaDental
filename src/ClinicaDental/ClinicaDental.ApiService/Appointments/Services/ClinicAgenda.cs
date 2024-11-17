@@ -59,15 +59,15 @@ public class ClinicAgenda
 
         var scheduleModifications = await this.scheduleRegistry.GetScheduleModificationsForDoctorOnDate(doctorId, date);
 
-        var existingAppointments = this.appointmentRegistry.GetAppointmentsListByDate(date);
+        var existingAppointments = await this.appointmentRegistry.GetAppointmentsListByDate(date).ToListAsync();
 
         var availableSlots = new List<TimeOnly>();
         var currentTime = doctorSchedule.StartTime;
 
         while (currentTime < doctorSchedule.EndTime)
         {
-            var slotIsOccupied = await existingAppointments
-                .AnyAsync(appointment => currentTime.IsBetween(appointment.StartTime, appointment.EndTime));
+            var slotIsOccupied = existingAppointments
+                .Exists(appointment => currentTime.IsBetween(appointment.StartTime, appointment.EndTime));
 
             if (slotIsOccupied)
             {
@@ -114,7 +114,7 @@ public class ClinicAgenda
         var doctorAppointments = this.appointmentRegistry.GetAppointmentsListByDoctor(doctorId);
 
         var appointmentsInRange = await doctorAppointments
-            .Where(appointment => IsDateBetween(appointment.Date, dateStart, dateEnd))
+            .Where(appointment => appointment.Date >= dateStart && appointment.Date <= dateEnd)
             .ToListAsync();
 
         return appointmentsInRange;
@@ -136,7 +136,7 @@ public class ClinicAgenda
         var appointments = this.appointmentRegistry.GetAppointmentsList();
 
         var appointmentsInRange = await appointments
-            .Where(appointment => IsDateBetween(appointment.Date, dateStart, dateEnd))
+            .Where(appointment => appointment.Date >= dateStart && appointment.Date <= dateEnd)
             .ToListAsync();
 
         return appointmentsInRange;
