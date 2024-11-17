@@ -7,10 +7,6 @@ body {
   .navbar {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
-
-  #barra{
-    background-color: #0d47a1;
-  }
   
   .homepage {
     
@@ -31,7 +27,7 @@ body {
   }
 
   .navbar-nav .nav-link:hover, .active {
-    color: white; /* Color al pasar el mouse (verde en este caso) */
+    color: #0d47a1; /* Color al pasar el mouse (verde en este caso) */
   }
   
   .navbar-nav .nav-link i {
