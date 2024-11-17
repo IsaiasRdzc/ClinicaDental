@@ -17,6 +17,7 @@ public static class AppointmentsEndpoints
 
         group.MapGet("{id}", GetAppointment);
         group.MapGet(string.Empty, GetAppointmentsInRange);
+        group.MapGet("doctor", GetDoctorsList);
         group.MapGet("doctor/{doctorId}", GetAppointmentsForDoctorInRange);
         group.MapGet("availableSlots", GetAvailableSlots);
         group.MapGet("clinicHours", GetClinicHours);
@@ -125,5 +126,12 @@ public static class AppointmentsEndpoints
     {
         await clinicAdmin.SetDoctorDaySchedule(doctorSchedule);
         return Results.Ok();
+    }
+
+    public static async Task<IResult> GetDoctorsList(
+        ClinicAdmin clinicAdmin)
+    {
+        var doctors = await clinicAdmin.GetDoctorsList();
+        return Results.Ok(doctors);
     }
 }
