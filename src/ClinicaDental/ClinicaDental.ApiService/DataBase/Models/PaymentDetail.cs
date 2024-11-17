@@ -6,13 +6,13 @@ public class PaymentDetail
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int paymentDetailId { get; set; }
+    public int PaymentDetailId { get; set; }
 
-    public string cardOwnerName { get; set; } = "";
+    public string CardOwnerName { get; set; } = "";
 
-    public string cardNumber { get; set; }="";
+    public string CardNumber { get; set; }="";
 
-    public string expirationDate { get; set; }="";
+    public string ExpirationDate { get; set; }="";
 
-    public string securityCode { get; set; }="";
+    public string SecurityCode { get; set; }="";
 }

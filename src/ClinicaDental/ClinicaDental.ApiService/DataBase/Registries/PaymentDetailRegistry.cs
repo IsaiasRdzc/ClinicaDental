@@ -48,11 +48,11 @@ public class PaymentDetailRegistry
             throw new KeyNotFoundException($"Payment with {id} not found.");
         }
 
-        paymentDetail.paymentDetailId = id;
-        paymentDetail.cardOwnerName = name;
-        paymentDetail.cardNumber = number;
-        paymentDetail.expirationDate = expiration;
-        paymentDetail.securityCode = code;
+        paymentDetail.PaymentDetailId = id;
+        paymentDetail.CardOwnerName = name;
+        paymentDetail.CardNumber = number;
+        paymentDetail.ExpirationDate = expiration;
+        paymentDetail.SecurityCode = code;
 
         this.context.PaymentDetails.Update(paymentDetail);
         await this.context.SaveChangesAsync();
