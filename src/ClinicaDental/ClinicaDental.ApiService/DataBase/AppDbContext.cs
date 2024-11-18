@@ -2,6 +2,7 @@
 
 using ClinicaDental.ApiService.DataBase.Models;
 using ClinicaDental.ApiService.DataBase.Models.Appointments;
+using ClinicaDental.ApiService.DataBase.Models.MedicalRecords;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<DoctorDaySchedule> DoctorDaySchedules { get; init; }
 
     public DbSet<ScheduleModification> ScheduleModifications { get; init; }
+
+    public DbSet<MedicalRecord> MedicalRecords { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

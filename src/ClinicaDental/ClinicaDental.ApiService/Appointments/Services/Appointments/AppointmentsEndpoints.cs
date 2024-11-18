@@ -1,6 +1,5 @@
-namespace ClinicaDental.ApiService.Appointments;
+namespace ClinicaDental.ApiService.Appointments.Services.Appointments;
 
-using ClinicaDental.ApiService.Appointments.Services;
 using ClinicaDental.ApiService.DataBase.Models.Appointments;
 using ClinicaDental.ApiService.DataBase.Registries;
 

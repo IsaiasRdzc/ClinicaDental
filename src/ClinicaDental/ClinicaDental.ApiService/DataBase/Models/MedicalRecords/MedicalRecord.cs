@@ -7,11 +7,17 @@ public class MedicalRecord
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int RecordId { get; private set; }
+    public int MedicalRecordId { get; private set; }
+
+    [Required]
+    public int DoctorId { get; set; }
+
+    [Required]
+    public int PatientId { get; set; }
 
     public DateTime DateCreated { get; init; }
 
-    public ICollection<Illness> Diagnostic { get; set; }
+    public ICollection<Illness> Diagnosis { get; set; }
 
     public ICollection<Teeth> Teeths { get; set; }
 

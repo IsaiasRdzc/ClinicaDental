@@ -1,8 +1,7 @@
-using ClinicaDental.ApiService.Appointments;
-using ClinicaDental.ApiService.Appointments.Services;
+using ClinicaDental.ApiService.Appointments.Services.Appointments;
 using ClinicaDental.ApiService.DataBase;
 using ClinicaDental.ApiService.DataBase.Models;
-using ClinicaDental.ApiService.DataBase.Registries;
+using ClinicaDental.ApiService.DataBase.Registries.Appointments;
 
 var builder = WebApplication.CreateBuilder(args);
 
