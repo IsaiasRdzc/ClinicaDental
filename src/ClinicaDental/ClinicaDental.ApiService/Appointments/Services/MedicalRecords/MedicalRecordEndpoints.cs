@@ -6,19 +6,25 @@ using Microsoft.EntityFrameworkCore;
 
 public static class MedicalRecordEndpoints
 {
-    public static void MapMedicalRecordEndpoints(this IEndpointRouteBuilder app)
+    public static void MapMedicalRecordsEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("api/medicalRecords");
         group.MapPost("newRecord", CreateRecord);
-        group.MapGet("searchRecord", SearchRecord);
 
+        group.MapGet("searchRecordById/{medicalRecordId}", SearchRecordById);
+        group.MapGet("searchRecordByDoctorId/{doctorId}", SearchRecordsByDoctorId);
+        group.MapGet("searchRecordByPatientId/{patientId}", SearchRecordsByPatientId);
+
+        group.MapPut("updateRecord", UpdateRecord);
+
+        group.MapDelete("deleteRecordById/{medicalRecordId}", DeleteMedicalRecordByRecordId);
     }
 
     public static async Task<IResult> CreateRecord(MedicalRecord medicalRecord, MedicalRecordsManager medicalRecordsManager)
     {
         try
         {
-            await medicalRecordsManager.SaveMedicalRecord(1, medicalRecord);
+            await medicalRecordsManager.SaveMedicalRecord(medicalRecord);
             return Results.Ok();
         }
         catch (ArgumentException error)
@@ -27,11 +33,71 @@ public static class MedicalRecordEndpoints
         }
     }
 
-    public static async Task<IResult> SearchRecord(int medicalRecordId, MedicalRecordsManager medicalRecordsManager)
+    public static async Task<IResult> UpdateRecord(MedicalRecord medicalRecord, MedicalRecordsManager medicalRecordsManager)
     {
         try
         {
-            var medicalRecords = await medicalRecordsManager.SearchMedicalRecordByRecordId(1, medicalRecordId).ToListAsync();
+            await medicalRecordsManager.UpdateMedicalRecord(medicalRecord);
+            return Results.Ok();
+        }
+        catch (ArgumentException error)
+        {
+            return Results.BadRequest(error.Message);
+        }
+        catch (KeyNotFoundException error)
+        {
+            return Results.NotFound(error.Message);
+        }
+    }
+
+    public static async Task<IResult> DeleteMedicalRecordByRecordId(int medicalRecordId, MedicalRecordsManager medicalRecordsManager)
+    {
+        try
+        {
+            await medicalRecordsManager.DeleteMedicalRecordByRecordId(medicalRecordId);
+            return Results.Ok();
+        }
+        catch (ArgumentException error)
+        {
+            return Results.BadRequest(error.Message);
+        }
+        catch (KeyNotFoundException error)
+        {
+            return Results.NotFound(error.Message);
+        }
+    }
+
+    public static async Task<IResult> SearchRecordById(int medicalRecordId, MedicalRecordsManager medicalRecordsManager)
+    {
+        try
+        {
+            var medicalRecords = await medicalRecordsManager.SearchMedicalRecordByRecordId(medicalRecordId).ToListAsync();
+            return Results.Ok(medicalRecords);
+        }
+        catch (KeyNotFoundException error)
+        {
+            return Results.NotFound(error.Message);
+        }
+    }
+
+    public static async Task<IResult> SearchRecordsByPatientId(int patientId, MedicalRecordsManager medicalRecordsManager)
+    {
+        try
+        {
+            var medicalRecords = await medicalRecordsManager.SearchMedicalRecordsByPatientId(patientId).ToListAsync();
+            return Results.Ok(medicalRecords);
+        }
+        catch (KeyNotFoundException error)
+        {
+            return Results.NotFound(error.Message);
+        }
+    }
+
+    public static async Task<IResult> SearchRecordsByDoctorId(int doctorId, MedicalRecordsManager medicalRecordsManager)
+    {
+        try
+        {
+            var medicalRecords = await medicalRecordsManager.SearchMedicalRecordsByDoctorId(doctorId).ToListAsync();
             return Results.Ok(medicalRecords);
         }
         catch (KeyNotFoundException error)

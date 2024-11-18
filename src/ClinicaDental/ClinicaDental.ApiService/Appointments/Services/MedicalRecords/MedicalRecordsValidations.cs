@@ -11,14 +11,14 @@ public static class MedicalRecordsValidations
         return medicalRecord.Teeths.Count > 0;
     }
 
-    public static bool IsInAcceptableTime(MedicalRecord medicalRecord)
+    public static bool IsInAcceptableTime(DateTime medicalRecordTime)
     {
 
         DateTime currentTime = DateTime.Now;
         TimeSpan maxDelay = TimeSpan.FromHours(AcceptableTimeInHours);
-        TimeSpan difference = currentTime - medicalRecord.DateCreated;
+        TimeSpan difference = currentTime - medicalRecordTime;
 
-        return difference <= maxDelay && medicalRecord.DateCreated <= currentTime;
+        return difference <= maxDelay && medicalRecordTime <= currentTime;
     }
 
     public static bool HasValidPatientInfo(MedicalRecord medicalRecord)

@@ -66,31 +66,14 @@ public class MedicalRecordsRegistry
     public async Task DeleteMedicalRecordByRecordId(int medicalRecordId)
     {
         var existingMedicalRecord = this.GetMedicalRecordByMedicalRecordId(medicalRecordId);
-
-        if (existingMedicalRecord is not null)
-        {
-            this.context.Remove(existingMedicalRecord);
-            await this.context.SaveChangesAsync();
-        }
-        else
-        {
-            throw new KeyNotFoundException($"MedicalRecord with id {medicalRecordId} not found.");
-        }
+        this.context.Remove(existingMedicalRecord);
+        await this.context.SaveChangesAsync();
     }
 
     public async Task UpdateMedicalRecord(MedicalRecord medicalRecord)
     {
-        var existingMedicalRecord = this.GetMedicalRecordByMedicalRecordId(medicalRecord.MedicalRecordId);
-
-        if (existingMedicalRecord is not null)
-        {
-            this.context.MedicalRecords.Update(medicalRecord);
-            await this.context.SaveChangesAsync();
-        }
-        else
-        {
-            throw new KeyNotFoundException($"MedicalRecord with id {medicalRecord.MedicalRecordId} not found.");
-        }
+        this.context.MedicalRecords.Update(medicalRecord);
+        await this.context.SaveChangesAsync();
     }
 
     public IQueryable<MedicalRecord> GetMedicalRecordsByPatientIdWithinTimeSpan(int patientId,DateTime startDate, DateTime finalDate)

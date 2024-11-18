@@ -41,7 +41,7 @@ app.UseSwaggerUI();
 app.MapDefaultEndpoints();
 app.MapControllers();
 app.MapAppointmentsEndpoints();
-app.MapMedicalRecordEndpoints();
+app.MapMedicalRecordsEndpoints();
 
 // Initialize the database
 await app.InitializeDatabase();
