@@ -2,6 +2,8 @@
 
 using ClinicaDental.ApiService.DataBase.Models.MedicalRecords;
 
+using Microsoft.EntityFrameworkCore;
+
 public class MedicalRecordsRegistry
 {
     private readonly AppDbContext context;
@@ -20,7 +22,22 @@ public class MedicalRecordsRegistry
     {
         var medicalRecords = this.context.MedicalRecords
         .AsQueryable()
-        .Where(medicalRecord => medicalRecord.PatientId == patientId);
+        .Where(medicalRecord => medicalRecord.PatientId == patientId)
+            .Include(medicalRecord => medicalRecord.Diagnosis).ThenInclude(illness => illness.Treatments)
+            .Include(medicalRecord => medicalRecord.MedicalProcedures)
+            .Include(medicalRecord => medicalRecord.Teeths);
+
+        return medicalRecords;
+    }
+
+    public IQueryable<MedicalRecord> GetMedicalRecordByMedicalRecordId(int medicalRecordId)
+    {
+        var medicalRecords = this.context.MedicalRecords
+        .AsQueryable()
+        .Where(medicalRecord => medicalRecord.MedicalRecordId == medicalRecordId)
+            .Include(medicalRecord => medicalRecord.Diagnosis).ThenInclude(illness => illness.Treatments)
+            .Include(medicalRecord => medicalRecord.MedicalProcedures)
+            .Include(medicalRecord => medicalRecord.Teeths);
 
         return medicalRecords;
     }
@@ -29,7 +46,10 @@ public class MedicalRecordsRegistry
     {
         var medicalRecords = this.context.MedicalRecords
         .AsQueryable()
-        .Where(medicalRecord => medicalRecord.PatientId == doctorId);
+        .Where(medicalRecord => medicalRecord.PatientId == doctorId)
+            .Include(medicalRecord => medicalRecord.Diagnosis).ThenInclude(illness => illness.Treatments)
+            .Include(medicalRecord => medicalRecord.MedicalProcedures)
+            .Include(medicalRecord => medicalRecord.Teeths); ;
 
         return medicalRecords;
     }
@@ -43,19 +63,53 @@ public class MedicalRecordsRegistry
         }
     }
 
-    public async Task DeleteMedicalRecord(int medicalRecordId)
+    public async Task DeleteMedicalRecordByRecordId(int medicalRecordId)
     {
-        var medicalRecord = this.GetMedicalRecordsByPatientId(medicalRecordId);
+        var existingMedicalRecord = this.GetMedicalRecordByMedicalRecordId(medicalRecordId);
 
-        if (medicalRecord is not null)
+        if (existingMedicalRecord is not null)
         {
-            this.context.Remove(medicalRecord);
+            this.context.Remove(existingMedicalRecord);
+            await this.context.SaveChangesAsync();
         }
         else
         {
-            throw new KeyNotFoundException($"MedicalRecord with id {medicalRecord} not found.");
+            throw new KeyNotFoundException($"MedicalRecord with id {medicalRecordId} not found.");
         }
+    }
 
-        await this.context.SaveChangesAsync();
+    public async Task UpdateMedicalRecord(MedicalRecord medicalRecord)
+    {
+        var existingMedicalRecord = this.GetMedicalRecordByMedicalRecordId(medicalRecord.MedicalRecordId);
+
+        if (existingMedicalRecord is not null)
+        {
+            this.context.MedicalRecords.Update(medicalRecord);
+            await this.context.SaveChangesAsync();
+        }
+        else
+        {
+            throw new KeyNotFoundException($"MedicalRecord with id {medicalRecord.MedicalRecordId} not found.");
+        }
+    }
+
+    public IQueryable<MedicalRecord> GetMedicalRecordsByPatientIdWithinTimeSpan(int patientId,DateTime startDate, DateTime finalDate)
+    {
+        var medicalRecords = this.GetMedicalRecordsByPatientId(patientId)
+            .Include(medicalRecord => medicalRecord.Diagnosis).ThenInclude(illness => illness.Treatments)
+            .Include(medicalRecord => medicalRecord.MedicalProcedures)
+            .Include(medicalRecord => medicalRecord.Teeths);
+
+        return medicalRecords.Where(medicalRecord => medicalRecord.DateCreated >= startDate && medicalRecord.DateCreated <= finalDate);
+    }
+
+    public IQueryable<MedicalRecord> GetMedicalRecordsByDoctorIdWithinTimeSpan(int patientId, DateTime startDate, DateTime finalDate)
+    {
+        var medicalRecords = this.GetMedicalRecordsByDoctortId(patientId)
+            .Include(medicalRecord => medicalRecord.Diagnosis).ThenInclude(illness => illness.Treatments)
+            .Include(medicalRecord => medicalRecord.MedicalProcedures)
+            .Include(medicalRecord => medicalRecord.Teeths);
+
+        return medicalRecords.Where(medicalRecord => medicalRecord.DateCreated >= startDate && medicalRecord.DateCreated <= finalDate);
     }
 }

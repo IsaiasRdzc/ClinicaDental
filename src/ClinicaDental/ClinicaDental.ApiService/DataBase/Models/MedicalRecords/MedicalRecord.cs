@@ -17,9 +17,9 @@ public class MedicalRecord
 
     public DateTime DateCreated { get; init; }
 
-    public ICollection<Illness> Diagnosis { get; set; }
+    public ICollection<Illness> Diagnosis { get; set; } = new List<Illness>();
 
-    public ICollection<Teeth> Teeths { get; set; }
+    public ICollection<Teeth> Teeths { get; set; } = new List<Teeth>();
 
-    public ICollection<MedicalProcedure> MedicalProcedures { get; set; }
+    public ICollection<MedicalProcedure> MedicalProcedures { get; set; } = new List<MedicalProcedure>();
 }

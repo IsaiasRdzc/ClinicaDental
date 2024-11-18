@@ -1,7 +1,8 @@
 using ClinicaDental.ApiService.Appointments.Services.Appointments;
+using ClinicaDental.ApiService.Appointments.Services.MedicalRecords;
 using ClinicaDental.ApiService.DataBase;
-using ClinicaDental.ApiService.DataBase.Models;
 using ClinicaDental.ApiService.DataBase.Registries.Appointments;
+using ClinicaDental.ApiService.DataBase.Registries.MedicalRecords;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,10 +21,14 @@ builder.Services.AddTransient<ClinicReceptionist>();
 builder.Services.AddTransient<ClinicAgenda>();
 builder.Services.AddTransient<ClinicAdmin>();
 
+builder.Services.AddTransient<MedicalRecordsManager>();
+
 // Registries
 builder.Services.AddTransient<AppointmentRegistry>();
 builder.Services.AddTransient<ScheduleRegistry>();
 builder.Services.AddTransient<DoctorRegistry>();
+
+builder.Services.AddTransient<MedicalRecordsRegistry>();
 
 var app = builder.Build();
 
@@ -36,6 +41,7 @@ app.UseSwaggerUI();
 app.MapDefaultEndpoints();
 app.MapControllers();
 app.MapAppointmentsEndpoints();
+app.MapMedicalRecordEndpoints();
 
 // Initialize the database
 await app.InitializeDatabase();

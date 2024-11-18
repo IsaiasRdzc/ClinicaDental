@@ -1,14 +1,19 @@
 ﻿namespace ClinicaDental.ApiService.DataBase.Models.MedicalRecords;
 
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 public class Illness
 {
-    [Required]
-    private string? Name { get; init; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int IllnessId { get; private set; }
 
     [Required]
-    private string? Description { get; set; }
+    public string Name { get; set; }
 
-    public ICollection<Medicine>? Treatments { get; set; }
+    [Required]
+    public string Description { get; set; }
+
+    public ICollection<Medicine> Treatments { get; set; }
 }

@@ -50,5 +50,25 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             new DoctorDaySchedule(5) { DoctorId = 1, DayOfWeek = DayOfWeek.Thursday, StartTime = new TimeOnly(10, 0), EndTime = new TimeOnly(16, 0) },
             new DoctorDaySchedule(6) { DoctorId = 1, DayOfWeek = DayOfWeek.Friday, StartTime = new TimeOnly(10, 0), EndTime = new TimeOnly(16, 0) },
             new DoctorDaySchedule(7) { DoctorId = 1, DayOfWeek = DayOfWeek.Saturday, StartTime = new TimeOnly(10, 0), EndTime = new TimeOnly(14, 0) });
+
+        modelBuilder.Entity<MedicalRecord>()
+            .HasMany(r => r.Diagnosis)
+            .WithOne()
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<MedicalRecord>()
+            .HasMany(r => r.MedicalProcedures)
+            .WithOne()
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<MedicalRecord>()
+            .HasMany(r => r.Teeths)
+            .WithOne()
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Illness>()
+           .HasMany(r => r.Treatments) // medicine
+           .WithOne()
+           .OnDelete(DeleteBehavior.Cascade);
     }
 }
