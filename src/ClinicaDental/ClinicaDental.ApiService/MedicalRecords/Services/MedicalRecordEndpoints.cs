@@ -12,8 +12,8 @@ public static class MedicalRecordEndpoints
         group.MapPost("newRecord", CreateRecord);
 
         group.MapGet("searchRecordById/{medicalRecordId}", SearchRecordById);
-        group.MapGet("searchRecordByDoctorId/{doctorId}", SearchRecordsByDoctorId);
-        group.MapGet("searchRecordByPatientId/{patientId}", SearchRecordsByPatientId);
+        group.MapGet("searchRecordsByDoctorId/{doctorId}", SearchRecordsByDoctorId);
+        group.MapGet("searchRecordsByPatientId/{patientId}", SearchRecordsByPatientId);
 
         group.MapPut("updateRecord", UpdateRecord);
 

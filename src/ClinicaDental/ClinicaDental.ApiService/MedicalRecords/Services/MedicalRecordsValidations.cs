@@ -1,4 +1,4 @@
-﻿namespace ClinicaDental.ApiService.Appointments.Services.MedicalRecords;
+﻿namespace ClinicaDental.ApiService.MedicalRecords.Services;
 
 using ClinicaDental.ApiService.DataBase.Models.MedicalRecords;
 
@@ -15,7 +15,7 @@ public static class MedicalRecordsValidations
     {
 
         DateTime currentTime = DateTime.Now;
-        TimeSpan maxDelay = TimeSpan.FromHours(AcceptableTimeInHours);
+        var maxDelay = TimeSpan.FromHours(AcceptableTimeInHours);
         TimeSpan difference = currentTime - medicalRecordTime;
 
         return difference <= maxDelay && medicalRecordTime <= currentTime;
