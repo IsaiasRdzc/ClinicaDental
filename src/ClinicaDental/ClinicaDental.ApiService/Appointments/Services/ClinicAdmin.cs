@@ -14,7 +14,7 @@ public class ClinicAdmin
         this.doctorRegistry = doctorRegistry;
     }
 
-    public async Task<IEnumerable<ClinicDayBussinesHours?>> GetClinicBussinesHours()
+    public async Task<List<ClinicDayBussinesHours>> GetClinicBussinesHours()
     {
         var clinicHours = await this.scheduleRegistry.GetClinicHoursList();
 
@@ -62,7 +62,7 @@ public class ClinicAdmin
         }
     }
 
-    public async Task<IEnumerable<Doctor>> GetDoctorsList()
+    public async Task<List<Doctor>> GetDoctorsList()
     {
         var doctors = await this.doctorRegistry.GetDoctorsList();
 

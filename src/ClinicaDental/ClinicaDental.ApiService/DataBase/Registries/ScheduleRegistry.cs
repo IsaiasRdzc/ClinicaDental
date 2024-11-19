@@ -30,7 +30,7 @@ public class ScheduleRegistry
         return schedule;
     }
 
-    public async Task<IEnumerable<DoctorDaySchedule>> GetDoctorSchedules(int doctorId)
+    public async Task<List<DoctorDaySchedule>> GetDoctorSchedules(int doctorId)
     {
         return await this.context.DoctorDaySchedules
             .Where(ds => ds.DoctorId == doctorId)
@@ -76,14 +76,14 @@ public class ScheduleRegistry
         return await this.context.ScheduleModifications.FindAsync(id);
     }
 
-    public async Task<IEnumerable<ScheduleModification>> GetScheduleModificationsByDate(DateOnly date)
+    public async Task<List<ScheduleModification>> GetScheduleModificationsByDate(DateOnly date)
     {
         return await this.context.ScheduleModifications
             .Where(mod => mod.Date == date)
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<ScheduleModification>> GetScheduleModificationsForDoctorOnDate(int doctorId, DateOnly date)
+    public async Task<List<ScheduleModification>> GetScheduleModificationsForDoctorOnDate(int doctorId, DateOnly date)
     {
         return await this.context.ScheduleModifications
             .Where(mod => mod.Date == date && mod.DoctorId == doctorId)
@@ -118,7 +118,7 @@ public class ScheduleRegistry
         return await this.context.ClinicDayBussinesHours.FindAsync(id);
     }
 
-    public async Task<IEnumerable<ClinicDayBussinesHours?>> GetClinicHoursList()
+    public async Task<List<ClinicDayBussinesHours>> GetClinicHoursList()
     {
         return await this.context.ClinicDayBussinesHours.ToListAsync();
     }

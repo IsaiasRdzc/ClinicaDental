@@ -13,7 +13,7 @@ public class DoctorRegistry
         this.context = context;
     }
 
-    public async Task<IEnumerable<Doctor>> GetDoctorsList()
+    public async Task<List<Doctor>> GetDoctorsList()
     {
         return await this.context.Doctors.ToListAsync();
     }
