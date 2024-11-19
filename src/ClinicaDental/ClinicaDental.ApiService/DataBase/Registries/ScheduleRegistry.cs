@@ -20,26 +20,29 @@ public class ScheduleRegistry
         await this.context.SaveChangesAsync();
     }
 
-    public async Task<DoctorDaySchedule?> GetDoctorSchedule(int doctorId, DayOfWeek dayOfWeek)
+    public DoctorDaySchedule? GetDoctorSchedule(int doctorId, DayOfWeek dayOfWeek)
     {
-        var schedules = await this.GetDoctorSchedules(doctorId);
+        var schedules = this.GetDoctorSchedules(doctorId);
 
         var schedule = schedules
-            .First(schedule => schedule.DayOfWeek == dayOfWeek);
+            .Where(schedule => schedule.DayOfWeek == dayOfWeek)
+            .FirstOrDefault();
 
         return schedule;
     }
 
-    public async Task<List<DoctorDaySchedule>> GetDoctorSchedules(int doctorId)
+    public IQueryable<DoctorDaySchedule> GetDoctorSchedules(int doctorId)
     {
-        return await this.context.DoctorDaySchedules
+        var doctorSchedules = this.context.DoctorDaySchedules
             .Where(ds => ds.DoctorId == doctorId)
-            .ToListAsync();
+            .AsQueryable();
+
+        return doctorSchedules;
     }
 
     public async Task UpdateDoctorSchedule(DoctorDaySchedule doctorSchedule)
     {
-        var existingSchedule = await this.GetDoctorSchedule(doctorSchedule.DoctorId, doctorSchedule.DayOfWeek);
+        var existingSchedule = this.GetDoctorSchedule(doctorSchedule.DoctorId, doctorSchedule.DayOfWeek);
 
         if (existingSchedule is null)
         {
@@ -56,7 +59,7 @@ public class ScheduleRegistry
 
     public async Task DeleteDoctorSchedule(int doctorId, DayOfWeek dayOfWeek)
     {
-        var doctorSchedule = await this.GetDoctorSchedule(doctorId, dayOfWeek);
+        var doctorSchedule = this.GetDoctorSchedule(doctorId, dayOfWeek);
         if (doctorSchedule != null)
         {
             this.context.DoctorDaySchedules.Remove(doctorSchedule);
@@ -76,18 +79,22 @@ public class ScheduleRegistry
         return await this.context.ScheduleModifications.FindAsync(id);
     }
 
-    public async Task<List<ScheduleModification>> GetScheduleModificationsByDate(DateOnly date)
+    public IQueryable<ScheduleModification> GetScheduleModificationsByDate(DateOnly date)
     {
-        return await this.context.ScheduleModifications
+        var scheduleModifications = this.context.ScheduleModifications
             .Where(mod => mod.Date == date)
-            .ToListAsync();
+            .AsQueryable();
+
+        return scheduleModifications;
     }
 
-    public async Task<List<ScheduleModification>> GetScheduleModificationsForDoctorOnDate(int doctorId, DateOnly date)
+    public IQueryable<ScheduleModification> GetScheduleModificationsForDoctorOnDate(int doctorId, DateOnly date)
     {
-        return await this.context.ScheduleModifications
+        var scheduleModifications = this.context.ScheduleModifications
             .Where(mod => mod.Date == date && mod.DoctorId == doctorId)
-            .ToListAsync();
+            .AsQueryable();
+
+        return scheduleModifications;
     }
 
     public async Task UpdateScheduleModification(ScheduleModification modification)
@@ -118,9 +125,9 @@ public class ScheduleRegistry
         return await this.context.ClinicDayBussinesHours.FindAsync(id);
     }
 
-    public async Task<List<ClinicDayBussinesHours>> GetClinicHoursList()
+    public IQueryable<ClinicDayBussinesHours> GetClinicHoursList()
     {
-        return await this.context.ClinicDayBussinesHours.ToListAsync();
+        return this.context.ClinicDayBussinesHours.AsQueryable();
     }
 
     public async Task<ClinicDayBussinesHours?> GetClinicHoursByDay(DayOfWeek dayOfWeek)
