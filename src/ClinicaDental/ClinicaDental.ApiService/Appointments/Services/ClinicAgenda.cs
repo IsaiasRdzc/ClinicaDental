@@ -3,6 +3,8 @@ namespace ClinicaDental.ApiService.Appointments.Services;
 using ClinicaDental.ApiService.DataBase.Models;
 using ClinicaDental.ApiService.DataBase.Registries;
 
+using Microsoft.EntityFrameworkCore;
+
 public class ClinicAgenda
 {
     private readonly AppointmentRegistry appointmentRegistry;
@@ -56,9 +58,9 @@ public class ClinicAgenda
             return new List<TimeOnly>();
         }
 
-        var scheduleModifications = await this.scheduleRegistry.GetScheduleModificationsForDoctorOnDate(doctorId, date);
+        var scheduleModifications = await this.scheduleRegistry.GetScheduleModificationsForDoctorOnDate(doctorId, date).ToListAsync();
 
-        var existingAppointments = await this.appointmentRegistry.GetAppointmentsListByDate(date);
+        var existingAppointments = await this.appointmentRegistry.GetAppointmentsListByDate(date).ToListAsync();
 
         var availableSlots = new List<TimeOnly>();
         var currentTime = doctorSchedule.StartTime;
@@ -99,40 +101,40 @@ public class ClinicAgenda
 
     public async Task<List<Appointment>> GetAppointmentsForDoctorInDate(int doctorId, DateOnly date)
     {
-        var doctorAppointments = await this.appointmentRegistry.GetAppointmentsListByDoctor(doctorId);
+        var doctorAppointments = this.appointmentRegistry.GetAppointmentsListByDoctor(doctorId);
 
-        var appointmentsInDate = doctorAppointments
-            .Where(appointment => appointment.Date == date).ToList();
+        var appointmentsInDate = await doctorAppointments
+            .Where(appointment => appointment.Date == date).ToListAsync();
 
         return appointmentsInDate;
     }
 
     public async Task<List<Appointment>> GetAppointmentsForDoctorInRange(int doctorId, DateOnly dateStart, DateOnly dateEnd)
     {
-        var doctorAppointments = await this.appointmentRegistry.GetAppointmentsListByDoctor(doctorId);
+        var doctorAppointments = this.appointmentRegistry.GetAppointmentsListByDoctor(doctorId);
 
-        var appointmentsInRange = doctorAppointments
-            .Where(appointment => IsDateBetween(appointment.Date, dateStart, dateEnd)).ToList();
+        var appointmentsInRange = await doctorAppointments
+            .Where(appointment => IsDateBetween(appointment.Date, dateStart, dateEnd)).ToListAsync();
 
         return appointmentsInRange;
     }
 
     public async Task<List<Appointment>> GetAllAppointmentsInDate(DateOnly date)
     {
-        var appointments = await this.appointmentRegistry.GetAppointmentsList();
+        var appointments = this.appointmentRegistry.GetAppointmentsList();
 
-        var appointmentsInDate = appointments
-            .Where(appointment => appointment.Date == date).ToList();
+        var appointmentsInDate = await appointments
+            .Where(appointment => appointment.Date == date).ToListAsync();
 
         return appointmentsInDate;
     }
 
     public async Task<List<Appointment>> GetAllAppointmentsInRange(DateOnly dateStart, DateOnly dateEnd)
     {
-        var appointments = await this.appointmentRegistry.GetAppointmentsList();
+        var appointments = this.appointmentRegistry.GetAppointmentsList();
 
-        var appointmentsInRange = appointments
-            .Where(appointment => IsDateBetween(appointment.Date, dateStart, dateEnd)).ToList();
+        var appointmentsInRange = await appointments
+            .Where(appointment => IsDateBetween(appointment.Date, dateStart, dateEnd)).ToListAsync();
 
         return appointmentsInRange;
     }
