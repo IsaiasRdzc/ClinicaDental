@@ -1,7 +1,10 @@
 namespace ClinicaDental.ApiService.DataBase.Registries;
 
+using System.Diagnostics;
+
 using ClinicaDental.ApiService.DataBase;
 using ClinicaDental.ApiService.DataBase.Models;
+
 using Microsoft.EntityFrameworkCore;
 
 public class AppointmentRegistry
@@ -13,28 +16,28 @@ public class AppointmentRegistry
         this.context = context;
     }
 
-    public async Task<IEnumerable<Appointment>> GetAppointmentsList()
+    public IQueryable<Appointment> GetAppointmentsList()
     {
-        var appointmentsList = await this.context.Appointments.ToListAsync();
+        var appointmentsList = this.context.Appointments.AsQueryable();
         return appointmentsList;
     }
 
-    public async Task<IEnumerable<Appointment>> GetAppointmentsListByDate(DateOnly date)
+    public IQueryable<Appointment> GetAppointmentsListByDate(DateOnly date)
     {
-        var appointments = await this.context.Appointments
+        var appointmentsList = this.context.Appointments
         .Where(appointment => appointment.Date == date)
-        .ToListAsync();
+        .AsQueryable();
 
-        return appointments;
+        return appointmentsList;
     }
 
-    public async Task<IEnumerable<Appointment>> GetAppointmentsListByDoctor(int doctorId)
+    public IQueryable<Appointment> GetAppointmentsListByDoctor(int doctorId)
     {
-        var appointments = await this.context.Appointments
+        var appointmentsList = this.context.Appointments
         .Where(appointment => appointment.DoctorId == doctorId)
-        .ToListAsync();
+        .AsQueryable();
 
-        return appointments;
+        return appointmentsList;
     }
 
     public async Task<Appointment?> GetAppointmentByFolio(int folio)

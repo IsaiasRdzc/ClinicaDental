@@ -6,17 +6,17 @@ using Microsoft.EntityFrameworkCore;
 public class AppDbContext(DbContextOptions<AppDbContext> options)
     : DbContext(options)
 {
-    public DbSet<Supply> Supplies { get; init; }
+    public required DbSet<Supply> Supplies { get; init; }
 
-    public DbSet<Appointment> Appointments { get; init; }
+    public required DbSet<Appointment> Appointments { get; init; }
 
-    public DbSet<Doctor> Doctors { get; init; }
+    public required DbSet<Doctor> Doctors { get; init; }
 
-    public DbSet<ClinicDayBussinesHours> ClinicDayBussinesHours { get; init; }
+    public required DbSet<ClinicDayBussinesHours> ClinicDayBussinesHours { get; init; }
 
-    public DbSet<DoctorDaySchedule> DoctorDaySchedules { get; init; }
+    public required DbSet<DoctorDaySchedule> DoctorDaySchedules { get; init; }
 
-    public DbSet<ScheduleModification> ScheduleModifications { get; init; }
+    public required DbSet<ScheduleModification> ScheduleModifications { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
