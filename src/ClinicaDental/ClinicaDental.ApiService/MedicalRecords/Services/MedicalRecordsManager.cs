@@ -1,4 +1,4 @@
-﻿namespace ClinicaDental.ApiService.Appointments.Services.MedicalRecords;
+﻿namespace ClinicaDental.ApiService.MedicalRecords.Services;
 
 using System;
 
@@ -33,8 +33,7 @@ public class MedicalRecordsManager
 
     public async Task DeleteMedicalRecordByRecordId(int medicalRecordId)
     {
-        var existingRrecords = this.medicalRecordsRegistry.GetMedicalRecordByMedicalRecordId(medicalRecordId);
-        var existingRecord = existingRrecords.First();
+        var existingRecord = await this.medicalRecordsRegistry.GetMedicalRecordByMedicalRecordId(medicalRecordId);
 
         if (existingRecord is not null)
         {
@@ -53,8 +52,7 @@ public class MedicalRecordsManager
 
     public async Task UpdateMedicalRecord(MedicalRecord medicalRecord)
     {
-        var existingRrecords = this.medicalRecordsRegistry.GetMedicalRecordByMedicalRecordId(medicalRecord.MedicalRecordId);
-        var existingRecord = existingRrecords.First();
+        var existingRecord = await this.medicalRecordsRegistry.GetMedicalRecordByMedicalRecordId(medicalRecord.MedicalRecordId);
 
         if (existingRecord is not null)
         {
@@ -99,13 +97,13 @@ public class MedicalRecordsManager
         }
     }
 
-    public IQueryable<MedicalRecord> SearchMedicalRecordByRecordId(int medicalRecordId)
+    public async Task<MedicalRecord?> SearchMedicalRecordByRecordId(int medicalRecordId)
     {
-        var existingRrecords = this.medicalRecordsRegistry.GetMedicalRecordByMedicalRecordId(medicalRecordId);
+        var existingRecord = await this.medicalRecordsRegistry.GetMedicalRecordByMedicalRecordId(medicalRecordId);
 
-        if (existingRrecords.FirstOrDefault() is not null)
+        if (existingRecord is not null)
         {
-           return existingRrecords;
+            return existingRecord;
         }
         else
         {

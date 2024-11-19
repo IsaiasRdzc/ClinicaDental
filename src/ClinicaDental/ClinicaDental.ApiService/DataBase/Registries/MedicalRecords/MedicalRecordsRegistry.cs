@@ -30,16 +30,16 @@ public class MedicalRecordsRegistry
         return medicalRecords;
     }
 
-    public IQueryable<MedicalRecord> GetMedicalRecordByMedicalRecordId(int medicalRecordId)
+    public async Task<MedicalRecord?> GetMedicalRecordByMedicalRecordId(int medicalRecordId)
     {
-        var medicalRecords = this.context.MedicalRecords
-        .AsQueryable()
-        .Where(medicalRecord => medicalRecord.MedicalRecordId == medicalRecordId)
+        var medicalRecord = await this.context.MedicalRecords
+            .Where(medicalRecord => medicalRecord.MedicalRecordId == medicalRecordId)
             .Include(medicalRecord => medicalRecord.Diagnosis).ThenInclude(illness => illness.Treatments)
             .Include(medicalRecord => medicalRecord.MedicalProcedures)
-            .Include(medicalRecord => medicalRecord.Teeths);
+            .Include(medicalRecord => medicalRecord.Teeths)
+            .FirstOrDefaultAsync();
 
-        return medicalRecords;
+        return medicalRecord;
     }
 
     public IQueryable<MedicalRecord> GetMedicalRecordsByDoctortId(int doctorId)

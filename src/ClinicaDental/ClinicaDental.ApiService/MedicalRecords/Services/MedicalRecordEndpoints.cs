@@ -1,4 +1,4 @@
-﻿namespace ClinicaDental.ApiService.Appointments.Services.MedicalRecords;
+﻿namespace ClinicaDental.ApiService.MedicalRecords.Services;
 
 using ClinicaDental.ApiService.DataBase.Models.MedicalRecords;
 
@@ -71,8 +71,8 @@ public static class MedicalRecordEndpoints
     {
         try
         {
-            var medicalRecords = await medicalRecordsManager.SearchMedicalRecordByRecordId(medicalRecordId).ToListAsync();
-            return Results.Ok(medicalRecords);
+            var medicalRecord = await medicalRecordsManager.SearchMedicalRecordByRecordId(medicalRecordId);
+            return Results.Ok(medicalRecord);
         }
         catch (KeyNotFoundException error)
         {
