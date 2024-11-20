@@ -2,8 +2,11 @@
 
 using System;
 
+using ClinicaDental.ApiService.DataBase.Models.Appointments;
 using ClinicaDental.ApiService.DataBase.Models.MedicalRecords;
 using ClinicaDental.ApiService.DataBase.Registries.MedicalRecords;
+
+using Microsoft.EntityFrameworkCore;
 
 public class MedicalInformationManager(MedicalRecordsRegistry medicalRecordsRegistry)
 {
@@ -64,13 +67,13 @@ public class MedicalInformationManager(MedicalRecordsRegistry medicalRecordsRegi
         }
     }
 
-    public IQueryable<MedicalRecord> SearchMedicalRecordsByDoctorId(int doctorId)
+    public Task<List<MedicalRecord>> SearchMedicalRecordsByDoctorId(int doctorId)
     {
         var existingRrecords = this.medicalRecordsRegistry.GetMedicalRecordsByDoctortId(doctorId);
 
         if (existingRrecords.FirstOrDefault() is not null)
         {
-            return existingRrecords;
+            return existingRrecords.ToListAsync();
         }
         else
         {
@@ -78,13 +81,13 @@ public class MedicalInformationManager(MedicalRecordsRegistry medicalRecordsRegi
         };
     }
 
-    public IQueryable<MedicalRecord> SearchMedicalRecordsByPatientId(int patientId)
+    public Task<List<MedicalRecord>> SearchMedicalRecordsByPatientId(int patientId)
     {
         var existingRrecords = this.medicalRecordsRegistry.GetMedicalRecordsByPatientId(patientId);
 
         if (existingRrecords.FirstOrDefault() is not null)
         {
-            return existingRrecords;
+            return existingRrecords.ToListAsync();
         }
         else
         {

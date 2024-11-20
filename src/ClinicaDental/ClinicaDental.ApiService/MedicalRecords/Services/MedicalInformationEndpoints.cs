@@ -1,7 +1,5 @@
 ﻿namespace ClinicaDental.ApiService.MedicalRecords.Services;
 
-using System.Runtime.CompilerServices;
-
 using ClinicaDental.ApiService.DataBase.Models.MedicalRecords;
 
 using Microsoft.EntityFrameworkCore;
@@ -24,39 +22,39 @@ public static class MedicalInformationEndpoints
 
     public static async Task<IResult> CreateRecord(MedicalRecord medicalRecord, MedicalInformationManager medicalRecordsManager)
     {
-        try
-        {
-            await medicalRecordsManager.SaveMedicalRecord(medicalRecord);
-            return Results.Ok();
-        }
-        catch (ArgumentException error)
-        {
-            return Results.BadRequest(error.Message);
-        }
+        return await HandleErrorOrResult(async () => await medicalRecordsManager.SaveMedicalRecord(medicalRecord));
     }
 
     public static async Task<IResult> UpdateRecord(int medicalRecordId, MedicalRecord medicalRecord, MedicalInformationManager medicalRecordsManager)
     {
-        try
-        {
-            await medicalRecordsManager.UpdateMedicalRecord(medicalRecordId, medicalRecord);
-            return Results.Ok();
-        }
-        catch (ArgumentException error)
-        {
-            return Results.BadRequest(error.Message);
-        }
-        catch (KeyNotFoundException error)
-        {
-            return Results.NotFound(error.Message);
-        }
+        return await HandleErrorOrResult(async () => await medicalRecordsManager.UpdateMedicalRecord(medicalRecordId, medicalRecord));
     }
 
     public static async Task<IResult> DeleteMedicalRecordByRecordId(int medicalRecordId, MedicalInformationManager medicalRecordsManager)
     {
+        return await HandleErrorOrResult(async () => await medicalRecordsManager.DeleteMedicalRecordByRecordId(medicalRecordId));
+    }
+
+    public static async Task<IResult> SearchRecordById(int medicalRecordId, MedicalInformationManager medicalRecordsManager)
+    {
+        return await HandleErrorOrResult(async () => await medicalRecordsManager.SearchMedicalRecordByRecordId(medicalRecordId));
+    }
+
+    public static async Task<IResult> SearchRecordsByPatientId(int patientId, MedicalInformationManager medicalRecordsManager)
+    {
+        return await HandleErrorOrResult(async () => await medicalRecordsManager.SearchMedicalRecordsByPatientId(patientId));
+    }
+
+    public static async Task<IResult> SearchRecordsByDoctorId(int doctorId, MedicalInformationManager medicalRecordsManager)
+    {
+        return await HandleErrorOrResult(async () => await medicalRecordsManager.SearchMedicalRecordsByDoctorId(doctorId));
+    }
+
+    public static async Task<IResult> HandleErrorOrResult(Func<Task> operation)
+    {
         try
         {
-            await medicalRecordsManager.DeleteMedicalRecordByRecordId(medicalRecordId);
+            await operation();
             return Results.Ok();
         }
         catch (ArgumentException error)
@@ -67,44 +65,30 @@ public static class MedicalInformationEndpoints
         {
             return Results.NotFound(error.Message);
         }
+        catch (UnauthorizedAccessException)
+        {
+            return Results.Unauthorized();
+        }
     }
 
-    public static async Task<IResult> SearchRecordById(int medicalRecordId, MedicalInformationManager medicalRecordsManager)
+    private static async Task<IResult> HandleErrorOrResult<T>(Func<Task<T>> operation)
     {
         try
         {
-            var medicalRecord = await medicalRecordsManager.SearchMedicalRecordByRecordId(medicalRecordId);
-            return Results.Ok(medicalRecord);
+            var result = await operation();
+            return Results.Ok(result);
+        }
+        catch (ArgumentException error)
+        {
+            return Results.BadRequest(error.Message);
         }
         catch (KeyNotFoundException error)
         {
             return Results.NotFound(error.Message);
         }
-    }
-
-    public static async Task<IResult> SearchRecordsByPatientId(int patientId, MedicalInformationManager medicalRecordsManager)
-    {
-        try
+        catch (UnauthorizedAccessException)
         {
-            var medicalRecords = await medicalRecordsManager.SearchMedicalRecordsByPatientId(patientId).ToListAsync(); // remover
-            return Results.Ok(medicalRecords);
-        }
-        catch (KeyNotFoundException error)
-        {
-            return Results.NotFound(error.Message);
-        }
-    }
-
-    public static async Task<IResult> SearchRecordsByDoctorId(int doctorId, MedicalInformationManager medicalRecordsManager)
-    {
-        try
-        {
-            var medicalRecords = await medicalRecordsManager.SearchMedicalRecordsByDoctorId(doctorId).ToListAsync();
-            return Results.Ok(medicalRecords);
-        }
-        catch (KeyNotFoundException error)
-        {
-            return Results.NotFound(error.Message);
+            return Results.Unauthorized();
         }
     }
 }
