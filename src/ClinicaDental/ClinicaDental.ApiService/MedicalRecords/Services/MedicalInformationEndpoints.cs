@@ -1,26 +1,28 @@
 ﻿namespace ClinicaDental.ApiService.MedicalRecords.Services;
 
+using System.Runtime.CompilerServices;
+
 using ClinicaDental.ApiService.DataBase.Models.MedicalRecords;
 
 using Microsoft.EntityFrameworkCore;
 
-public static class MedicalRecordEndpoints
+public static class MedicalInformationEndpoints
 {
     public static void MapMedicalRecordsEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("api/medicalRecords");
-        group.MapPost("newRecord", CreateRecord);
+        group.MapPost("newMedicalRecord", CreateRecord);
 
         group.MapGet("searchRecordById/{medicalRecordId}", SearchRecordById);
         group.MapGet("searchRecordsByDoctorId/{doctorId}", SearchRecordsByDoctorId);
         group.MapGet("searchRecordsByPatientId/{patientId}", SearchRecordsByPatientId);
 
-        group.MapPut("updateRecord", UpdateRecord);
+        group.MapPut("updateRecord/{medicalRecordId}", UpdateRecord);
 
         group.MapDelete("deleteRecordById/{medicalRecordId}", DeleteMedicalRecordByRecordId);
     }
 
-    public static async Task<IResult> CreateRecord(MedicalRecord medicalRecord, MedicalRecordsManager medicalRecordsManager)
+    public static async Task<IResult> CreateRecord(MedicalRecord medicalRecord, MedicalInformationManager medicalRecordsManager)
     {
         try
         {
@@ -33,11 +35,11 @@ public static class MedicalRecordEndpoints
         }
     }
 
-    public static async Task<IResult> UpdateRecord(MedicalRecord medicalRecord, MedicalRecordsManager medicalRecordsManager)
+    public static async Task<IResult> UpdateRecord(int medicalRecordId, MedicalRecord medicalRecord, MedicalInformationManager medicalRecordsManager)
     {
         try
         {
-            await medicalRecordsManager.UpdateMedicalRecord(medicalRecord);
+            await medicalRecordsManager.UpdateMedicalRecord(medicalRecordId, medicalRecord);
             return Results.Ok();
         }
         catch (ArgumentException error)
@@ -50,7 +52,7 @@ public static class MedicalRecordEndpoints
         }
     }
 
-    public static async Task<IResult> DeleteMedicalRecordByRecordId(int medicalRecordId, MedicalRecordsManager medicalRecordsManager)
+    public static async Task<IResult> DeleteMedicalRecordByRecordId(int medicalRecordId, MedicalInformationManager medicalRecordsManager)
     {
         try
         {
@@ -67,7 +69,7 @@ public static class MedicalRecordEndpoints
         }
     }
 
-    public static async Task<IResult> SearchRecordById(int medicalRecordId, MedicalRecordsManager medicalRecordsManager)
+    public static async Task<IResult> SearchRecordById(int medicalRecordId, MedicalInformationManager medicalRecordsManager)
     {
         try
         {
@@ -80,11 +82,11 @@ public static class MedicalRecordEndpoints
         }
     }
 
-    public static async Task<IResult> SearchRecordsByPatientId(int patientId, MedicalRecordsManager medicalRecordsManager)
+    public static async Task<IResult> SearchRecordsByPatientId(int patientId, MedicalInformationManager medicalRecordsManager)
     {
         try
         {
-            var medicalRecords = await medicalRecordsManager.SearchMedicalRecordsByPatientId(patientId).ToListAsync();
+            var medicalRecords = await medicalRecordsManager.SearchMedicalRecordsByPatientId(patientId).ToListAsync(); // remover
             return Results.Ok(medicalRecords);
         }
         catch (KeyNotFoundException error)
@@ -93,7 +95,7 @@ public static class MedicalRecordEndpoints
         }
     }
 
-    public static async Task<IResult> SearchRecordsByDoctorId(int doctorId, MedicalRecordsManager medicalRecordsManager)
+    public static async Task<IResult> SearchRecordsByDoctorId(int doctorId, MedicalInformationManager medicalRecordsManager)
     {
         try
         {

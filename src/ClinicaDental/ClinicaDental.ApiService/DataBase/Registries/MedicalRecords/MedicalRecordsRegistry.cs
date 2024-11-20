@@ -4,14 +4,9 @@ using ClinicaDental.ApiService.DataBase.Models.MedicalRecords;
 
 using Microsoft.EntityFrameworkCore;
 
-public class MedicalRecordsRegistry
+public class MedicalRecordsRegistry(AppDbContext context)
 {
-    private readonly AppDbContext context;
-
-    public MedicalRecordsRegistry(AppDbContext context)
-    {
-        this.context = context;
-    }
+    private readonly AppDbContext context = context;
 
     public IQueryable<MedicalRecord> GetMedicalRecords()
     {
@@ -70,9 +65,17 @@ public class MedicalRecordsRegistry
         await this.context.SaveChangesAsync();
     }
 
-    public async Task UpdateMedicalRecord(MedicalRecord medicalRecord)
+    public async Task UpdateMedicalRecord(MedicalRecord existingMedicalRecord, MedicalRecord updatedmedicalRecord)
     {
-        this.context.MedicalRecords.Update(medicalRecord);
+        this.RemoveOldDiagnosisInfo(existingMedicalRecord);
+        this.RemoveOldTeethInfo(existingMedicalRecord);
+        this.RemoveOldMedicalProceduresInfo(existingMedicalRecord);
+
+        existingMedicalRecord.Diagnosis = updatedmedicalRecord.Diagnosis;
+        existingMedicalRecord.Teeths = updatedmedicalRecord.Teeths;
+        existingMedicalRecord.MedicalProcedures = updatedmedicalRecord.MedicalProcedures;
+
+        this.context.Update(existingMedicalRecord);
         await this.context.SaveChangesAsync();
     }
 
@@ -94,5 +97,25 @@ public class MedicalRecordsRegistry
             .Include(medicalRecord => medicalRecord.Teeths);
 
         return medicalRecords.Where(medicalRecord => medicalRecord.DateCreated >= startDate && medicalRecord.DateCreated <= finalDate);
+    }
+
+    private void RemoveOldDiagnosisInfo(MedicalRecord existingMedicalRecord)
+    {
+        foreach (var diagnosis in existingMedicalRecord.Diagnosis)
+        {
+            this.context.Set<Medicine>().RemoveRange(diagnosis.Treatments);
+        }
+
+        this.context.Set<Illness>().RemoveRange(existingMedicalRecord.Diagnosis);
+    }
+
+    private void RemoveOldTeethInfo(MedicalRecord existingMedicalRecord)
+    {
+        this.context.Set<Teeth>().RemoveRange(existingMedicalRecord.Teeths);
+    }
+
+    private void RemoveOldMedicalProceduresInfo(MedicalRecord existingMedicalRecord)
+    {
+        this.context.Set<MedicalProcedure>().RemoveRange(existingMedicalRecord.MedicalProcedures);
     }
 }

@@ -13,7 +13,7 @@ public class MedicalRecord
     public int DoctorId { get; set; }
 
     [Required]
-    public int PatientId { get; set; }
+    public int PatientId { get; init; }
 
     public DateTime DateCreated { get; init; }
 

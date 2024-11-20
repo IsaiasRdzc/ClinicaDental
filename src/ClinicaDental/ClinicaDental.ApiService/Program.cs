@@ -21,7 +21,7 @@ builder.Services.AddTransient<ClinicReceptionist>();
 builder.Services.AddTransient<ClinicAgenda>();
 builder.Services.AddTransient<ClinicAdmin>();
 
-builder.Services.AddTransient<MedicalRecordsManager>();
+builder.Services.AddTransient<MedicalInformationManager>();
 
 // Registries
 builder.Services.AddTransient<AppointmentRegistry>();

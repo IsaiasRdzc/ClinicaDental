@@ -5,22 +5,17 @@ using System;
 using ClinicaDental.ApiService.DataBase.Models.MedicalRecords;
 using ClinicaDental.ApiService.DataBase.Registries.MedicalRecords;
 
-public class MedicalRecordsManager
+public class MedicalInformationManager(MedicalRecordsRegistry medicalRecordsRegistry)
 {
-    private readonly MedicalRecordsRegistry medicalRecordsRegistry;
-
-    public MedicalRecordsManager(MedicalRecordsRegistry medicalRecordsRegistry)
-    {
-        this.medicalRecordsRegistry = medicalRecordsRegistry;
-    }
+    private readonly MedicalRecordsRegistry medicalRecordsRegistry = medicalRecordsRegistry;
 
     public async Task SaveMedicalRecord(MedicalRecord medicalRecord)
     {
-        if (MedicalRecordsValidations.HasValidInformation(medicalRecord) && MedicalRecordsValidations.IsInAcceptableTime(medicalRecord.DateCreated))
+        if (MedicalRecordInformationChecker.HasValidMedicalInformation(medicalRecord) && MedicalRecordInformationChecker.IsInAcceptableTime(medicalRecord.DateCreated))
         {
             await this.medicalRecordsRegistry.CreateMedicalRecord(medicalRecord);
         }
-        else if (!MedicalRecordsValidations.IsInAcceptableTime(medicalRecord.DateCreated))
+        else if (!MedicalRecordInformationChecker.IsInAcceptableTime(medicalRecord.DateCreated))
         {
             throw new ArgumentException("The time for modification has elapsed");
         }
@@ -37,7 +32,7 @@ public class MedicalRecordsManager
 
         if (existingRecord is not null)
         {
-            if (!MedicalRecordsValidations.IsInAcceptableTime(existingRecord.DateCreated))
+            if (!MedicalRecordInformationChecker.IsInAcceptableTime(existingRecord.DateCreated))
             {
                 throw new ArgumentException("The time for modification has elapsed");
             }
@@ -50,22 +45,22 @@ public class MedicalRecordsManager
         }
     }
 
-    public async Task UpdateMedicalRecord(MedicalRecord medicalRecord)
+    public async Task UpdateMedicalRecord(int medicalRecordId, MedicalRecord updatedmedicalRecord)
     {
-        var existingRecord = await this.medicalRecordsRegistry.GetMedicalRecordByMedicalRecordId(medicalRecord.MedicalRecordId);
+        var existingRecord = await this.medicalRecordsRegistry.GetMedicalRecordByMedicalRecordId(medicalRecordId);
 
         if (existingRecord is not null)
         {
-            if (!MedicalRecordsValidations.IsInAcceptableTime(existingRecord.DateCreated))
+            if (!MedicalRecordInformationChecker.IsInAcceptableTime(existingRecord.DateCreated))
             {
                 throw new ArgumentException("The time for modification has elapsed");
             }
 
-            await this.medicalRecordsRegistry.UpdateMedicalRecord(medicalRecord);
+            await this.medicalRecordsRegistry.UpdateMedicalRecord(existingRecord, updatedmedicalRecord);
         }
         else
         {
-            throw new KeyNotFoundException($"MedicalRecord with id {medicalRecord.MedicalRecordId} not found.");
+            throw new KeyNotFoundException($"MedicalRecord with id {medicalRecordId} not found.");
         }
     }
 
