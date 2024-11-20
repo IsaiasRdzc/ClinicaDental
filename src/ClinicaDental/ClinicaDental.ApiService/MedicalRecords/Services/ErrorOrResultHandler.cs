@@ -2,7 +2,7 @@
 
 public static class ErrorOrResultHandler
 {
-    public static async Task<IResult> HandleRequest(Func<Task> operation)
+    public static async Task<IResult> HandleResult(Func<Task> operation)
     {
         try
         {
@@ -21,9 +21,13 @@ public static class ErrorOrResultHandler
         {
             return Results.Unauthorized();
         }
+        catch (Exception)
+        {
+            return Results.StatusCode(500);
+        }
     }
 
-    private static async Task<IResult> HandleRequest<T>(Func<Task<T>> operation)
+    public static async Task<IResult> HandleResult<T>(Func<Task<T>> operation)
     {
         try
         {
@@ -41,6 +45,10 @@ public static class ErrorOrResultHandler
         catch (UnauthorizedAccessException)
         {
             return Results.Unauthorized();
+        }
+        catch (Exception)
+        {
+            return Results.StatusCode(500);
         }
     }
 }

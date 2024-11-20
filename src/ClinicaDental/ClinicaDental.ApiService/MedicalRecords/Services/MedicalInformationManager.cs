@@ -26,7 +26,6 @@ public class MedicalInformationManager(MedicalRecordsRegistry medicalRecordsRegi
         {
             throw new ArgumentException("The data of the record is incorrect");
         }
-
     }
 
     public async Task DeleteMedicalRecordByRecordId(int medicalRecordId)
@@ -95,7 +94,7 @@ public class MedicalInformationManager(MedicalRecordsRegistry medicalRecordsRegi
         }
     }
 
-    public async Task<MedicalRecord?> SearchMedicalRecordByRecordId(int medicalRecordId)
+    public async Task<MedicalRecord> SearchMedicalRecordByRecordId(int medicalRecordId)
     {
         var existingRecord = await this.medicalRecordsRegistry.GetMedicalRecordByMedicalRecordId(medicalRecordId);
 

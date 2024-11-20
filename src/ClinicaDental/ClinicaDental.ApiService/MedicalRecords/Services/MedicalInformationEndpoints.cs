@@ -20,31 +20,31 @@ public static class MedicalInformationEndpoints
 
     public static async Task<IResult> CreateRecord(MedicalRecord medicalRecord, MedicalInformationManager medicalRecordsManager)
     {
-        return await ErrorOrResultHandler.HandleRequest(async () => await medicalRecordsManager.SaveMedicalRecord(medicalRecord));
+        return await ErrorOrResultHandler.HandleResult(async () => await medicalRecordsManager.SaveMedicalRecord(medicalRecord));
     }
 
     public static async Task<IResult> UpdateRecord(int medicalRecordId, MedicalRecord medicalRecord, MedicalInformationManager medicalRecordsManager)
     {
-        return await ErrorOrResultHandler.HandleRequest(async () => await medicalRecordsManager.UpdateMedicalRecord(medicalRecordId, medicalRecord));
+        return await ErrorOrResultHandler.HandleResult(async () => await medicalRecordsManager.UpdateMedicalRecord(medicalRecordId, medicalRecord));
     }
 
     public static async Task<IResult> DeleteMedicalRecordByRecordId(int medicalRecordId, MedicalInformationManager medicalRecordsManager)
     {
-        return await ErrorOrResultHandler.HandleRequest(async () => await medicalRecordsManager.DeleteMedicalRecordByRecordId(medicalRecordId));
+        return await ErrorOrResultHandler.HandleResult(async () => await medicalRecordsManager.DeleteMedicalRecordByRecordId(medicalRecordId));
     }
 
     public static async Task<IResult> SearchRecordById(int medicalRecordId, MedicalInformationManager medicalRecordsManager)
     {
-        return await ErrorOrResultHandler.HandleRequest(async () => await medicalRecordsManager.SearchMedicalRecordByRecordId(medicalRecordId));
+        return await ErrorOrResultHandler.HandleResult(async () => await medicalRecordsManager.SearchMedicalRecordByRecordId(medicalRecordId));
     }
 
     public static async Task<IResult> SearchRecordsByPatientId(int patientId, MedicalInformationManager medicalRecordsManager)
     {
-        return await ErrorOrResultHandler.HandleRequest(async () => await medicalRecordsManager.SearchMedicalRecordsByPatientId(patientId));
+        return await ErrorOrResultHandler.HandleResult(async () => await medicalRecordsManager.SearchMedicalRecordsByPatientId(patientId));
     }
 
     public static async Task<IResult> SearchRecordsByDoctorId(int doctorId, MedicalInformationManager medicalRecordsManager)
     {
-        return await ErrorOrResultHandler.HandleRequest(async () => await medicalRecordsManager.SearchMedicalRecordsByDoctorId(doctorId));
+        return await ErrorOrResultHandler.HandleResult(async () => await medicalRecordsManager.SearchMedicalRecordsByDoctorId(doctorId));
     }
 }
