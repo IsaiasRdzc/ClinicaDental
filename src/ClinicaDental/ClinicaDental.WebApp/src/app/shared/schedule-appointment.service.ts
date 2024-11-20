@@ -9,6 +9,7 @@ import { NgForm } from '@angular/forms';
 })
 export class ScheduleAppointmentService {
   url: string=environment.apiBaseUrl+"/appointments";
+  appointmentList: Appointment[]=[];
   formData: Appointment = new Appointment();
   constructor(private http: HttpClient) { }
 
@@ -19,5 +20,14 @@ export class ScheduleAppointmentService {
   resetForm(form: NgForm){
     form.form.reset();
     this.formData = new Appointment();
+  }
+
+  getAllDoctors(){
+    this.http.get(this.url+"/doctor")
+    .subscribe({
+      next: res=>{
+        this.list = res as 
+      }
+    })
   }
 }
