@@ -1,30 +1,19 @@
 namespace ClinicaDental.ApiService.DataBase.Registries;
 
-using System.Diagnostics;
-
 using ClinicaDental.ApiService.DataBase;
 using ClinicaDental.ApiService.DataBase.Models;
 
-using Microsoft.EntityFrameworkCore;
-
-public class AppointmentRegistry
+public class AppointmentRegistry(AppDbContext context)
 {
-    private readonly AppDbContext context;
-
-    public AppointmentRegistry(AppDbContext context)
-    {
-        this.context = context;
-    }
-
     public IQueryable<Appointment> GetAppointmentsList()
     {
-        var appointmentsList = this.context.Appointments.AsQueryable();
+        var appointmentsList = context.Appointments.AsQueryable();
         return appointmentsList;
     }
 
     public IQueryable<Appointment> GetAppointmentsListByDate(DateOnly date)
     {
-        var appointmentsList = this.context.Appointments
+        var appointmentsList = context.Appointments
         .Where(appointment => appointment.Date == date)
         .AsQueryable();
 
@@ -33,7 +22,7 @@ public class AppointmentRegistry
 
     public IQueryable<Appointment> GetAppointmentsListByDoctor(int doctorId)
     {
-        var appointmentsList = this.context.Appointments
+        var appointmentsList = context.Appointments
         .Where(appointment => appointment.DoctorId == doctorId)
         .AsQueryable();
 
@@ -42,14 +31,14 @@ public class AppointmentRegistry
 
     public async Task<Appointment?> GetAppointmentByFolio(int folio)
     {
-        var appointment = await this.context.Appointments.FindAsync(folio);
+        var appointment = await context.Appointments.FindAsync(folio);
         return appointment;
     }
 
     public async Task CreateAppointment(Appointment appointment)
     {
-        this.context.Appointments.Add(appointment);
-        await this.context.SaveChangesAsync();
+        context.Appointments.Add(appointment);
+        await context.SaveChangesAsync();
     }
 
     public async Task UpdateAppointment(int folio, DateOnly date, TimeOnly time, int duration)
@@ -65,8 +54,8 @@ public class AppointmentRegistry
         appointment.StartTime = time;
         appointment.DurationInHours = duration;
 
-        this.context.Appointments.Update(appointment);
-        await this.context.SaveChangesAsync();
+        context.Appointments.Update(appointment);
+        await context.SaveChangesAsync();
     }
 
     public async Task DeleteAppointment(int folio)
@@ -78,7 +67,7 @@ public class AppointmentRegistry
             throw new KeyNotFoundException($"Appointment with folio {folio} not found.");
         }
 
-        this.context.Appointments.Remove(appointment);
-        await this.context.SaveChangesAsync();
+        context.Appointments.Remove(appointment);
+        await context.SaveChangesAsync();
     }
 }

@@ -4,31 +4,24 @@ using ClinicaDental.ApiService.DataBase;
 using ClinicaDental.ApiService.DataBase.Models;
 using Microsoft.EntityFrameworkCore;
 
-public class DoctorRegistry
+public class DoctorRegistry(AppDbContext context)
 {
-    private readonly AppDbContext context;
-
-    public DoctorRegistry(AppDbContext context)
-    {
-        this.context = context;
-    }
-
     public IQueryable<Doctor> GetDoctorsList()
     {
-        return this.context.Doctors.AsQueryable();
+        return context.Doctors.AsQueryable();
     }
 
     public async Task<Doctor?> GetDoctorWithId(int id)
     {
-        return await this.context.Doctors
+        return await context.Doctors
         .Include(doctor => doctor.Schedules)
         .FirstOrDefaultAsync(doctor => doctor.Id == id);
     }
 
     public async Task AddDoctor(Doctor doctor)
     {
-        this.context.Doctors.Add(doctor);
-        await this.context.SaveChangesAsync();
+        context.Doctors.Add(doctor);
+        await context.SaveChangesAsync();
     }
 
     public async Task UpdateDoctor(int id, Doctor doctor)
@@ -38,8 +31,8 @@ public class DoctorRegistry
             throw new KeyNotFoundException($"Doctor with ID {id} not found.");
         }
 
-        this.context.Entry(doctor).State = EntityState.Modified;
-        await this.context.SaveChangesAsync();
+        context.Entry(doctor).State = EntityState.Modified;
+        await context.SaveChangesAsync();
     }
 
     public async Task RemoveDoctor(int id)
@@ -51,12 +44,12 @@ public class DoctorRegistry
             throw new KeyNotFoundException($"Doctor with ID {id} not found.");
         }
 
-        this.context.Doctors.Remove(doctor);
-        await this.context.SaveChangesAsync();
+        context.Doctors.Remove(doctor);
+        await context.SaveChangesAsync();
     }
 
     private bool DoctorExists(int id)
     {
-        return this.context.Doctors.Any(e => e.Id == id);
+        return context.Doctors.Any(e => e.Id == id);
     }
 }
