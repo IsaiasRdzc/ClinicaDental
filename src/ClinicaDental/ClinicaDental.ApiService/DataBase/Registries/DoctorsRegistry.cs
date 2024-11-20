@@ -4,24 +4,24 @@ using ClinicaDental.ApiService.DataBase;
 using ClinicaDental.ApiService.DataBase.Models;
 using Microsoft.EntityFrameworkCore;
 
-public class DoctorRegistry(AppDbContext context)
+public class DoctorsRegistry(AppDbContext clinicDataBase)
 {
     public IQueryable<Doctor> GetDoctorsList()
     {
-        return context.Doctors.AsQueryable();
+        return clinicDataBase.DoctorsTable.AsQueryable();
     }
 
     public async Task<Doctor?> GetDoctorWithId(int id)
     {
-        return await context.Doctors
+        return await clinicDataBase.DoctorsTable
         .Include(doctor => doctor.Schedules)
         .FirstOrDefaultAsync(doctor => doctor.Id == id);
     }
 
     public async Task AddDoctor(Doctor doctor)
     {
-        context.Doctors.Add(doctor);
-        await context.SaveChangesAsync();
+        clinicDataBase.DoctorsTable.Add(doctor);
+        await clinicDataBase.SaveChangesAsync();
     }
 
     public async Task UpdateDoctor(int id, Doctor doctor)
@@ -31,8 +31,8 @@ public class DoctorRegistry(AppDbContext context)
             throw new KeyNotFoundException($"Doctor with ID {id} not found.");
         }
 
-        context.Entry(doctor).State = EntityState.Modified;
-        await context.SaveChangesAsync();
+        clinicDataBase.Entry(doctor).State = EntityState.Modified;
+        await clinicDataBase.SaveChangesAsync();
     }
 
     public async Task RemoveDoctor(int id)
@@ -44,12 +44,12 @@ public class DoctorRegistry(AppDbContext context)
             throw new KeyNotFoundException($"Doctor with ID {id} not found.");
         }
 
-        context.Doctors.Remove(doctor);
-        await context.SaveChangesAsync();
+        clinicDataBase.DoctorsTable.Remove(doctor);
+        await clinicDataBase.SaveChangesAsync();
     }
 
     private bool DoctorExists(int id)
     {
-        return context.Doctors.Any(e => e.Id == id);
+        return clinicDataBase.DoctorsTable.Any(e => e.Id == id);
     }
 }

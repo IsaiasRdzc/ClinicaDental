@@ -3,24 +3,24 @@ namespace ClinicaDental.ApiService.DataBase.Registries;
 using ClinicaDental.ApiService.DataBase;
 using ClinicaDental.ApiService.DataBase.Models;
 
-public class PaymentDetailRegistry(AppDbContext context)
+public class PaymentDetailRegistry(AppDbContext clinicDataBase)
 {
     public IQueryable<PaymentDetail> GetPaymentDetailList()
     {
-        var paymentDetailsList = context.PaymentDetails.AsQueryable();
+        var paymentDetailsList = clinicDataBase.PaymentDetails.AsQueryable();
         return paymentDetailsList;
     }
 
     public async Task<PaymentDetail?> GetPaymentDetailById(int id)
     {
-        var paymentDetail = await context.PaymentDetails.FindAsync(id);
+        var paymentDetail = await clinicDataBase.PaymentDetails.FindAsync(id);
         return paymentDetail;
     }
 
     public async Task CreatePaymentDetail(PaymentDetail paymentDetail)
     {
-        context.PaymentDetails.Add(paymentDetail);
-        await context.SaveChangesAsync();
+        clinicDataBase.PaymentDetails.Add(paymentDetail);
+        await clinicDataBase.SaveChangesAsync();
     }
 
     public async Task DeletePaymentDetail(int id)
@@ -31,8 +31,8 @@ public class PaymentDetailRegistry(AppDbContext context)
             throw new KeyNotFoundException($"Payment with {id} not found.");
         }
 
-        context.PaymentDetails.Remove(paymentDetail);
-        await context.SaveChangesAsync();
+        clinicDataBase.PaymentDetails.Remove(paymentDetail);
+        await clinicDataBase.SaveChangesAsync();
     }
 
     public async Task UpdatePaymentDetail(int id, string name, string number, string expiration, string code)
@@ -49,13 +49,13 @@ public class PaymentDetailRegistry(AppDbContext context)
         paymentDetail.ExpirationDate = expiration;
         paymentDetail.SecurityCode = code;
 
-        context.PaymentDetails.Update(paymentDetail);
-        await context.SaveChangesAsync();
+        clinicDataBase.PaymentDetails.Update(paymentDetail);
+        await clinicDataBase.SaveChangesAsync();
     }
 
     public IQueryable<PaymentDetail> GetAllDetails()
     {
-        var details = context.PaymentDetails
+        var details = clinicDataBase.PaymentDetails
         .AsQueryable();
         return details;
     }

@@ -4,13 +4,13 @@ using ClinicaDental.ApiService.DataBase;
 using ClinicaDental.ApiService.DataBase.Models;
 using Microsoft.EntityFrameworkCore;
 
-public class ScheduleRegistry(AppDbContext context)
+public class SchedulesRegistry(AppDbContext clinicDataBase)
 {
     // Doctor schedule CRUD
     public async Task AddDoctorSchedule(DoctorDaySchedule doctorSchedule)
     {
-        await context.DoctorDaySchedules.AddAsync(doctorSchedule);
-        await context.SaveChangesAsync();
+        await clinicDataBase.DoctorDaySchedulesTable.AddAsync(doctorSchedule);
+        await clinicDataBase.SaveChangesAsync();
     }
 
     public DoctorDaySchedule? GetDoctorSchedule(int doctorId, DayOfWeek dayOfWeek)
@@ -26,7 +26,7 @@ public class ScheduleRegistry(AppDbContext context)
 
     public IQueryable<DoctorDaySchedule> GetDoctorSchedules(int doctorId)
     {
-        var doctorSchedules = context.DoctorDaySchedules
+        var doctorSchedules = clinicDataBase.DoctorDaySchedulesTable
             .Where(ds => ds.DoctorId == doctorId)
             .AsQueryable();
 
@@ -46,8 +46,8 @@ public class ScheduleRegistry(AppDbContext context)
         existingSchedule.EndTime = doctorSchedule.EndTime;
         existingSchedule.IsOff = doctorSchedule.IsOff;
 
-        context.DoctorDaySchedules.Update(existingSchedule);
-        await context.SaveChangesAsync();
+        clinicDataBase.DoctorDaySchedulesTable.Update(existingSchedule);
+        await clinicDataBase.SaveChangesAsync();
     }
 
     public async Task DeleteDoctorSchedule(int doctorId, DayOfWeek dayOfWeek)
@@ -55,26 +55,26 @@ public class ScheduleRegistry(AppDbContext context)
         var doctorSchedule = this.GetDoctorSchedule(doctorId, dayOfWeek);
         if (doctorSchedule != null)
         {
-            context.DoctorDaySchedules.Remove(doctorSchedule);
-            await context.SaveChangesAsync();
+            clinicDataBase.DoctorDaySchedulesTable.Remove(doctorSchedule);
+            await clinicDataBase.SaveChangesAsync();
         }
     }
 
     // Schedule modifications CRUD
     public async Task AddScheduleModification(ScheduleModification modification)
     {
-        await context.ScheduleModifications.AddAsync(modification);
-        await context.SaveChangesAsync();
+        await clinicDataBase.ScheduleModificationsTable.AddAsync(modification);
+        await clinicDataBase.SaveChangesAsync();
     }
 
     public async Task<ScheduleModification?> GetScheduleModification(int id)
     {
-        return await context.ScheduleModifications.FindAsync(id);
+        return await clinicDataBase.ScheduleModificationsTable.FindAsync(id);
     }
 
     public IQueryable<ScheduleModification> GetScheduleModificationsByDate(DateOnly date)
     {
-        var scheduleModifications = context.ScheduleModifications
+        var scheduleModifications = clinicDataBase.ScheduleModificationsTable
             .Where(mod => mod.Date == date)
             .AsQueryable();
 
@@ -83,7 +83,7 @@ public class ScheduleRegistry(AppDbContext context)
 
     public IQueryable<ScheduleModification> GetScheduleModificationsForDoctorOnDate(int doctorId, DateOnly date)
     {
-        var scheduleModifications = context.ScheduleModifications
+        var scheduleModifications = clinicDataBase.ScheduleModificationsTable
             .Where(mod => mod.Date == date && mod.DoctorId == doctorId)
             .AsQueryable();
 
@@ -92,8 +92,8 @@ public class ScheduleRegistry(AppDbContext context)
 
     public async Task UpdateScheduleModification(ScheduleModification modification)
     {
-        context.ScheduleModifications.Update(modification);
-        await context.SaveChangesAsync();
+        clinicDataBase.ScheduleModificationsTable.Update(modification);
+        await clinicDataBase.SaveChangesAsync();
     }
 
     public async Task DeleteScheduleModification(int id)
@@ -101,31 +101,31 @@ public class ScheduleRegistry(AppDbContext context)
         var modification = await this.GetScheduleModification(id);
         if (modification != null)
         {
-            context.ScheduleModifications.Remove(modification);
-            await context.SaveChangesAsync();
+            clinicDataBase.ScheduleModificationsTable.Remove(modification);
+            await clinicDataBase.SaveChangesAsync();
         }
     }
 
     // Clinic hours CRUD
     public async Task AddClinicHours(ClinicDayBussinesHours clinicHours)
     {
-        await context.ClinicDayBussinesHours.AddAsync(clinicHours);
-        await context.SaveChangesAsync();
+        await clinicDataBase.ClinicDayBussinesHoursTable.AddAsync(clinicHours);
+        await clinicDataBase.SaveChangesAsync();
     }
 
     public async Task<ClinicDayBussinesHours?> GetClinicHours(int id)
     {
-        return await context.ClinicDayBussinesHours.FindAsync(id);
+        return await clinicDataBase.ClinicDayBussinesHoursTable.FindAsync(id);
     }
 
     public IQueryable<ClinicDayBussinesHours> GetClinicHoursList()
     {
-        return context.ClinicDayBussinesHours.AsQueryable();
+        return clinicDataBase.ClinicDayBussinesHoursTable.AsQueryable();
     }
 
     public async Task<ClinicDayBussinesHours?> GetClinicHoursByDay(DayOfWeek dayOfWeek)
     {
-        return await context.ClinicDayBussinesHours
+        return await clinicDataBase.ClinicDayBussinesHoursTable
             .FirstOrDefaultAsync(ch => ch.DayOfWeek == dayOfWeek);
     }
 
@@ -142,8 +142,8 @@ public class ScheduleRegistry(AppDbContext context)
         existingClinicHours.ClosingTime = clinicHours.ClosingTime;
         existingClinicHours.IsClosed = clinicHours.IsClosed;
 
-        context.ClinicDayBussinesHours.Update(existingClinicHours);
-        await context.SaveChangesAsync();
+        clinicDataBase.ClinicDayBussinesHoursTable.Update(existingClinicHours);
+        await clinicDataBase.SaveChangesAsync();
     }
 
     public async Task DeleteClinicHours(int id)
@@ -151,8 +151,8 @@ public class ScheduleRegistry(AppDbContext context)
         var clinicDayBussinesHours = await this.GetClinicHours(id);
         if (clinicDayBussinesHours != null)
         {
-            context.ClinicDayBussinesHours.Remove(clinicDayBussinesHours);
-            await context.SaveChangesAsync();
+            clinicDataBase.ClinicDayBussinesHoursTable.Remove(clinicDayBussinesHours);
+            await clinicDataBase.SaveChangesAsync();
         }
     }
 }

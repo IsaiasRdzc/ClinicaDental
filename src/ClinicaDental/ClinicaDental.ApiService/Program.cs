@@ -25,9 +25,9 @@ builder.Services.AddTransient<ClinicAdmin>();
 builder.Services.AddTransient<PaymentsAdmin>();
 
 // Registries
-builder.Services.AddTransient<AppointmentRegistry>();
-builder.Services.AddTransient<ScheduleRegistry>();
-builder.Services.AddTransient<DoctorRegistry>();
+builder.Services.AddTransient<AppointmentsRegistry>();
+builder.Services.AddTransient<SchedulesRegistry>();
+builder.Services.AddTransient<DoctorsRegistry>();
 builder.Services.AddTransient<PaymentDetailRegistry>();
 
 var app = builder.Build();
