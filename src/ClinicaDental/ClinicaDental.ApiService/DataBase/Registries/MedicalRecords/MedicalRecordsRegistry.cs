@@ -6,11 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 public class MedicalRecordsRegistry(AppDbContext database)
 {
-    public IQueryable<MedicalRecord> GetMedicalRecords()
-    {
-        return database.MedicalRecords.AsQueryable();
-    }
-
     public IQueryable<MedicalRecord> GetMedicalRecordsByPatientId(int patientId)
     {
         var medicalRecords = database.MedicalRecords
