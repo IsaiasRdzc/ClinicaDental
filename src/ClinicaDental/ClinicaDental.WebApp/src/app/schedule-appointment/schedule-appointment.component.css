@@ -2,6 +2,7 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
+    background-color: #0d47a1;
   }
   
   .navbar {
@@ -27,7 +28,7 @@ body {
   }
 
   .navbar-nav .nav-link:hover, .active {
-    color: #0d47a1; /* Color al pasar el mouse (verde en este caso) */
+    color: #0d48a1; 
   }
   
   .navbar-nav .nav-link i {
@@ -49,3 +50,19 @@ body {
   background-color: #0d47a1;
   color: white;
  }
+
+ .vertical-bar {
+  width: 100px;
+  min-height: 100vh;
+}
+
+.containerForm{
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.allContainer{
+  background-color: rgba(13, 72, 161, 0.44);
+}
