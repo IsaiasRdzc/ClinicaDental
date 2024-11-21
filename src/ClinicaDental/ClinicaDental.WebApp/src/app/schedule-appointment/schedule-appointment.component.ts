@@ -56,6 +56,7 @@ export class AppointmentComponent implements OnInit{
   appointmentData = {
     id: 0,
     doctorId: 1,
+    patientId: 0,
     date: '',
     startTime: "",
     durationInHours: 0,
@@ -63,7 +64,7 @@ export class AppointmentComponent implements OnInit{
     patientPhone: ''
   };
 
-
+  
 
 
   availableSlots: string[] = [];
@@ -120,7 +121,6 @@ export class AppointmentComponent implements OnInit{
     if (form.valid) {
       const appointment = {
         doctorId: this.appointmentData.doctorId,
-        
         date: this.appointmentData.date,
         startTime: this.appointmentData.startTime,
         durationInHours: 1, // Duración fija de 1 hora
