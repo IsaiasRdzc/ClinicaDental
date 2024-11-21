@@ -120,12 +120,20 @@ export class AppointmentComponent implements OnInit{
     if (form.valid) {
       const appointment = {
         doctorId: this.appointmentData.doctorId,
+        
         date: this.appointmentData.date,
         startTime: this.appointmentData.startTime,
         durationInHours: 1, // Duración fija de 1 hora
+        endTime: this.appointmentData.startTime + 1,
         patientName: this.appointmentData.patientName,
         patientPhone: this.appointmentData.patientPhone
       };
+      console.log(appointment.date.toString())
+      console.log(appointment.startTime.toString())
+      console.log(appointment.durationInHours.toString())
+      console.log(appointment.endTime.toString())
+      console.log(appointment.patientName.toString())
+      console.log(appointment.patientPhone.toString())
 
       this.http.post('/api/appointments', appointment)
         .subscribe((response: any) => {

@@ -19,6 +19,7 @@ const routeConfig: Routes=[
         component: LoginComponent,
         title: "Dentist Login"
     }
+   
 ];
 
 export default routeConfig;
