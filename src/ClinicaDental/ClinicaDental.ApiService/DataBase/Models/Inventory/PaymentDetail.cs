@@ -1,4 +1,4 @@
-﻿namespace ClinicaDental.ApiService.DataBase.Models;
+﻿namespace ClinicaDental.ApiService.DataBase.Models.Inventory;
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,9 +10,9 @@ public class PaymentDetail
 
     public string CardOwnerName { get; set; } = "";
 
-    public string CardNumber { get; set; }="";
+    public string CardNumber { get; set; } = "";
 
-    public string ExpirationDate { get; set; }="";
+    public string ExpirationDate { get; set; } = "";
 
-    public string SecurityCode { get; set; }="";
+    public string SecurityCode { get; set; } = "";
 }

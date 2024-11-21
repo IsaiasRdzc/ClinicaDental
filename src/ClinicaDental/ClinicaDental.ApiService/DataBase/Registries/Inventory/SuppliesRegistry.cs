@@ -1,11 +1,11 @@
-namespace ClinicaDental.ApiService.DataBase.Registries;
+namespace ClinicaDental.ApiService.DataBase.Registries.Inventory;
 
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
 using ClinicaDental.ApiService.DataBase;
-using ClinicaDental.ApiService.DataBase.Models;
+using ClinicaDental.ApiService.DataBase.Models.Inventory;
 
 using Microsoft.EntityFrameworkCore;
 

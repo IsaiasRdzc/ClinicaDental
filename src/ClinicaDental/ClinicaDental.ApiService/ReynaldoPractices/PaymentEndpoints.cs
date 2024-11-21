@@ -1,5 +1,5 @@
 ﻿namespace ClinicaDental.ApiService.ReynaldoPractices;
-using ClinicaDental.ApiService.DataBase.Models;
+using ClinicaDental.ApiService.DataBase.Models.Inventory;
 using ClinicaDental.ApiService.DataBase.Registries;
 using ClinicaDental.ApiService.ReynaldoPractices.Services;
 public static class PaymentEndpoints

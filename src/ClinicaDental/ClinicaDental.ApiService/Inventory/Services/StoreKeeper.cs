@@ -1,7 +1,7 @@
 ﻿namespace ClinicaDental.ApiService.Appointments.Services;
 
-using ClinicaDental.ApiService.DataBase.Models;
-using ClinicaDental.ApiService.DataBase.Registries;
+using ClinicaDental.ApiService.DataBase.Models.Inventory;
+using ClinicaDental.ApiService.DataBase.Registries.Inventory;
 
 using Microsoft.EntityFrameworkCore;
 

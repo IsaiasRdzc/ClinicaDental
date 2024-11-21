@@ -1,7 +1,7 @@
 namespace ClinicaDental.ApiService.DataBase.Registries;
 
 using ClinicaDental.ApiService.DataBase;
-using ClinicaDental.ApiService.DataBase.Models;
+using ClinicaDental.ApiService.DataBase.Models.Appointments;
 
 public class AppointmentsRegistry(AppDbContext clinicDataBase)
 {

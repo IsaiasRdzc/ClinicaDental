@@ -1,4 +1,4 @@
-﻿namespace ClinicaDental.ApiService.DataBase.Models;
+﻿namespace ClinicaDental.ApiService.DataBase.Models.Inventory;
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

@@ -1,7 +1,8 @@
 namespace ClinicaDental.ApiService.DataBase.Registries;
 
 using ClinicaDental.ApiService.DataBase;
-using ClinicaDental.ApiService.DataBase.Models;
+using ClinicaDental.ApiService.DataBase.Models.Appointments;
+
 using Microsoft.EntityFrameworkCore;
 
 public class DoctorsRegistry(AppDbContext clinicDataBase)
