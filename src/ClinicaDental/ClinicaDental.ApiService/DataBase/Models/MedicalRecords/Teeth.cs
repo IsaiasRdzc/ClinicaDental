@@ -13,9 +13,9 @@ public class Teeth
     public int Name { get; init; }
 
     [Required]
-    public string Description { get; set; }
+    public required string Description { get; set; }
 
-    public bool isSuperNumerary { get; init; }
+    public bool IsSuperNumerary { get; init; }
 
-    public int MedicalRecordId { get; private set; }
+    public int MedicalRecordId { get; init; }
 }
