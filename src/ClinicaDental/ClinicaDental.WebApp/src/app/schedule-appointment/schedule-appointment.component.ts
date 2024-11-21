@@ -55,7 +55,7 @@ export class AppointmentComponent {
     doctorId: 1,
     date: '',
     startTime: "",
-    duration: "",
+    durationInHours: 0,
     endTime: '',
     patientName: '',
     patientPhone: ''
@@ -114,17 +114,18 @@ export class AppointmentComponent {
         doctorId: this.firstAppointmentData.doctorId,
         date: this.firstAppointmentData.date,
         startTime: this.firstAppointmentData.startTime,
-        duration: 1, // Duración fija de 1 hora
+        durationInHours: 1, // Duración fija de 1 hora
         patientName: this.firstAppointmentData.patientName,
         patientPhone: this.firstAppointmentData.patientPhone
       };
-  
+      console.log("holaaa"+appointment.durationInHours.toString())
       this.http.post('/api/appointments', appointment)
         .subscribe(() => alert('Cita registrada exitosamente.'), (error) => {
           console.error('Error registrando la cita:', error);
           alert('Hubo un problema al registrar la cita.');
         });
     }
+    
   }
 
   onSubmitNormalAppointment(form: any) {
