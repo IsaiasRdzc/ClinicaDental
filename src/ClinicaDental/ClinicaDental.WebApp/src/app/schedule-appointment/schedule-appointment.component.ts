@@ -56,11 +56,10 @@ export class AppointmentComponent implements OnInit{
   // Modelos de datos
   appointmentData = {
     id: 0,
-    doctorId: 0,
+    doctorId: 1,
     date: '',
     startTime: "",
     durationInHours: 0,
-    endTime: '',
     patientName: '',
     patientPhone: ''
   };
@@ -120,14 +119,20 @@ export class AppointmentComponent implements OnInit{
     if (form.valid) {
       const appointment = {
         doctorId: this.appointmentData.doctorId,
+        
         date: this.appointmentData.date,
         startTime: this.appointmentData.startTime,
         durationInHours: 1, // Duración fija de 1 hora
         patientName: this.appointmentData.patientName,
         patientPhone: this.appointmentData.patientPhone
       };
+      console.log(appointment.date.toString())
+      console.log(appointment.startTime.toString())
+      console.log(appointment.durationInHours.toString())
+      console.log(appointment.patientName.toString())
+      console.log(appointment.patientPhone.toString())
 
-      this.http.post('/api/appointments', appointment)
+      this.http.post('/api/appointments',appointment)
         .subscribe((response: any) => {
           // Manejar el folio recibido del backend
           this.confirmationData = {
