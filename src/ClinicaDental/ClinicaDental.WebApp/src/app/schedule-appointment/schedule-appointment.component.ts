@@ -76,7 +76,15 @@ export class AppointmentComponent {
   isFirstAppointment(choice: boolean) {
     this.firstAppointment = choice;
     if (choice) {
-      //this.fetchAvailableSlots();
+      const yesButton = document.getElementById("yesButton");
+      yesButton?.classList.add("buttonSelected");
+      const noButton = document.getElementById("noButton");
+      noButton?.classList.remove("buttonSelected");
+    }else{
+      const noButton = document.getElementById("noButton");
+      noButton?.classList.add("buttonSelected");
+      const yesButton = document.getElementById("yesButton");
+      yesButton?.classList.remove("buttonSelected");
     }
   }
 
