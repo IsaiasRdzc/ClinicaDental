@@ -15,6 +15,8 @@ public class Account
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; private set; }
 
+    public required int DoctorId { get; set; }
+
     public required string Username { get; set; } = null!;
 
     public required string Password { get; set; } = null!;

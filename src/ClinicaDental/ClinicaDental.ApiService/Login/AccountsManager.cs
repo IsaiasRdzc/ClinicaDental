@@ -14,12 +14,12 @@ public class AccountsManager
         this.accountsRegistry = accountsRegistry;
     }
 
-    public async Task<bool> AttemptLogin(Account doctorAccount)
+    public async Task<bool> AttemptLogin(string username, string password)
     {
         var validAccounts = await this.accountsRegistry.GetAccountsList().ToListAsync();
 
-        var userExists = validAccounts.Exists(account => account.Username == doctorAccount.Username
-        && account.Password == doctorAccount.Password);
+        var userExists = validAccounts.Exists(account => account.Username == username
+        && account.Password == password);
 
         if (userExists)
         {

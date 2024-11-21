@@ -126,11 +126,6 @@ export class AppointmentComponent implements OnInit{
         patientName: this.appointmentData.patientName,
         patientPhone: this.appointmentData.patientPhone
       };
-      console.log(appointment.date.toString())
-      console.log(appointment.startTime.toString())
-      console.log(appointment.durationInHours.toString())
-      console.log(appointment.patientName.toString())
-      console.log(appointment.patientPhone.toString())
 
       this.http.post('/api/appointments',appointment)
         .subscribe((response: any) => {

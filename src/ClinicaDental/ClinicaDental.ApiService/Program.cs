@@ -5,6 +5,7 @@ using ClinicaDental.ApiService.Appointments;
 using ClinicaDental.ApiService.Appointments.Services;
 using ClinicaDental.ApiService.DataBase;
 using ClinicaDental.ApiService.DataBase.Registries.Appointments;
+using ClinicaDental.ApiService.DataBase.Registries.Doctors;
 using ClinicaDental.ApiService.DataBase.Registries.Inventory;
 using ClinicaDental.ApiService.DataBase.Registries.Login;
 using ClinicaDental.ApiService.DataBase.Registries.MedicalRecords;

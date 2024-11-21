@@ -1,6 +1,7 @@
 ﻿namespace ClinicaDental.ApiService.DataBase;
 
 using ClinicaDental.ApiService.DataBase.Models.Appointments;
+using ClinicaDental.ApiService.DataBase.Models.Doctors;
 using ClinicaDental.ApiService.DataBase.Models.Inventory;
 using ClinicaDental.ApiService.DataBase.Models.Login;
 using ClinicaDental.ApiService.DataBase.Models.MedicalRecords;
@@ -66,7 +67,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 
         // Seed Accounts
         modelBuilder.Entity<Account>().HasData(
-            new Account(1) { Username = "Admin", Password = "123" });
+            new Account(1) { Username = "Admin", Password = "123", DoctorId = 1 });
 
         modelBuilder.Entity<Supply>().ToTable("Supplies");
         modelBuilder.Entity<MedicalSupply>().ToTable("MedicalSupplies");
