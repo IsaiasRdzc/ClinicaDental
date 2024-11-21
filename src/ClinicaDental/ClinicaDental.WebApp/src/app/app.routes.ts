@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { ScheduleAppointmentComponent } from './schedule-appointment/schedule-appointment.component';
+import { AppointmentComponent } from './schedule-appointment/schedule-appointment.component';
 import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
@@ -11,7 +11,7 @@ export const routes: Routes = [
     },
     {
         path: 'schedule-appointment',
-        component: ScheduleAppointmentComponent,
+        component: AppointmentComponent,
         title: 'Agendar Cita'
     },
     {
