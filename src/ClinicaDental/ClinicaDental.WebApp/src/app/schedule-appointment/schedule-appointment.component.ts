@@ -52,8 +52,7 @@ export class AppointmentComponent implements OnInit{
   firstAppointment: boolean | null = null;
   dateSelected: boolean | null = null;
   
-
-  // Modelos de datos
+  //model
   appointmentData = {
     id: 0,
     doctorId: 1,
@@ -63,6 +62,8 @@ export class AppointmentComponent implements OnInit{
     patientName: '',
     patientPhone: ''
   };
+
+
 
 
   availableSlots: string[] = [];
