@@ -8,6 +8,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 {
     public required DbSet<Supply> Supplies { get; init; }
 
+    public DbSet<MedicalSupply> MedicalSupplies { get; init; }
+
+    public DbSet<SurgicalSupply> SurgicalSupplies { get; init; }
+
+    public DbSet<CleaningSupply> CleaningSupplies { get; init; }
+
     public required DbSet<Appointment> AppointmentsTable { get; init; }
 
     public required DbSet<Doctor> DoctorsTable { get; init; }
@@ -47,5 +53,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             new DoctorDaySchedule(5) { DoctorId = 1, DayOfWeek = DayOfWeek.Thursday, StartTime = new TimeOnly(10, 0), EndTime = new TimeOnly(16, 0) },
             new DoctorDaySchedule(6) { DoctorId = 1, DayOfWeek = DayOfWeek.Friday, StartTime = new TimeOnly(10, 0), EndTime = new TimeOnly(16, 0) },
             new DoctorDaySchedule(7) { DoctorId = 1, DayOfWeek = DayOfWeek.Saturday, StartTime = new TimeOnly(10, 0), EndTime = new TimeOnly(14, 0) });
+
+        modelBuilder.Entity<Supply>().ToTable("Supplies");
+        modelBuilder.Entity<MedicalSupply>().ToTable("MedicalSupplies");
+        modelBuilder.Entity<SurgicalSupply>().ToTable("SurgicalSupplies");
+        modelBuilder.Entity<CleaningSupply>().ToTable("CleaningSupplies");
     }
 }
