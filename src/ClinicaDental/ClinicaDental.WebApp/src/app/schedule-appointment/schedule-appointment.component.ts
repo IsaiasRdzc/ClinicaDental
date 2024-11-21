@@ -60,7 +60,6 @@ export class AppointmentComponent implements OnInit{
     date: '',
     startTime: "",
     durationInHours: 0,
-    endTime: '',
     patientName: '',
     patientPhone: ''
   };
@@ -120,20 +119,15 @@ export class AppointmentComponent implements OnInit{
     if (form.valid) {
       const appointment = {
         doctorId: this.appointmentData.doctorId,
+        
         date: this.appointmentData.date,
         startTime: this.appointmentData.startTime,
         durationInHours: 1, // Duración fija de 1 hora
         patientName: this.appointmentData.patientName,
         patientPhone: this.appointmentData.patientPhone
       };
-      console.log(appointment.doctorId)
-      console.log(appointment.date)
-      console.log(appointment.startTime)
-      console.log(appointment.durationInHours)
-      console.log(appointment.patientName)
-      console.log(appointment.patientPhone)
 
-      this.http.post('/api/appointments', appointment)
+      this.http.post('/api/appointments',appointment)
         .subscribe((response: any) => {
           // Manejar el folio recibido del backend
           this.confirmationData = {
