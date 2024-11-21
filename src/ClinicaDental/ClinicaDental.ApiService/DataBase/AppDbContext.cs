@@ -8,17 +8,17 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 {
     public required DbSet<Supply> Supplies { get; init; }
 
-    public required DbSet<Appointment> Appointments { get; init; }
+    public required DbSet<Appointment> AppointmentsTable { get; init; }
 
-    public required DbSet<Doctor> Doctors { get; init; }
+    public required DbSet<Doctor> DoctorsTable { get; init; }
 
-    public required DbSet<ClinicDayBussinesHours> ClinicDayBussinesHours { get; init; }
+    public required DbSet<ClinicDayBussinesHours> ClinicDayBussinesHoursTable { get; init; }
 
-    public required DbSet<DoctorDaySchedule> DoctorDaySchedules { get; init; }
+    public required DbSet<DoctorDaySchedule> DoctorDaySchedulesTable { get; init; }
 
-    public required DbSet<ScheduleModification> ScheduleModifications { get; init; }
+    public required DbSet<ScheduleModification> ScheduleModificationsTable { get; init; }
 
-    public DbSet<PaymentDetail> PaymentDetails { get; init; }
+    public required DbSet<PaymentDetail> PaymentDetails { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

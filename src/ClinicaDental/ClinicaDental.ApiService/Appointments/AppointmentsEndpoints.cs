@@ -2,7 +2,6 @@ namespace ClinicaDental.ApiService.Appointments;
 
 using ClinicaDental.ApiService.Appointments.Services;
 using ClinicaDental.ApiService.DataBase.Models;
-using ClinicaDental.ApiService.DataBase.Registries;
 
 public static class AppointmentsEndpoints
 {
@@ -31,8 +30,19 @@ public static class AppointmentsEndpoints
         Doctor doctor,
         ClinicAdmin clinicAdmin)
     {
-        await clinicAdmin.CreateDoctorAccount(doctor);
-        return Results.Ok();
+        try
+        {
+            await clinicAdmin.CreateDoctorAccount(doctor);
+            return Results.Ok();
+        }
+        catch (KeyNotFoundException error)
+        {
+            return Results.NotFound(error.Message);
+        }
+        catch (InvalidOperationException error)
+        {
+            return Results.BadRequest(error.Message);
+        }
     }
 
     public static async Task<IResult> GetAvailableSlots(
@@ -40,9 +50,19 @@ public static class AppointmentsEndpoints
         DateOnly date,
         ClinicAgenda appointmentCalendar)
     {
-        var appointments = await appointmentCalendar.GetAvailableTimeSlotsForDoctorInDate(doctorId, date);
-
-        return Results.Ok(appointments);
+        try
+        {
+            var appointments = await appointmentCalendar.GetAvailableTimeSlotsForDoctorInDate(doctorId, date);
+            return Results.Ok(appointments);
+        }
+        catch (KeyNotFoundException error)
+        {
+            return Results.NotFound(error.Message);
+        }
+        catch (InvalidOperationException error)
+        {
+            return Results.BadRequest(error.Message);
+        }
     }
 
     public static async Task<IResult> GetAppointmentsInRange(
@@ -50,9 +70,19 @@ public static class AppointmentsEndpoints
         DateOnly dateEnd,
         ClinicAgenda appointmentCalendar)
     {
-        var appointments = await appointmentCalendar.GetAllAppointmentsInRange(dateStart, dateEnd);
-
-        return Results.Ok(appointments);
+        try
+        {
+            var appointments = await appointmentCalendar.GetAllAppointmentsInRange(dateStart, dateEnd);
+            return Results.Ok(appointments);
+        }
+        catch (KeyNotFoundException error)
+        {
+            return Results.NotFound(error.Message);
+        }
+        catch (InvalidOperationException error)
+        {
+            return Results.BadRequest(error.Message);
+        }
     }
 
     public static async Task<IResult> GetAppointmentsForDoctorInRange(
@@ -61,27 +91,57 @@ public static class AppointmentsEndpoints
         DateOnly dateTimeEnd,
         ClinicAgenda appointmentCalendar)
     {
-        var appointments = await appointmentCalendar.GetAppointmentsForDoctorInRange(doctorId, dateTimeStart, dateTimeEnd);
-
-        return Results.Ok(appointments);
+        try
+        {
+            var appointments = await appointmentCalendar.GetAppointmentsForDoctorInRange(doctorId, dateTimeStart, dateTimeEnd);
+            return Results.Ok(appointments);
+        }
+        catch (KeyNotFoundException error)
+        {
+            return Results.NotFound(error.Message);
+        }
+        catch (InvalidOperationException error)
+        {
+            return Results.BadRequest(error.Message);
+        }
     }
 
     public static async Task<IResult> GetAppointment(
         int folio,
         ClinicAgenda appointmentCalendar)
     {
-        var appointment = await appointmentCalendar.GetAppointmentByFolio(folio);
-
-        return Results.Ok(appointment);
+        try
+        {
+            var appointment = await appointmentCalendar.GetAppointmentByFolio(folio);
+            return Results.Ok(appointment);
+        }
+        catch (KeyNotFoundException error)
+        {
+            return Results.NotFound(error.Message);
+        }
+        catch (InvalidOperationException error)
+        {
+            return Results.BadRequest(error.Message);
+        }
     }
 
     public static async Task<IResult> ScheduleAppointment(
         Appointment appointment,
         ClinicReceptionist scheduler)
     {
-        await scheduler.ScheduleAppointment(appointment);
-
-        return Results.Ok();
+        try
+        {
+            await scheduler.ScheduleAppointment(appointment);
+            return Results.Ok();
+        }
+        catch (KeyNotFoundException error)
+        {
+            return Results.NotFound(error.Message);
+        }
+        catch (InvalidOperationException error)
+        {
+            return Results.BadRequest(error.Message);
+        }
     }
 
     public static async Task<IResult> ReScheduleAppointment(
@@ -91,47 +151,111 @@ public static class AppointmentsEndpoints
         int duration,
         ClinicReceptionist scheduler)
     {
-        await scheduler.ReScheduleAppointment(appointmentId, date, time, duration);
-
-        return Results.Ok();
+        try
+        {
+            await scheduler.ReScheduleAppointment(appointmentId, date, time, duration);
+            return Results.Ok();
+        }
+        catch (KeyNotFoundException error)
+        {
+            return Results.NotFound(error.Message);
+        }
+        catch (InvalidOperationException error)
+        {
+            return Results.BadRequest(error.Message);
+        }
     }
 
     public static async Task<IResult> DeleteAppointment(
         int appointmentId,
         ClinicReceptionist scheduler)
     {
-        await scheduler.CancelAppointment(appointmentId);
-
-        return Results.Ok();
+        try
+        {
+            await scheduler.CancelAppointment(appointmentId);
+            return Results.Ok();
+        }
+        catch (KeyNotFoundException error)
+        {
+            return Results.NotFound(error.Message);
+        }
+        catch (InvalidOperationException error)
+        {
+            return Results.BadRequest(error.Message);
+        }
     }
 
     public static async Task<IResult> SetClinicHours(
         ClinicDayBussinesHours clinicHours,
         ClinicAdmin clinicAdmin)
     {
-        await clinicAdmin.SetClinicBussinesHours(clinicHours);
-        return Results.Ok();
+        try
+        {
+            await clinicAdmin.SetClinicBussinesHours(clinicHours);
+            return Results.Ok();
+        }
+        catch (KeyNotFoundException error)
+        {
+            return Results.NotFound(error.Message);
+        }
+        catch (InvalidOperationException error)
+        {
+            return Results.BadRequest(error.Message);
+        }
     }
 
     public static async Task<IResult> GetClinicHours(
         ClinicAdmin clinicAdmin)
     {
-        var clinicHours = await clinicAdmin.GetClinicBussinesHours();
-        return Results.Ok(clinicHours);
+        try
+        {
+            var clinicHours = await clinicAdmin.GetClinicBussinesHours();
+            return Results.Ok(clinicHours);
+        }
+        catch (KeyNotFoundException error)
+        {
+            return Results.NotFound(error.Message);
+        }
+        catch (InvalidOperationException error)
+        {
+            return Results.BadRequest(error.Message);
+        }
     }
 
     public static async Task<IResult> SetDoctorSchedule(
         DoctorDaySchedule doctorSchedule,
         ClinicAdmin clinicAdmin)
     {
-        await clinicAdmin.SetDoctorDaySchedule(doctorSchedule);
-        return Results.Ok();
+        try
+        {
+            await clinicAdmin.SetDoctorDaySchedule(doctorSchedule);
+            return Results.Ok();
+        }
+        catch (KeyNotFoundException error)
+        {
+            return Results.NotFound(error.Message);
+        }
+        catch (InvalidOperationException error)
+        {
+            return Results.BadRequest(error.Message);
+        }
     }
 
     public static async Task<IResult> GetDoctorsList(
         ClinicAdmin clinicAdmin)
     {
-        var doctors = await clinicAdmin.GetDoctorsList();
-        return Results.Ok(doctors);
+        try
+        {
+            var doctors = await clinicAdmin.GetDoctorsList();
+            return Results.Ok(doctors);
+        }
+        catch (KeyNotFoundException error)
+        {
+            return Results.NotFound(error.Message);
+        }
+        catch (InvalidOperationException error)
+        {
+            return Results.BadRequest(error.Message);
+        }
     }
 }

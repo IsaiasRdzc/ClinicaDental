@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 public class ClinicAgenda
 {
-    private readonly AppointmentRegistry appointmentRegistry;
-    private readonly ScheduleRegistry scheduleRegistry;
-    private readonly DoctorRegistry doctorRegistry;
+    private readonly AppointmentsRegistry appointmentRegistry;
+    private readonly SchedulesRegistry scheduleRegistry;
+    private readonly DoctorsRegistry doctorRegistry;
 
-    public ClinicAgenda(AppointmentRegistry appointmentRegistry, ScheduleRegistry scheduleRegistry, DoctorRegistry doctorRegistry)
+    public ClinicAgenda(AppointmentsRegistry appointmentRegistry, SchedulesRegistry scheduleRegistry, DoctorsRegistry doctorRegistry)
     {
         this.appointmentRegistry = appointmentRegistry;
         this.scheduleRegistry = scheduleRegistry;
