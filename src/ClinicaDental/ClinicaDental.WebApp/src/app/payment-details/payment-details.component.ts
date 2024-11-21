@@ -1,22 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { PaymentDetailFormComponent } from './payment-detail-form/payment-detail-form.component';
-import { PaymentDetailService } from '../shared/payment-detail.service';
+import { PurchaseService } from '../purchase.service';
 
 @Component({
-  selector: 'app-payment-details',
-  standalone: true,
-  imports: [PaymentDetailFormComponent,CommonModule],
-  templateUrl: './payment-details.component.html',
-  styleUrl: './payment-details.component.css'
+  selector: 'app-purchase-list',
+  templateUrl: './purchase-list.component.html',
+  styleUrls: ['./purchase-list.component.css']
 })
-export class PaymentDetailsComponent implements OnInit{
-  constructor(public service: PaymentDetailService){
+export class PurchaseListComponent implements OnInit {
+  purchases: any[] = []; // Aquí se almacenarán las compras
 
-  }
+  constructor(private purchaseService: PurchaseService) { }
+
   ngOnInit(): void {
-    this.service.refreshList();
+    this.getPurchases();
   }
 
-
+  getPurchases(): void {
+    this.purchaseService.getAllPurchases().subscribe(
+      (data) => {
+        this.purchases = data;
+      },
+      (error) => {
+        console.error('Error al cargar las compras:', error);
+      }
+    );
+  }
 }

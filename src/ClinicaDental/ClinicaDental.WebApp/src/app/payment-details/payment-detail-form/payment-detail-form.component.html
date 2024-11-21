@@ -1,37 +1,26 @@
-<p>payment-detail-form works!</p>
-<form #form="ngForm" (submit)="onSubmit(form)">
-    <input type="hidden" name="paymentDetailId" [value]="service.formData.paymentDetailId">
-    <div class="mb-3">
-        <label>Card Owner Name</label>
-        <input class="form-control form-control-lg" 
-        placeholder="Name on Card"
-        #cardOwnerName="ngModel" name="cardOwnerName"
-        [(ngModel)]="service.formData.cardOwnerName">
-    </div>
-    <div class="mb-3">
-        <label>Security Code</label>
-        <input class="form-control form-control-lg" 
-        placeholder="CSV" type="password"
-        #securityCode="ngModel" name="securityCode"
-        [(ngModel)]="service.formData.securityCode">
-    </div>
-    <div class="mb-3">
-        <label>Card Number</label>
-        <input class="form-control form-control-lg" 
-        placeholder="16 digit number"
-        #cardNumber="ngModel" name="cardNumber"
-        [(ngModel)]="service.formData.cardNumber">
-    </div>
-    <div class="mb-3">
-        <label>Expiration Date</label>
-        <input class="form-control form-control-lg" 
-        placeholder="ddmmyy"
-        #expirationDate="ngModel" name="expirationDate"
-        [(ngModel)]="service.formData.expirationDate">
-    </div>
-    <div class="d-grid">
-        <button class="btn btn-lg btn-success" type="submit">
-            Submit
-        </button>
-    </div>
-</form>
+<div class="purchase-list">
+  <h2>Lista de Compras</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Fecha</th>
+        <th>Proveedor</th>
+        <th>Monto</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let purchase of purchases">
+        <td>{{ purchase.id }}</td>
+        <td>{{ purchase.createdDate }}</td>
+        <td>{{ purchase.supplierName }}</td>
+        <td>{{ purchase.amount }}</td>
+        <td>
+          <button (click)="editPurchase(purchase.id)">Editar</button>
+          <button (click)="deletePurchase(purchase.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
