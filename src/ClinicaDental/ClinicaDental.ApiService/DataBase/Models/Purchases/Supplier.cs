@@ -17,8 +17,6 @@ public class Supplier
     [Required]
     public string PhoneNumber { get; set; } = null!;
 
-    public List<Purchase> Purchases { get; set; } = new();
-
     public Supplier()
     {
     }

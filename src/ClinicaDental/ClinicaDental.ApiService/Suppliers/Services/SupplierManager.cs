@@ -34,15 +34,27 @@
 
         public async Task UpdateSupplierAsync(Supplier supplier)
         {
-            SupplierValidator.ValidateSupplier(supplier);
+            if (supplier == null || supplier.Id <= 0)
+            {
+                throw new ArgumentException("Proveedor inválido o no especificado");
+            }
+
             var existingSupplier = await _suppliersRegistry.GetSupplierByIdAsync(supplier.Id);
             if (existingSupplier == null)
             {
                 throw new KeyNotFoundException($"No se encontró el proveedor con ID {supplier.Id}");
             }
 
-            await _suppliersRegistry.UpdateSupplierAsync(supplier);
+            // Valida campos del proveedor
+            SupplierValidator.ValidateSupplier(supplier);
+
+            // Actualiza solo propiedades necesarias
+            existingSupplier.Name = supplier.Name;
+            existingSupplier.PhoneNumber = supplier.PhoneNumber;
+
+            await _suppliersRegistry.UpdateSupplierAsync(existingSupplier);
         }
+
 
         public async Task DeleteSupplierAsync(int supplierId)
         {

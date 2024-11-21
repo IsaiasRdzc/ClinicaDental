@@ -19,7 +19,11 @@ public static class PurchasesEndpoints
 
     public static async Task<IResult> CreatePurchase(Purchase purchase, PurchaseManager purchaseManager)
     {
-        return await ErrorOrResultHandler.HandleResult(async () => await purchaseManager.AddPurchaseAsync(purchase));
+        return await ErrorOrResultHandler.HandleResult(async () =>
+        {
+            await purchaseManager.AddPurchaseAsync(purchase);
+            return Results.Ok();
+        });
     }
 
     public static async Task<IResult> GetPurchaseById(int purchaseId, PurchaseManager purchaseManager)

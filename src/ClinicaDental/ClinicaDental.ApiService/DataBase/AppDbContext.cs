@@ -96,27 +96,23 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
            .WithOne()
            .OnDelete(DeleteBehavior.Cascade);
 
-         // Configuración para la entidad Purchase
-        modelBuilder.Entity<Purchase>(entity =>
-        {
-            entity.HasKey(e => e.Id); // Primary Key
-            entity.Property(e => e.CreatedDate ).IsRequired(); // Campo requerido
-            entity.HasOne(e => e.Supplier)
-                .WithMany(s => s.Purchases)
-                .HasForeignKey(e => e.SupplierId)
-                .OnDelete(DeleteBehavior.Cascade); // Relación con Supplier
-        });
+        // Configuración para la entidad Purchase
+            modelBuilder.Entity<Purchase>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.CreatedDate).IsRequired();
+                entity.HasOne(e => e.Supplier)
+                    .WithMany() // Ya no hay relación con Purchases
+                    .HasForeignKey(e => e.SupplierId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
 
         // Configuración para la entidad PurchaseDetail
         modelBuilder.Entity<PurchaseDetail>(entity =>
         {
             entity.HasKey(e => e.Id); // Primary Key
-            entity.HasOne(e => e.Purchase)
-                .WithMany(p => p.Details)
-                .HasForeignKey(e => e.PurchaseId)
-                .OnDelete(DeleteBehavior.Cascade); // Relación con Purchase
-            entity.HasOne(e => e.Material)
-                .WithMany() // No se especifica propiedad de navegación
+            entity.HasOne<Material>(e => e.Material)
+                .WithMany()
                 .HasForeignKey(e => e.MaterialId)
                 .OnDelete(DeleteBehavior.Restrict); // Relación con Material
         });

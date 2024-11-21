@@ -9,7 +9,6 @@
         public int Id { get; set; }
 
         public int PurchaseId { get; set; } // Clave foránea
-        public Purchase Purchase { get; set; } = null!; // Propiedad de navegación
 
         [Required]
         public int MaterialId { get; set; }

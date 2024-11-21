@@ -31,10 +31,18 @@ namespace ClinicaDental.ApiService.DataBase.Registries.Purchases
             return await _context.Suppliers.FindAsync(id);
         }
 
-        // Actualizar proveedor existente
         public async Task UpdateSupplierAsync(Supplier supplier)
         {
-            _context.Suppliers.Update(supplier);
+            var existingSupplier = await _context.Suppliers.FindAsync(supplier.Id);
+            if (existingSupplier == null)
+            {
+                throw new KeyNotFoundException($"No se encontró el proveedor con ID {supplier.Id}");
+            }
+
+            // Actualiza solo las propiedades necesarias
+            existingSupplier.Name = supplier.Name;
+            existingSupplier.PhoneNumber = supplier.PhoneNumber;
+
             await _context.SaveChangesAsync();
         }
 
