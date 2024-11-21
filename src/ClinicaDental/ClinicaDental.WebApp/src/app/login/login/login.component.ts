@@ -35,7 +35,7 @@ export class LoginComponent {
         next: (response: any) => {
           if (response===true) {
             // Si la respuesta es positiva, redirige a otra página
-            this.router.navigate(['/payment']); // Ajusta la ruta de destino
+            this.router.navigate(['/dashboard']); // Ajusta la ruta de destino
           } else {
             // Manejo de error si el login es incorrecto
             alert('Credenciales incorrectas');
