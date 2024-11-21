@@ -56,7 +56,7 @@ export class AppointmentComponent implements OnInit{
   // Modelos de datos
   appointmentData = {
     id: 0,
-    doctorId: 0,
+    doctorId: 1,
     date: '',
     startTime: "",
     durationInHours: 0,
@@ -126,6 +126,12 @@ export class AppointmentComponent implements OnInit{
         patientName: this.appointmentData.patientName,
         patientPhone: this.appointmentData.patientPhone
       };
+      console.log(appointment.doctorId)
+      console.log(appointment.date)
+      console.log(appointment.startTime)
+      console.log(appointment.durationInHours)
+      console.log(appointment.patientName)
+      console.log(appointment.patientPhone)
 
       this.http.post('/api/appointments', appointment)
         .subscribe((response: any) => {
