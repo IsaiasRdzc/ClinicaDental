@@ -13,9 +13,9 @@ public class DoctorRegistry
         this.context = context;
     }
 
-    public async Task<IEnumerable<Doctor>> GetDoctorsList()
+    public IQueryable<Doctor> GetDoctorsList()
     {
-        return await this.context.Doctors.ToListAsync();
+        return this.context.Doctors.AsQueryable();
     }
 
     public async Task<Doctor?> GetDoctorWithId(int id)

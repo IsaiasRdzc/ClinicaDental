@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 public class AppDbContext(DbContextOptions<AppDbContext> options)
     : DbContext(options)
 {
-    public DbSet<Supply> Supplies { get; init; }
+    public required DbSet<Supply> Supplies { get; init; }
 
     public DbSet<MedicalSupply> MedicalSupplies { get; init; }
 
@@ -14,29 +14,31 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 
     public DbSet<CleaningSupply> CleaningSupplies { get; init; }
 
-    public DbSet<Appointment> Appointments { get; init; }
+    public required DbSet<Appointment> Appointments { get; init; }
 
-    public DbSet<Doctor> Doctors { get; init; }
+    public required DbSet<Doctor> Doctors { get; init; }
 
-    public DbSet<ClinicHours> ClinicHours { get; init; }
+    public required DbSet<ClinicDayBussinesHours> ClinicDayBussinesHours { get; init; }
 
-    public DbSet<DoctorDaySchedule> DoctorDaySchedules { get; init; }
+    public required DbSet<DoctorDaySchedule> DoctorDaySchedules { get; init; }
 
-    public DbSet<ScheduleModification> ScheduleModifications { get; init; }
+    public required DbSet<ScheduleModification> ScheduleModifications { get; init; }
+
+    public DbSet<PaymentDetail> PaymentDetails { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         // Seed ClinicHours
-        modelBuilder.Entity<ClinicHours>().HasData(
-            new ClinicHours(1) { DayOfWeek = DayOfWeek.Sunday, OpeningTime = new TimeOnly(0, 0), ClosingTime = new TimeOnly(0, 0), IsClosed = true },
-            new ClinicHours(2) { DayOfWeek = DayOfWeek.Monday, OpeningTime = new TimeOnly(9, 0), ClosingTime = new TimeOnly(18, 0) },
-            new ClinicHours(3) { DayOfWeek = DayOfWeek.Tuesday, OpeningTime = new TimeOnly(9, 0), ClosingTime = new TimeOnly(18, 0) },
-            new ClinicHours(4) { DayOfWeek = DayOfWeek.Wednesday, OpeningTime = new TimeOnly(9, 0), ClosingTime = new TimeOnly(18, 0) },
-            new ClinicHours(5) { DayOfWeek = DayOfWeek.Thursday, OpeningTime = new TimeOnly(9, 0), ClosingTime = new TimeOnly(18, 0) },
-            new ClinicHours(6) { DayOfWeek = DayOfWeek.Friday, OpeningTime = new TimeOnly(9, 0), ClosingTime = new TimeOnly(18, 0) },
-            new ClinicHours(7) { DayOfWeek = DayOfWeek.Saturday, OpeningTime = new TimeOnly(9, 0), ClosingTime = new TimeOnly(14, 0) });
+        modelBuilder.Entity<ClinicDayBussinesHours>().HasData(
+            new ClinicDayBussinesHours(1) { DayOfWeek = DayOfWeek.Sunday, OpeningTime = new TimeOnly(0, 0), ClosingTime = new TimeOnly(0, 0), IsClosed = true },
+            new ClinicDayBussinesHours(2) { DayOfWeek = DayOfWeek.Monday, OpeningTime = new TimeOnly(9, 0), ClosingTime = new TimeOnly(18, 0) },
+            new ClinicDayBussinesHours(3) { DayOfWeek = DayOfWeek.Tuesday, OpeningTime = new TimeOnly(9, 0), ClosingTime = new TimeOnly(18, 0) },
+            new ClinicDayBussinesHours(4) { DayOfWeek = DayOfWeek.Wednesday, OpeningTime = new TimeOnly(9, 0), ClosingTime = new TimeOnly(18, 0) },
+            new ClinicDayBussinesHours(5) { DayOfWeek = DayOfWeek.Thursday, OpeningTime = new TimeOnly(9, 0), ClosingTime = new TimeOnly(18, 0) },
+            new ClinicDayBussinesHours(6) { DayOfWeek = DayOfWeek.Friday, OpeningTime = new TimeOnly(9, 0), ClosingTime = new TimeOnly(18, 0) },
+            new ClinicDayBussinesHours(7) { DayOfWeek = DayOfWeek.Saturday, OpeningTime = new TimeOnly(9, 0), ClosingTime = new TimeOnly(14, 0) });
 
         // Seed Doctor
         modelBuilder.Entity<Doctor>().HasData(

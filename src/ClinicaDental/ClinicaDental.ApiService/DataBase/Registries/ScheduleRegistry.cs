@@ -20,26 +20,29 @@ public class ScheduleRegistry
         await this.context.SaveChangesAsync();
     }
 
-    public async Task<DoctorDaySchedule?> GetDoctorSchedule(int doctorId, DayOfWeek dayOfWeek)
+    public DoctorDaySchedule? GetDoctorSchedule(int doctorId, DayOfWeek dayOfWeek)
     {
-        var schedules = await this.GetDoctorSchedules(doctorId);
+        var schedules = this.GetDoctorSchedules(doctorId);
 
         var schedule = schedules
-            .First(schedule => schedule.DayOfWeek == dayOfWeek);
+            .Where(schedule => schedule.DayOfWeek == dayOfWeek)
+            .FirstOrDefault();
 
         return schedule;
     }
 
-    public async Task<IEnumerable<DoctorDaySchedule>> GetDoctorSchedules(int doctorId)
+    public IQueryable<DoctorDaySchedule> GetDoctorSchedules(int doctorId)
     {
-        return await this.context.DoctorDaySchedules
+        var doctorSchedules = this.context.DoctorDaySchedules
             .Where(ds => ds.DoctorId == doctorId)
-            .ToListAsync();
+            .AsQueryable();
+
+        return doctorSchedules;
     }
 
     public async Task UpdateDoctorSchedule(DoctorDaySchedule doctorSchedule)
     {
-        var existingSchedule = await this.GetDoctorSchedule(doctorSchedule.DoctorId, doctorSchedule.DayOfWeek);
+        var existingSchedule = this.GetDoctorSchedule(doctorSchedule.DoctorId, doctorSchedule.DayOfWeek);
 
         if (existingSchedule is null)
         {
@@ -56,7 +59,7 @@ public class ScheduleRegistry
 
     public async Task DeleteDoctorSchedule(int doctorId, DayOfWeek dayOfWeek)
     {
-        var doctorSchedule = await this.GetDoctorSchedule(doctorId, dayOfWeek);
+        var doctorSchedule = this.GetDoctorSchedule(doctorId, dayOfWeek);
         if (doctorSchedule != null)
         {
             this.context.DoctorDaySchedules.Remove(doctorSchedule);
@@ -76,18 +79,22 @@ public class ScheduleRegistry
         return await this.context.ScheduleModifications.FindAsync(id);
     }
 
-    public async Task<IEnumerable<ScheduleModification>> GetScheduleModificationsByDate(DateOnly date)
+    public IQueryable<ScheduleModification> GetScheduleModificationsByDate(DateOnly date)
     {
-        return await this.context.ScheduleModifications
+        var scheduleModifications = this.context.ScheduleModifications
             .Where(mod => mod.Date == date)
-            .ToListAsync();
+            .AsQueryable();
+
+        return scheduleModifications;
     }
 
-    public async Task<IEnumerable<ScheduleModification>> GetScheduleModificationsForDoctorOnDate(int doctorId, DateOnly date)
+    public IQueryable<ScheduleModification> GetScheduleModificationsForDoctorOnDate(int doctorId, DateOnly date)
     {
-        return await this.context.ScheduleModifications
+        var scheduleModifications = this.context.ScheduleModifications
             .Where(mod => mod.Date == date && mod.DoctorId == doctorId)
-            .ToListAsync();
+            .AsQueryable();
+
+        return scheduleModifications;
     }
 
     public async Task UpdateScheduleModification(ScheduleModification modification)
@@ -107,51 +114,51 @@ public class ScheduleRegistry
     }
 
     // Clinic hours CRUD
-    public async Task AddClinicHours(ClinicHours clinicHours)
+    public async Task AddClinicHours(ClinicDayBussinesHours clinicHours)
     {
-        await this.context.ClinicHours.AddAsync(clinicHours);
+        await this.context.ClinicDayBussinesHours.AddAsync(clinicHours);
         await this.context.SaveChangesAsync();
     }
 
-    public async Task<ClinicHours?> GetClinicHours(int id)
+    public async Task<ClinicDayBussinesHours?> GetClinicHours(int id)
     {
-        return await this.context.ClinicHours.FindAsync(id);
+        return await this.context.ClinicDayBussinesHours.FindAsync(id);
     }
 
-    public async Task<IEnumerable<ClinicHours?>> GetClinicHoursList()
+    public IQueryable<ClinicDayBussinesHours> GetClinicHoursList()
     {
-        return await this.context.ClinicHours.ToListAsync();
+        return this.context.ClinicDayBussinesHours.AsQueryable();
     }
 
-    public async Task<ClinicHours?> GetClinicHoursByDay(DayOfWeek dayOfWeek)
+    public async Task<ClinicDayBussinesHours?> GetClinicHoursByDay(DayOfWeek dayOfWeek)
     {
-        return await this.context.ClinicHours
+        return await this.context.ClinicDayBussinesHours
             .FirstOrDefaultAsync(ch => ch.DayOfWeek == dayOfWeek);
     }
 
-    public async Task UpdateClinicHours(ClinicHours clinicHours)
+    public async Task UpdateClinicHours(ClinicDayBussinesHours clinicHours)
     {
-        var existingSchedule = await this.GetClinicHoursByDay(clinicHours.DayOfWeek);
+        var existingClinicHours = await this.GetClinicHoursByDay(clinicHours.DayOfWeek);
 
-        if (existingSchedule is null)
+        if (existingClinicHours is null)
         {
             throw new KeyNotFoundException("Clinic schedule not found.");
         }
 
-        existingSchedule.OpeningTime = clinicHours.OpeningTime;
-        existingSchedule.ClosingTime = clinicHours.ClosingTime;
-        existingSchedule.IsClosed = clinicHours.IsClosed;
+        existingClinicHours.OpeningTime = clinicHours.OpeningTime;
+        existingClinicHours.ClosingTime = clinicHours.ClosingTime;
+        existingClinicHours.IsClosed = clinicHours.IsClosed;
 
-        this.context.ClinicHours.Update(existingSchedule);
+        this.context.ClinicDayBussinesHours.Update(existingClinicHours);
         await this.context.SaveChangesAsync();
     }
 
     public async Task DeleteClinicHours(int id)
     {
-        var clinicHours = await this.GetClinicHours(id);
-        if (clinicHours != null)
+        var clinicDayBussinesHours = await this.GetClinicHours(id);
+        if (clinicDayBussinesHours != null)
         {
-            this.context.ClinicHours.Remove(clinicHours);
+            this.context.ClinicDayBussinesHours.Remove(clinicDayBussinesHours);
             await this.context.SaveChangesAsync();
         }
     }

@@ -4,7 +4,10 @@ using System.Text.Json.Serialization;
 using ClinicaDental.ApiService.Appointments;
 using ClinicaDental.ApiService.Appointments.Services;
 using ClinicaDental.ApiService.DataBase;
+using ClinicaDental.ApiService.DataBase.Models;
 using ClinicaDental.ApiService.DataBase.Registries;
+using ClinicaDental.ApiService.ReynaldoPractices;
+using ClinicaDental.ApiService.ReynaldoPractices.Services;
 using Microsoft.AspNetCore.Http.Json;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,16 +33,18 @@ builder.Services.AddSwaggerGen();
 
 // Services
 builder.AddNpgsqlDbContext<AppDbContext>("ClinicaDentalDb");
-builder.Services.AddTransient<AppointmentScheduler>();
-builder.Services.AddTransient<AppointmentCalendar>();
-builder.Services.AddTransient<WorkScheduleAdmin>();
 builder.Services.AddTransient<StoreKeeper>();
+builder.Services.AddTransient<ClinicReceptionist>();
+builder.Services.AddTransient<ClinicAgenda>();
+builder.Services.AddTransient<ClinicAdmin>();
+builder.Services.AddTransient<PaymentsAdmin>();
 
 // Registries
 builder.Services.AddTransient<AppointmentRegistry>();
 builder.Services.AddTransient<ScheduleRegistry>();
 builder.Services.AddTransient<DoctorRegistry>();
 builder.Services.AddTransient<SuppliesRegistry>();
+builder.Services.AddTransient<PaymentDetailRegistry>();
 
 var app = builder.Build();
 
@@ -52,6 +57,7 @@ app.UseSwaggerUI();
 app.MapDefaultEndpoints();
 app.MapAppointmentsEndpoints();
 app.MapSuppliesEndpoints();
+app.MapPaymentEndpoints();
 
 // Initialize the database
 await app.InitializeDatabase();
