@@ -26,9 +26,10 @@ export class LoginComponent {
     if (loginForm.valid) {
       const loginPayload = {
         username: this.loginData.username,
-        password: this.loginData.password
+        password: this.loginData.password,
+        
       };
-
+      console.log(loginPayload);
       // Realiza el POST al backend
       this.http.post('/api/login', loginPayload).subscribe({
         next: (response: any) => {
