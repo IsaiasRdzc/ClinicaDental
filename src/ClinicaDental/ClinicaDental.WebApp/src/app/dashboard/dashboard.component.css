@@ -46,7 +46,6 @@
 /* Main content styles */
 .content {
     margin: 10pt;
-
     flex-grow: 1;
     display: flex;
     justify-content: center;
