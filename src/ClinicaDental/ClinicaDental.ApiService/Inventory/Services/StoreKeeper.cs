@@ -1,4 +1,4 @@
-﻿namespace ClinicaDental.ApiService.Appointments.Services;
+﻿namespace ClinicaDental.ApiService.Inventory.Services;
 
 using ClinicaDental.ApiService.DataBase.Models.Inventory;
 using ClinicaDental.ApiService.DataBase.Registries.Inventory;

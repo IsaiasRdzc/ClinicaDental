@@ -1,5 +1,4 @@
-﻿namespace ClinicaDental.ApiService.DataBase.Models;
-
+﻿namespace ClinicaDental.ApiService.DataBase.Models.Inventory;
 public class CleaningSupply : Supply
 {
     public required string CleaningType { get; set; }

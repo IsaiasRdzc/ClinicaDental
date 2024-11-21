@@ -1,7 +1,8 @@
 ﻿namespace ClinicaDental.ApiService.DataBase;
 
-using ClinicaDental.ApiService.DataBase.Models;
 using ClinicaDental.ApiService.DataBase.Models.Appointments;
+using ClinicaDental.ApiService.DataBase.Models.Inventory;
+using ClinicaDental.ApiService.DataBase.Models.MedicalRecords;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +28,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public required DbSet<ScheduleModification> ScheduleModificationsTable { get; init; }
 
     public required DbSet<PaymentDetail> PaymentDetails { get; init; }
+
+    public DbSet<MedicalRecord> MedicalRecords { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -60,5 +63,25 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
         modelBuilder.Entity<MedicalSupply>().ToTable("MedicalSupplies");
         modelBuilder.Entity<SurgicalSupply>().ToTable("SurgicalSupplies");
         modelBuilder.Entity<CleaningSupply>().ToTable("CleaningSupplies");
+
+        modelBuilder.Entity<MedicalRecord>()
+            .HasMany(r => r.Diagnosis)
+            .WithOne()
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<MedicalRecord>()
+            .HasMany(r => r.MedicalProcedures)
+            .WithOne()
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<MedicalRecord>()
+            .HasMany(r => r.Teeths)
+            .WithOne()
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Illness>()
+           .HasMany(r => r.Treatments) // medicine
+           .WithOne()
+           .OnDelete(DeleteBehavior.Cascade);
     }
 }

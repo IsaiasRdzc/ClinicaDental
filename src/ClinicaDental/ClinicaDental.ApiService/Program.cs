@@ -1,13 +1,16 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using ClinicaDental.ApiService.Appointments;
 using ClinicaDental.ApiService.Appointments.Services;
 using ClinicaDental.ApiService.DataBase;
-using ClinicaDental.ApiService.DataBase.Models;
-using ClinicaDental.ApiService.DataBase.Registries;
+using ClinicaDental.ApiService.DataBase.Registries.Appointments;
+using ClinicaDental.ApiService.DataBase.Registries.Inventory;
+using ClinicaDental.ApiService.DataBase.Registries.MedicalRecords;
+using ClinicaDental.ApiService.Inventory.Services;
+using ClinicaDental.ApiService.MedicalRecords.Services;
 using ClinicaDental.ApiService.ReynaldoPractices;
 using ClinicaDental.ApiService.ReynaldoPractices.Services;
+
 using Microsoft.AspNetCore.Http.Json;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,12 +42,16 @@ builder.Services.AddTransient<ClinicAgenda>();
 builder.Services.AddTransient<ClinicAdmin>();
 builder.Services.AddTransient<PaymentsAdmin>();
 
+builder.Services.AddTransient<MedicalInformationManager>();
+
 // Registries
 builder.Services.AddTransient<SuppliesRegistry>();
 builder.Services.AddTransient<AppointmentsRegistry>();
 builder.Services.AddTransient<SchedulesRegistry>();
 builder.Services.AddTransient<DoctorsRegistry>();
 builder.Services.AddTransient<PaymentDetailRegistry>();
+
+builder.Services.AddTransient<MedicalRecordsRegistry>();
 
 var app = builder.Build();
 
@@ -57,6 +64,7 @@ app.UseSwaggerUI();
 app.MapDefaultEndpoints();
 app.MapAppointmentsEndpoints();
 app.MapSuppliesEndpoints();
+app.MapMedicalRecordsEndpoints();
 app.MapPaymentEndpoints();
 
 // Initialize the database
