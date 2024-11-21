@@ -12,6 +12,9 @@ public class Appointment
     [ForeignKey("Doctor")]
     public int DoctorId { get; set; }
 
+    [ForeignKey("Patient")]
+    public int PatientId { get; set; }
+
     public DateOnly Date { get; set; }
 
     public TimeOnly StartTime { get; set; }

@@ -23,6 +23,7 @@ public static class AppointmentsEndpoints
         group.MapGet("clinicHours", GetClinicHours);
 
         group.MapPut("reschedule/{id}", ReScheduleAppointment);
+        group.MapPut("appointment/{appointmentId,newPatientId}", UpdateAppointmentPatientId);
 
         group.MapDelete("{id}", DeleteAppointment);
     }
@@ -86,6 +87,15 @@ public static class AppointmentsEndpoints
     {
         return await ErrorOrResultHandler.HandleResult(
             async () => await scheduler.ReScheduleAppointment(appointmentId, date, time, duration));
+    }
+
+    public static async Task<IResult> UpdateAppointmentPatientId(
+        int folio,
+        int newPatientId,
+        ClinicReceptionist scheduler)
+    {
+        return await ErrorOrResultHandler.HandleResult(
+            async () => await scheduler.UpdateAppointmentPatientId(folio, newPatientId));
     }
 
     public static async Task<IResult> DeleteAppointment(
