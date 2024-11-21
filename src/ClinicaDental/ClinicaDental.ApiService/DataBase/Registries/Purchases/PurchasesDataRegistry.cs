@@ -2,56 +2,55 @@
 
 using ClinicaDental.ApiService.DataBase.Models.Purchases;
 using Microsoft.EntityFrameworkCore;
+
 public class PurchasesDataRegistry
+{
+    private readonly AppDbContext context;
+
+    public PurchasesDataRegistry(AppDbContext context)
     {
-        private readonly AppDbContext _context;
+        this.context = context;
+    }
 
-        public PurchasesDataRegistry(AppDbContext context)
+    public async Task<List<Purchase>> GetAllPurchasesAsync()
+    {
+        return await this.context.Purchases
+            .Include(p => p.Supplier)
+            .Include(p => p.Type)
+            .Include(p => p.Details)
+            .ToListAsync();
+    }
+
+    // Agregar una nueva compra
+    public async Task AddPurchaseAsync(Purchase purchase)
+    {
+        await this.context.Purchases.AddAsync(purchase);
+        await this.context.SaveChangesAsync();
+    }
+
+    // Obtener una compra específica por ID
+    public async Task<Purchase?> GetPurchaseByIdAsync(int id)
+    {
+        return await this.context.Purchases
+            .Include(p => p.Supplier)
+            .Include(p => p.Type)
+            .Include(p => p.Details)
+            .FirstOrDefaultAsync(p => p.Id == id);
+    }
+
+    public async Task DeletePurchaseAsync(int id)
+    {
+        var purchase = await this.context.Purchases.FindAsync(id);
+        if (purchase != null)
         {
-            this._context = context;
+            this.context.Purchases.Remove(purchase);
+            await this.context.SaveChangesAsync();
         }
+    }
 
-        public async Task<List<Purchase>> GetAllPurchasesAsync()
-        {
-            return await this._context.Purchases
-                .Include(p => p.Supplier)
-                .Include(p => p.Type)
-                .Include(p => p.Details)
-                .ToListAsync();
-        }
-
-        // Agregar una nueva compra
-        public async Task AddPurchaseAsync(Purchase purchase)
-        {
-            await this._context.Purchases.AddAsync(purchase);
-            await this._context.SaveChangesAsync();
-        }
-
-        // Obtener una compra específica por ID
-        public async Task<Purchase?> GetPurchaseByIdAsync(int id)
-        {
-            return await this._context.Purchases
-                .Include(p => p.Supplier)
-                .Include(p => p.Type)
-                .Include(p => p.Details)
-                .FirstOrDefaultAsync(p => p.Id == id);
-        }
-
-
-        public async Task DeletePurchaseAsync(int id)
-        {
-            var purchase = await this._context.Purchases.FindAsync(id);
-            if (purchase != null)
-            {
-                this._context.Purchases.Remove(purchase);
-                await this._context.SaveChangesAsync();
-            }
-        }
-
-            // Actualizar una compra existente
     public async Task UpdatePurchaseAsync(Purchase updatedPurchase)
     {
-        var existingPurchase = await this._context.Purchases
+        var existingPurchase = await this.context.Purchases
             .Include(p => p.Details)
             .FirstOrDefaultAsync(p => p.Id == updatedPurchase.Id);
 
@@ -61,7 +60,7 @@ public class PurchasesDataRegistry
         }
 
         // Actualiza los valores de la compra existente con los del objeto actualizado
-        _context.Entry(existingPurchase).CurrentValues.SetValues(updatedPurchase);
+        context.Entry(existingPurchase).CurrentValues.SetValues(updatedPurchase);
 
         // Actualiza los detalles de la compra
         foreach (var detail in updatedPurchase.Details)
@@ -71,7 +70,7 @@ public class PurchasesDataRegistry
             if (existingDetail != null)
             {
                 // Si el detalle existe, actualiza los valores
-                _context.Entry(existingDetail).CurrentValues.SetValues(detail);
+                context.Entry(existingDetail).CurrentValues.SetValues(detail);
             }
             else
             {
@@ -85,10 +84,10 @@ public class PurchasesDataRegistry
         {
             if (!updatedPurchase.Details.Any(d => d.Id == detail.Id))
             {
-                _context.PurchaseDetails.Remove(detail);
+                context.PurchaseDetails.Remove(detail);
             }
         }
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
     }
 }

@@ -70,6 +70,7 @@ builder.Services.AddTransient<SchedulesRegistry>();
 builder.Services.AddTransient<DoctorsRegistry>();
 builder.Services.AddTransient<PaymentDetailRegistry>();
 
+builder.Services.AddTransient<PurchasesDataRegistry>();
 builder.Services.AddTransient<PurchasesRegistry>();
 builder.Services.AddTransient<MaterialsRegistry>();
 builder.Services.AddTransient<SuppliersRegistry>();
