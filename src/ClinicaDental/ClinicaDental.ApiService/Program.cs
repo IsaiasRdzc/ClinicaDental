@@ -11,13 +11,18 @@ using ClinicaDental.ApiService.MedicalRecords.Services;
 using ClinicaDental.ApiService.ReynaldoPractices;
 using ClinicaDental.ApiService.ReynaldoPractices.Services;
 
+using ClinicaDental.ApiService.Purchases;
+using ClinicaDental.ApiService.Materials;
+using ClinicaDental.ApiService.Suppliers;
+using ClinicaDental.ApiService.Purchases.Services;
+using ClinicaDental.ApiService.Materials.Services;
+using ClinicaDental.ApiService.Suppliers.Services;
+
 using Microsoft.AspNetCore.Http.Json;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
-// Configuci�n JsonSerializerOptions globalmente para Minimal APIs
+// Configurar JsonSerializerOptions globalmente para Minimal APIs
 builder.Services.Configure<JsonOptions>(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -26,16 +31,18 @@ builder.Services.Configure<JsonOptions>(options =>
     options.SerializerOptions.WriteIndented = true;
 });
 
-// Add service defaults.
+// Configurar la conexión a la base de datos (PostgreSQL)
+builder.AddNpgsqlDbContext<AppDbContext>("ClinicaDentalDb");
+
+// Agregar servicios predeterminados y componentes adicionales
 builder.AddServiceDefaults();
 
-// Add services to the container.
+// Servicios generales de la aplicación
 builder.Services.AddProblemDetails();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Services
-builder.AddNpgsqlDbContext<AppDbContext>("ClinicaDentalDb");
+// Servicios específicos
 builder.Services.AddTransient<StoreKeeper>();
 builder.Services.AddTransient<ClinicReceptionist>();
 builder.Services.AddTransient<ClinicAgenda>();
@@ -44,7 +51,17 @@ builder.Services.AddTransient<PaymentsAdmin>();
 
 builder.Services.AddTransient<MedicalInformationManager>();
 
-// Registries
+// Servicios y managers para Purchases, Materials y Suppliers
+builder.Services.AddScoped<PurchasesRegistry>();
+builder.Services.AddScoped<PurchaseManager>();
+
+builder.Services.AddScoped<MaterialsRegistry>();
+builder.Services.AddScoped<MaterialManager>();
+
+builder.Services.AddScoped<SuppliersRegistry>();
+builder.Services.AddScoped<SupplierManager>();
+
+// Registries específicos
 builder.Services.AddTransient<SuppliesRegistry>();
 builder.Services.AddTransient<AppointmentsRegistry>();
 builder.Services.AddTransient<SchedulesRegistry>();
@@ -55,19 +72,25 @@ builder.Services.AddTransient<MedicalRecordsRegistry>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configurar el pipeline de solicitudes HTTP
 app.UseExceptionHandler();
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseHttpsRedirection();
 
-// Mappings
+// Mapeo de endpoints
 app.MapDefaultEndpoints();
 app.MapAppointmentsEndpoints();
 app.MapSuppliesEndpoints();
 app.MapMedicalRecordsEndpoints();
 app.MapPaymentEndpoints();
 
-// Initialize the database
+// Mapeo adicional de endpoints para Purchases, Materials y Suppliers
+app.MapPurchasesEndpoints();
+app.MapMaterialsEndpoints();
+app.MapSuppliersEndpoints();
+
+// Inicializar la base de datos
 await app.InitializeDatabase();
 
 await app.RunAsync();

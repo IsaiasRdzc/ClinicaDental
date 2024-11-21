@@ -3,6 +3,7 @@
 using ClinicaDental.ApiService.DataBase.Models.Appointments;
 using ClinicaDental.ApiService.DataBase.Models.Inventory;
 using ClinicaDental.ApiService.DataBase.Models.MedicalRecords;
+using ClinicaDental.ApiService.DataBase.Models.Purchases;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +31,17 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public required DbSet<PaymentDetail> PaymentDetails { get; init; }
 
     public DbSet<MedicalRecord> MedicalRecords { get; init; }
+
+    public DbSet<Purchase> Purchases { get; set; } = null!;
+
+    public DbSet<PurchaseDetail> PurchaseDetails { get; set; } = null!;
+
+    public DbSet<Supplier> Suppliers { get; set; } = null!;
+
+    public DbSet<PurchaseType> PurchaseTypes { get; set; } = null!;
+
+    public DbSet<Material> Materials { get; set; } = null!;
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -83,5 +95,53 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
            .HasMany(r => r.Treatments) // medicine
            .WithOne()
            .OnDelete(DeleteBehavior.Cascade);
+
+         // Configuración para la entidad Purchase
+        modelBuilder.Entity<Purchase>(entity =>
+        {
+            entity.HasKey(e => e.Id); // Primary Key
+            entity.Property(e => e.CreatedDate ).IsRequired(); // Campo requerido
+            entity.HasOne(e => e.Supplier)
+                .WithMany(s => s.Purchases)
+                .HasForeignKey(e => e.SupplierId)
+                .OnDelete(DeleteBehavior.Cascade); // Relación con Supplier
+        });
+
+        // Configuración para la entidad PurchaseDetail
+        modelBuilder.Entity<PurchaseDetail>(entity =>
+        {
+            entity.HasKey(e => e.Id); // Primary Key
+            entity.HasOne(e => e.Purchase)
+                .WithMany(p => p.Details)
+                .HasForeignKey(e => e.PurchaseId)
+                .OnDelete(DeleteBehavior.Cascade); // Relación con Purchase
+            entity.HasOne(e => e.Material)
+                .WithMany() // No se especifica propiedad de navegación
+                .HasForeignKey(e => e.MaterialId)
+                .OnDelete(DeleteBehavior.Restrict); // Relación con Material
+        });
+
+        // Configuración para la entidad Supplier
+        modelBuilder.Entity<Supplier>(entity =>
+        {
+            entity.HasKey(e => e.Id); // Primary Key
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(100); // Campo requerido
+            entity.Property(e => e.PhoneNumber).HasMaxLength(15); // Opcional
+        });
+
+        // Configuración para la entidad Material
+        modelBuilder.Entity<Material>(entity =>
+        {
+            entity.HasKey(e => e.Id); // Primary Key
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(100); // Campo requerido
+            entity.Property(e => e.Price).HasColumnType("decimal(18,2)"); // Definir precisión decimal
+        });
+
+        // Configuración para la entidad PurchaseType
+        modelBuilder.Entity<PurchaseType>(entity =>
+        {
+            entity.HasKey(e => e.Id); // Primary Key
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(50); // Campo requerido
+        });
     }
 }
