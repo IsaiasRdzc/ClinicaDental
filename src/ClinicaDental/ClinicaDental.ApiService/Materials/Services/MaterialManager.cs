@@ -1,6 +1,7 @@
 ﻿namespace ClinicaDental.ApiService.Materials.Services
 {
     using ClinicaDental.ApiService.DataBase.Models.Purchases;
+    using ClinicaDental.ApiService.DataBase.Registries.Purchases;
     using ClinicaDental.ApiService.Materials;
     using System.Collections.Generic;
     using System.Threading.Tasks;

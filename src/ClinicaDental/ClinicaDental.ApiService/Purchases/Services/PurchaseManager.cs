@@ -6,9 +6,9 @@ namespace ClinicaDental.ApiService.Purchases.Services
 {
     public class PurchaseManager
     {
-        private readonly PurchasesRegistry _purchasesRegistry;
+        private readonly PurchasesDataRegistry _purchasesRegistry;
 
-        public PurchaseManager(PurchasesRegistry purchasesRegistry)
+        public PurchaseManager(PurchasesDataRegistry purchasesRegistry)
         {
             _purchasesRegistry = purchasesRegistry;
         }

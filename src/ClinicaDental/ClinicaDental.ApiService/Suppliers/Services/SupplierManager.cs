@@ -2,6 +2,7 @@
 {
     using ClinicaDental.ApiService.DataBase.Models.Purchases;
     using ClinicaDental.ApiService.Suppliers;
+   using ClinicaDental.ApiService.DataBase.Registries.Purchases;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 

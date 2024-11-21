@@ -3,6 +3,7 @@
     using ClinicaDental.ApiService;
     using ClinicaDental.ApiService.Materials.Services;
     using ClinicaDental.ApiService.DataBase.Models.Purchases;
+    using ClinicaDental.ApiService.MedicalRecords.Services;
     using System.Threading.Tasks;
 
     public static class MaterialsEndpoints

@@ -1,7 +1,7 @@
 ﻿using ClinicaDental.ApiService;
 using ClinicaDental.ApiService.DataBase.Models.Purchases;
 using ClinicaDental.ApiService.Purchases.Services;
-using ClinicaDental.ApiService.Purchases.Services;
+using ClinicaDental.ApiService.MedicalRecords.Services;
 
 namespace ClinicaDental.ApiService.Purchases
 {

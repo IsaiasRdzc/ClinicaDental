@@ -14,6 +14,8 @@ using ClinicaDental.ApiService.ReynaldoPractices.Services;
 using ClinicaDental.ApiService.Purchases;
 using ClinicaDental.ApiService.Materials;
 using ClinicaDental.ApiService.Suppliers;
+using ClinicaDental.ApiService.DataBase.Registries.Purchases;
+
 using ClinicaDental.ApiService.Purchases.Services;
 using ClinicaDental.ApiService.Materials.Services;
 using ClinicaDental.ApiService.Suppliers.Services;
@@ -67,6 +69,10 @@ builder.Services.AddTransient<AppointmentsRegistry>();
 builder.Services.AddTransient<SchedulesRegistry>();
 builder.Services.AddTransient<DoctorsRegistry>();
 builder.Services.AddTransient<PaymentDetailRegistry>();
+
+builder.Services.AddTransient<PurchasesRegistry>();
+builder.Services.AddTransient<MaterialsRegistry>();
+builder.Services.AddTransient<SuppliersRegistry>();
 
 builder.Services.AddTransient<MedicalRecordsRegistry>();
 

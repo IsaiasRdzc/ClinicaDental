@@ -1,6 +1,6 @@
 ﻿namespace ClinicaDental.ApiService.Suppliers.Services
 {
-    using ClinicaDental.ApiService.Models.Purchases;
+    using ClinicaDental.ApiService.DataBase.Models.Purchases;
     using System;
 
     public static class SupplierValidator
