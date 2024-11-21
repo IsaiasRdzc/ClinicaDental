@@ -1,12 +1,15 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Appointment } from '../../../models/appointment.model';
 import { AsyncPipe } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, NgForm } from '@angular/forms';
 import { ScheduleAppointmentService } from '../shared/schedule-appointment.service';
 import { CommonModule } from '@angular/common';
+import { routes } from '../app.routes';
+import { Modal } from 'bootstrap';
+import { Doctor } from '../../../models/doctor.model';
 
 // @Component({
 //   selector: 'app-schedule-appointment',
@@ -44,15 +47,16 @@ import { CommonModule } from '@angular/common';
   templateUrl: './schedule-appointment.component.html',
   styleUrls: ['./schedule-appointment.component.css']
 })
-export class AppointmentComponent {
- 
+export class AppointmentComponent implements OnInit{
+  confirmationData: any = {};
   firstAppointment: boolean | null = null;
   dateSelected: boolean | null = null;
+  
 
   // Modelos de datos
-  firstAppointmentData = {
+  appointmentData = {
     id: 0,
-    doctorId: 1,
+    doctorId: 0,
     date: '',
     startTime: "",
     durationInHours: 0,
@@ -61,17 +65,13 @@ export class AppointmentComponent {
     patientPhone: ''
   };
 
-  appointmentData = {
-    date: '',
-    startTime: '',
-    duration: 1,
-    patientName: '',
-    patientPhone: ''
-  };
 
   availableSlots: string[] = [];
 
-  constructor(private http: HttpClient, public service: ScheduleAppointmentService) {}
+  constructor(private http: HttpClient, public service: ScheduleAppointmentService, private router: Router) {}
+  ngOnInit(): void {
+    this.service.getAllDoctors();
+  }
 
   isFirstAppointment(choice: boolean) {
     this.firstAppointment = choice;
@@ -88,43 +88,24 @@ export class AppointmentComponent {
     }
   }
 
-  isADateSelected(choice: boolean) {
+  isADateSelected(choice: boolean, id:number) {
+    console.log(choice.valueOf().toString() + id.toString());
     this.dateSelected = choice;
     if (choice) {
-      this.fetchAvailableSlots();
+      this.findAvailableSlots(id);
     }
   }
 
-  fetchAvailableSlots() {
-    const doctorId = 1;
-    const date = this.firstAppointmentData.date;
+  findAvailableSlots(_doctorId: number) {
+    const doctorId = _doctorId;
+    const date = this.appointmentData.date;
     const url = `/api/appointments/availableSlots?doctorId=${doctorId}&date=${date}`;
     this.http.get<string[]>(url)
       .subscribe((slots) => {this.availableSlots = slots
         if (slots.length > 0) {
-          this.firstAppointmentData.startTime = slots[0]; 
+          this.appointmentData.startTime = slots[0]; 
         }
       });
-    
-  }
-
-  onSubmitFirstAppointment(form: any) {
-    if (form.valid) {
-      const appointment = {
-        doctorId: this.firstAppointmentData.doctorId,
-        date: this.firstAppointmentData.date,
-        startTime: this.firstAppointmentData.startTime,
-        durationInHours: 1, // Duración fija de 1 hora
-        patientName: this.firstAppointmentData.patientName,
-        patientPhone: this.firstAppointmentData.patientPhone
-      };
-      console.log("holaaa"+appointment.durationInHours.toString())
-      this.http.post('/api/appointments', appointment)
-        .subscribe(() => alert('Cita registrada exitosamente.'), (error) => {
-          console.error('Error registrando la cita:', error);
-          alert('Hubo un problema al registrar la cita.');
-        });
-    }
     
   }
 
@@ -134,4 +115,53 @@ export class AppointmentComponent {
         .subscribe(() => alert('Cita registrada exitosamente.'));
     }
   }
+
+  onSubmitFirstAppointment(form: any) {
+    if (form.valid) {
+      const appointment = {
+        doctorId: this.appointmentData.doctorId,
+        date: this.appointmentData.date,
+        startTime: this.appointmentData.startTime,
+        durationInHours: 1, // Duración fija de 1 hora
+        patientName: this.appointmentData.patientName,
+        patientPhone: this.appointmentData.patientPhone
+      };
+
+      this.http.post('/api/appointments', appointment)
+        .subscribe((response: any) => {
+          // Manejar el folio recibido del backend
+          this.confirmationData = {
+            folio: response, // Ajusta esto según la estructura de la respuesta
+            patientName: appointment.patientName,
+            date: appointment.date,
+            startTime: appointment.startTime
+          };
+
+          console.log(response)
+
+          // Mostrar el modal
+          const modal = new Modal(document.getElementById('appointmentConfirmationModal')!);
+          modal.show();
+        }, (error) => {
+          console.error('Error registrando la cita:', error);
+          alert('Hubo un problema al registrar la cita.');
+        });
+    }
+  }
+
+
+  redirectToHomepage() {
+    // Cierra el modal y redirige al homepage
+    const modal = new Modal(document.getElementById('appointmentConfirmationModal')!);
+    modal.hide();
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+      backdrop.remove();  // Elimina el fondo atenuado
+    }
+    this.router.navigate(['/']); // Ajusta el path del homepage según tu configuración
+  }
+
 }
+
+
+

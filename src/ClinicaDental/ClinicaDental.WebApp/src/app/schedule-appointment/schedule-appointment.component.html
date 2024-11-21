@@ -34,7 +34,7 @@
   <div class="vertical-bar"></div>
 
   <!-- Contenido Principal -->
-  <div class="container containerForm my-5">
+  <div class="container containerForm my-5 citasform">
     <div class="row justify-content-center">
       <div class="col-lg-6 col-md-8 col-sm-10">
         <h2 class="text-center mb-4">¿Es tu primera cita?</h2>
@@ -51,7 +51,7 @@
         <!-- Formulario Primera Cita -->
         <div *ngIf="firstAppointment === true">
           <h3 class="text-center">Registrar Primera Cita</h3>
-          <p class="text-center">El doctor asignado será el ID: 1</p>
+          <p class="text-center">La dentista asignada por defecto es Ángela María Rubio</p>
           <form #firstForm="ngForm" (submit)="onSubmitFirstAppointment(firstForm)">
             <div class="mb-3">
               <label for="date" class="form-label">Fecha</label>
@@ -60,14 +60,14 @@
                 id="date"
                 name="date"
                 class="form-control"
-                [(ngModel)]="firstAppointmentData.date"
+                [(ngModel)]="appointmentData.date"
                 required
               />
               <button
                 class="btn btn-primary mt-2 w-100"
                 type="button"
-                (click)="isADateSelected(true)"
-                [disabled]="!firstAppointmentData.date"
+                (click)="isADateSelected(true, 1)"
+                [disabled]="!appointmentData.date"
               >
                 Ver horarios disponibles
               </button>
@@ -80,7 +80,7 @@
                   id="time"
                   name="time"
                   class="form-select"
-                  [(ngModel)]="firstAppointmentData.startTime"
+                  [(ngModel)]="appointmentData.startTime"
                   required
                 >
                   <option *ngFor="let slot of availableSlots" [value]="slot">{{ slot }}</option>
@@ -93,7 +93,7 @@
                   id="name"
                   name="name"
                   class="form-control"
-                  [(ngModel)]="firstAppointmentData.patientName"
+                  [(ngModel)]="appointmentData.patientName"
                   required
                 />
               </div>
@@ -104,7 +104,7 @@
                   id="phone"
                   name="phone"
                   class="form-control"
-                  [(ngModel)]="firstAppointmentData.patientPhone"
+                  [(ngModel)]="appointmentData.patientPhone"
                   pattern="[0-9]{10}"
                   required
                 />
@@ -122,6 +122,20 @@
           <h3 class="text-center">Registrar una Cita</h3>
           <form #form="ngForm" (submit)="onSubmitNormalAppointment(form)">
             <div class="mb-3">
+              <label for="dentist" class="form-label">Selecciona tu dentista</label>
+              <select
+                id="dentist"
+                name="dentist"
+                class="form-select"
+                [(ngModel)]="appointmentData.doctorId"
+                required
+              >
+                <option *ngFor="let dentist of service.dentists" [value]="dentist.id">
+                  {{ dentist.name }}
+                </option>
+              </select>
+            </div>
+            <div class="mb-3">
               <label for="date" class="form-label">Fecha</label>
               <input
                 type="date"
@@ -131,63 +145,90 @@
                 [(ngModel)]="appointmentData.date"
                 required
               />
+              <button
+                class="btn btn-primary mt-2 w-100"
+                type="button"
+                (click)="isADateSelected(true, appointmentData.doctorId)"
+                [disabled]="!appointmentData.doctorId"
+              >
+                Ver horarios disponibles
+              </button>
             </div>
-            <div class="mb-3">
-              <label for="startTime" class="form-label">Hora de Inicio</label>
-              <input
-                type="time"
-                id="startTime"
-                name="startTime"
-                class="form-control"
-                [(ngModel)]="appointmentData.startTime"
-                required
-              />
+
+            <div *ngIf="dateSelected === true">
+              <div class="mb-3">
+                <label for="time" class="form-label">Seleccionar Horario</label>
+                <select
+                  id="againtime"
+                  name="againtime"
+                  class="form-select"
+                  [(ngModel)]="appointmentData.startTime"
+                  required
+                >
+                  <option *ngFor="let slot of availableSlots" [value]="slot">{{ slot }}</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="name" class="form-label">Nombre del Paciente</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  class="form-control"
+                  [(ngModel)]="appointmentData.patientName"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="phone" class="form-label">Teléfono</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  class="form-control"
+                  [(ngModel)]="appointmentData.patientPhone"
+                  pattern="[0-9]{10}"
+                  required
+                />
+                <small class="form-text text-muted">Debe contener 10 dígitos.</small>
+              </div>
+              <button type="submit" class="btn btn-primary w-100" [disabled]="!form.valid">
+                Confirmar
+              </button>
             </div>
-            <div class="mb-3">
-              <label for="durationInHours" class="form-label">Duración (en horas)</label>
-              <input
-                type="number"
-                id="durationInHours"
-                name="durationInHours"
-                class="form-control"
-                [(ngModel)]="appointmentData.duration"
-                min="0"
-                step="1"
-                required
-              />
-            </div>
-            <div class="mb-3">
-              <label for="patientName" class="form-label">Nombre del Paciente</label>
-              <input
-                type="text"
-                id="patientName"
-                name="patientName"
-                class="form-control"
-                [(ngModel)]="appointmentData.patientName"
-                required
-              />
-            </div>
-            <div class="mb-3">
-              <label for="patientPhone" class="form-label">Teléfono</label>
-              <input
-                type="tel"
-                id="patientPhone"
-                name="patientPhone"
-                class="form-control"
-                [(ngModel)]="appointmentData.patientPhone"
-                pattern="[0-9]{10}"
-                required
-              />
-              <small class="form-text text-muted">Debe contener 10 dígitos.</small>
-            </div>
-            <button type="submit" class="btn btn-primary w-100" [disabled]="!form.valid">
-              Registrar Cita
-            </button>
           </form>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Modal para confirmar cita agendada -->
+<div 
+class="modal fade" 
+id="appointmentConfirmationModal" 
+tabindex="-1" 
+aria-labelledby="appointmentConfirmationModalLabel" 
+aria-hidden="true"
+>
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="appointmentConfirmationModalLabel">Cita Agendada</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <p><strong>Folio:</strong> {{ confirmationData.folio }}</p>
+      <p><strong>Nombre:</strong> {{ confirmationData.patientName }}</p>
+      <p><strong>Fecha:</strong> {{ confirmationData.date }}</p>
+      <p><strong>Hora:</strong> {{ confirmationData.startTime }}</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="redirectToHomepage()">Confirmar</button>
+    </div>
+  </div>
+</div>
+</div>
+
 
 
   <div class="vertical-bar"></div>
