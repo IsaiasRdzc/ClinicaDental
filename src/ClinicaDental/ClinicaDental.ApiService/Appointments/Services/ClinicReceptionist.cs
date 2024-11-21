@@ -14,7 +14,7 @@ public class ClinicReceptionist
         this.clinicAgenda = clinicAgenda;
     }
 
-    public async Task ScheduleAppointment(Appointment appointment)
+    public async Task<int> ScheduleAppointment(Appointment appointment)
     {
         var appointmentSlotIsAvailable = await this.clinicAgenda.IsAppointmentSlotAvailable(appointment);
 
@@ -24,6 +24,7 @@ public class ClinicReceptionist
         }
 
         await this.appointmentRegistry.CreateAppointment(appointment);
+        return appointment.Folio;
     }
 
     public async Task ReScheduleAppointment(int folio, DateOnly date, TimeOnly time, int duration)
