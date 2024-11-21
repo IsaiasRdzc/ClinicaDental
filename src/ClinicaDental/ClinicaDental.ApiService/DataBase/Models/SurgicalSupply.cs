@@ -7,6 +7,4 @@ public class SurgicalSupply : Supply
     public required string SterilizationMethod { get; set; }
 
     public DateTime SterilizationDate { get; set; }
-
-
 }

@@ -5,18 +5,13 @@ using ClinicaDental.ApiService.Appointments;
 using ClinicaDental.ApiService.Appointments.Services;
 using ClinicaDental.ApiService.DataBase;
 using ClinicaDental.ApiService.DataBase.Registries;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Http.Json;
-
 using Microsoft.AspNetCore.Http.Json;
 
 var builder = WebApplication.CreateBuilder(args);
-// Agregar soporte para Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Configurar JsonSerializerOptions globalmente para Minimal APIs
+// Configución JsonSerializerOptions globalmente para Minimal APIs
 builder.Services.Configure<JsonOptions>(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -33,13 +28,13 @@ builder.Services.AddProblemDetails();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
 // Services
 builder.AddNpgsqlDbContext<AppDbContext>("ClinicaDentalDb");
 builder.Services.AddTransient<AppointmentScheduler>();
 builder.Services.AddTransient<AppointmentCalendar>();
 builder.Services.AddTransient<WorkScheduleAdmin>();
 builder.Services.AddTransient<StoreKeeper>();
+
 // Registries
 builder.Services.AddTransient<AppointmentRegistry>();
 builder.Services.AddTransient<ScheduleRegistry>();
