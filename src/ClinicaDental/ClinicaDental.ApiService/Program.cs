@@ -47,6 +47,7 @@ builder.Services.AddTransient<ClinicAdmin>();
 builder.Services.AddTransient<PaymentsAdmin>();
 builder.Services.AddTransient<AccountsManager>();
 builder.Services.AddTransient<MedicalRecordsManager>();
+builder.Services.AddTransient<PatientsInformationManager>();
 
 // Registries
 builder.Services.AddTransient<SuppliesRegistry>();
