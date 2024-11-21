@@ -45,7 +45,6 @@ builder.Services.AddTransient<ClinicReceptionist>();
 builder.Services.AddTransient<ClinicAgenda>();
 builder.Services.AddTransient<ClinicAdmin>();
 builder.Services.AddTransient<PaymentsAdmin>();
-builder.Services.AddTransient<MedicalInformationManager>();
 builder.Services.AddTransient<AccountsManager>();
 builder.Services.AddTransient<MedicalRecordsManager>();
 
