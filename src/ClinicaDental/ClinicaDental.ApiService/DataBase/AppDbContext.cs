@@ -2,6 +2,7 @@
 
 using ClinicaDental.ApiService.DataBase.Models.Appointments;
 using ClinicaDental.ApiService.DataBase.Models.Inventory;
+using ClinicaDental.ApiService.DataBase.Models.Login;
 using ClinicaDental.ApiService.DataBase.Models.MedicalRecords;
 
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<SurgicalSupply> SurgicalSupplies { get; init; }
 
     public DbSet<CleaningSupply> CleaningSupplies { get; init; }
+
+    public required DbSet<Account> AccountsTable { get; init; }
 
     public required DbSet<Appointment> AppointmentsTable { get; init; }
 
@@ -58,6 +61,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             new DoctorDaySchedule(5) { DoctorId = 1, DayOfWeek = DayOfWeek.Thursday, StartTime = new TimeOnly(10, 0), EndTime = new TimeOnly(16, 0) },
             new DoctorDaySchedule(6) { DoctorId = 1, DayOfWeek = DayOfWeek.Friday, StartTime = new TimeOnly(10, 0), EndTime = new TimeOnly(16, 0) },
             new DoctorDaySchedule(7) { DoctorId = 1, DayOfWeek = DayOfWeek.Saturday, StartTime = new TimeOnly(10, 0), EndTime = new TimeOnly(14, 0) });
+
+        // Seed Accounts
+        modelBuilder.Entity<Account>().HasData(
+            new Account(1) { Username = "Admin", Password = "123" });
 
         modelBuilder.Entity<Supply>().ToTable("Supplies");
         modelBuilder.Entity<MedicalSupply>().ToTable("MedicalSupplies");
