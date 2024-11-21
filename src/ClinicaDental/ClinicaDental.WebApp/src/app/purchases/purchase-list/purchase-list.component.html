@@ -1,0 +1,26 @@
+<div class="purchase-list">
+  <h2>Lista de Compras</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Fecha</th>
+        <th>Proveedor</th>
+        <th>Monto</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let purchase of purchases">
+        <td>{{ purchase.id }}</td>
+        <td>{{ purchase.createdDate }}</td>
+        <td>{{ purchase.supplierName }}</td>
+        <td>{{ purchase.amount }}</td>
+        <td>
+          <button (click)="editPurchase(purchase.id)">Editar</button>
+          <button (click)="deletePurchase(purchase.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

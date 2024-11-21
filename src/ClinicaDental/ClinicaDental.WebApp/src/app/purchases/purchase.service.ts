@@ -3,35 +3,30 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class PurchaseService {
-  private baseUrl = 'http://localhost:5347/api/purchases'; // Cambia al puerto de tu API si es necesario
+  private apiUrl = 'http://localhost:5347/api/purchases'; 
 
   constructor(private http: HttpClient) { }
 
-  // Crear una nueva compra
+  getAllPurchases(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/getAllPurchases`);
+  }
+
+  getPurchaseById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/getPurchaseById/${id}`);
+  }
+
   createPurchase(purchase: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/newPurchase`, purchase);
+    return this.http.post<any>(`${this.apiUrl}/newPurchase`, purchase);
   }
 
-  // Obtener una compra por ID
-  getPurchaseById(purchaseId: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/getPurchaseById/${purchaseId}`);
+  updatePurchase(id: number, purchase: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/updatePurchase/${id}`, purchase);
   }
 
-  // Obtener todas las compras
-  getAllPurchases(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/getAllPurchases`);
-  }
-
-  // Actualizar una compra
-  updatePurchase(purchaseId: number, purchase: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/updatePurchase/${purchaseId}`, purchase);
-  }
-
-  // Eliminar una compra por ID
-  deletePurchaseById(purchaseId: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/deletePurchaseById/${purchaseId}`);
+  deletePurchaseById(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/deletePurchaseById/${id}`);
   }
 }
