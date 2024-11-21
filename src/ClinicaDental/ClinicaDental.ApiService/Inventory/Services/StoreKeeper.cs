@@ -26,9 +26,9 @@ public class StoreKeeper(SuppliesRegistry suppliesRegistry)
             throw new ArgumentException("El stock debe ser positivo");
         }
 
-        var existingSupply = suppliesRegistry.FindExistingMedicalSupply(newMedicalSupply);
+        var existingSupply = await suppliesRegistry.FindExistingMedicalSupply(newMedicalSupply);
 
-        if (existingSupply != null)
+        if (existingSupply is not null)
         {
             throw new InvalidOperationException(
                 $"El suministro con los datos que proporcionaste ya existe. " +
@@ -55,9 +55,9 @@ public class StoreKeeper(SuppliesRegistry suppliesRegistry)
             throw new ArgumentException("El stock debe ser positivo");
         }
 
-        var existingSupply = suppliesRegistry.FindExistingSurgicalSupply(newSurgicalSupply);
+        var existingSupply = await suppliesRegistry.FindExistingSurgicalSupply(newSurgicalSupply);
 
-        if (existingSupply != null)
+        if (existingSupply is not null)
         {
             throw new InvalidOperationException(
                 $"Un suministro con los datos que proporcionaste ya existe. " +
@@ -84,9 +84,9 @@ public class StoreKeeper(SuppliesRegistry suppliesRegistry)
             throw new ArgumentException("El stock debe ser positivo");
         }
 
-        var existingSupply = suppliesRegistry.FindExistingCleaningSupply(newCleaningSupply);
+        var existingSupply = await suppliesRegistry.FindExistingCleaningSupply(newCleaningSupply);
 
-        if (existingSupply != null)
+        if (existingSupply is not null)
         {
             throw new InvalidOperationException(
                 $"Un suministro con los datos que proporcionaste ya existe. " +

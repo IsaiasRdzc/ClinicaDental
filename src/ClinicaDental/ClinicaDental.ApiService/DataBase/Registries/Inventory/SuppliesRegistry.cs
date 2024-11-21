@@ -107,18 +107,28 @@ public class SuppliesRegistry(AppDbContext context)
 
     public async Task<MedicalSupply?> FindExistingMedicalSupply(MedicalSupply newMedicalSupply)
     {
-        return await context.MedicalSupplies.Where(s => s.Name == newMedicalSupply.Name).FirstOrDefaultAsync();
+        return await context.MedicalSupplies.
+            Where(s => s.Name == newMedicalSupply.Name &&
+        s.ExpirationDate == newMedicalSupply.ExpirationDate &&
+        s.MedicationType == newMedicalSupply.MedicationType).
+        FirstOrDefaultAsync();
     }
 
     public async Task<SurgicalSupply?> FindExistingSurgicalSupply(SurgicalSupply newSurgicalSupply)
     {
-        return await context.SurgicalSupplies.Where(s => s.Name == newSurgicalSupply.Name).FirstOrDefaultAsync();
+        return await context.SurgicalSupplies.
+            Where(s => s.Name == newSurgicalSupply.Name &&
+        s.SterilizationDate == newSurgicalSupply.SterilizationDate &&
+        s.SterilizationMethod == newSurgicalSupply.SterilizationMethod).
+        FirstOrDefaultAsync();
     }
 
     public async Task<CleaningSupply?> FindExistingCleaningSupply(CleaningSupply newCleaningSupply)
     {
-        return await context.CleaningSupplies
-            .AsNoTracking()
-            .FirstOrDefaultAsync(s => s.Name == newCleaningSupply.Name);
+        return await context.CleaningSupplies.
+             Where(s => s.Name == newCleaningSupply.Name &&
+             s.CleaningDate == newCleaningSupply.CleaningDate &&
+             s.CleaningType == newCleaningSupply.CleaningType).
+            FirstOrDefaultAsync();
     }
 }
