@@ -1,9 +1,6 @@
 namespace ClinicaDental.ApiService.Login;
 
 using ClinicaDental.ApiService;
-using ClinicaDental.ApiService.DataBase.Models.Login;
-
-using Microsoft.AspNetCore.Mvc;
 
 public static class LoginEndpoints
 {
@@ -15,9 +12,10 @@ public static class LoginEndpoints
     }
 
     public static async Task<IResult> LoginAsDoctor(
-        Account account,
+        string username,
+        string password,
         AccountsManager accountmanager)
     {
-        return await ErrorOrResultHandler.HandleResult(async () => await accountmanager.AttemptLogin(account));
+        return await ErrorOrResultHandler.HandleResult(async () => await accountmanager.AttemptLogin(username, password));
     }
 }
