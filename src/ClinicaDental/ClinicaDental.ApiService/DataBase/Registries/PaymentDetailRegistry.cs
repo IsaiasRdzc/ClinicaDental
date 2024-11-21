@@ -3,30 +3,24 @@ namespace ClinicaDental.ApiService.DataBase.Registries;
 using ClinicaDental.ApiService.DataBase;
 using ClinicaDental.ApiService.DataBase.Models;
 
-public class PaymentDetailRegistry
+public class PaymentDetailRegistry(AppDbContext clinicDataBase)
 {
-    private readonly AppDbContext context;
-
-    public PaymentDetailRegistry(AppDbContext context)
-    {
-        this.context =  context;
-    }
-
     public IQueryable<PaymentDetail> GetPaymentDetailList()
     {
-        var paymentDetailsList = this.context.PaymentDetails.AsQueryable();
+        var paymentDetailsList = clinicDataBase.PaymentDetails.AsQueryable();
         return paymentDetailsList;
     }
 
-    public async Task<PaymentDetail?> GetPaymentDetailById (int id)
+    public async Task<PaymentDetail?> GetPaymentDetailById(int id)
     {
-        var paymentDetail = await this.context.PaymentDetails.FindAsync(id);
+        var paymentDetail = await clinicDataBase.PaymentDetails.FindAsync(id);
         return paymentDetail;
     }
 
-    public async Task CreatePaymentDetail (PaymentDetail paymentDetail){
-        this.context.PaymentDetails.Add(paymentDetail);
-        await this.context.SaveChangesAsync();
+    public async Task CreatePaymentDetail(PaymentDetail paymentDetail)
+    {
+        clinicDataBase.PaymentDetails.Add(paymentDetail);
+        await clinicDataBase.SaveChangesAsync();
     }
 
     public async Task DeletePaymentDetail(int id)
@@ -37,14 +31,15 @@ public class PaymentDetailRegistry
             throw new KeyNotFoundException($"Payment with {id} not found.");
         }
 
-        this.context.PaymentDetails.Remove(paymentDetail);
-        await this.context.SaveChangesAsync();
+        clinicDataBase.PaymentDetails.Remove(paymentDetail);
+        await clinicDataBase.SaveChangesAsync();
     }
 
     public async Task UpdatePaymentDetail(int id, string name, string number, string expiration, string code)
     {
         var paymentDetail = await this.GetPaymentDetailById(id);
-        if(paymentDetail is null){
+        if (paymentDetail is null)
+        {
             throw new KeyNotFoundException($"Payment with {id} not found.");
         }
 
@@ -54,15 +49,14 @@ public class PaymentDetailRegistry
         paymentDetail.ExpirationDate = expiration;
         paymentDetail.SecurityCode = code;
 
-        this.context.PaymentDetails.Update(paymentDetail);
-        await this.context.SaveChangesAsync();
-
+        clinicDataBase.PaymentDetails.Update(paymentDetail);
+        await clinicDataBase.SaveChangesAsync();
     }
 
-    public IQueryable<PaymentDetail> GetAllDetails(){
-        var details = this.context.PaymentDetails
+    public IQueryable<PaymentDetail> GetAllDetails()
+    {
+        var details = clinicDataBase.PaymentDetails
         .AsQueryable();
-        
         return details;
     }
 }

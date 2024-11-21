@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Configución JsonSerializerOptions globalmente para Minimal APIs
+// Configuciï¿½n JsonSerializerOptions globalmente para Minimal APIs
 builder.Services.Configure<JsonOptions>(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -40,10 +40,10 @@ builder.Services.AddTransient<ClinicAdmin>();
 builder.Services.AddTransient<PaymentsAdmin>();
 
 // Registries
-builder.Services.AddTransient<AppointmentRegistry>();
-builder.Services.AddTransient<ScheduleRegistry>();
-builder.Services.AddTransient<DoctorRegistry>();
 builder.Services.AddTransient<SuppliesRegistry>();
+builder.Services.AddTransient<AppointmentsRegistry>();
+builder.Services.AddTransient<SchedulesRegistry>();
+builder.Services.AddTransient<DoctorsRegistry>();
 builder.Services.AddTransient<PaymentDetailRegistry>();
 
 var app = builder.Build();

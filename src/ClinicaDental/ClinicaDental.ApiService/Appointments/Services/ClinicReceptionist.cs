@@ -5,10 +5,10 @@ using ClinicaDental.ApiService.DataBase.Registries;
 
 public class ClinicReceptionist
 {
-    private readonly AppointmentRegistry appointmentRegistry;
+    private readonly AppointmentsRegistry appointmentRegistry;
     private readonly ClinicAgenda clinicAgenda;
 
-    public ClinicReceptionist(AppointmentRegistry appointmentRegistry, ClinicAgenda clinicAgenda)
+    public ClinicReceptionist(AppointmentsRegistry appointmentRegistry, ClinicAgenda clinicAgenda)
     {
         this.appointmentRegistry = appointmentRegistry;
         this.clinicAgenda = clinicAgenda;
