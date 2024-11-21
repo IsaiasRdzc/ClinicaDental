@@ -59,4 +59,7 @@
     font-weight: bold;
     margin: 0;
 }
-  
+
+.insumos:hover{
+    background-color: orange;
+}
