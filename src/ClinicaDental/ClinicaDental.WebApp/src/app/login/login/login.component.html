@@ -1,1 +1,64 @@
-<p>login works!</p>
+<!-- Navbar Superior -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" href="#">Clínica Dental</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/schedule-appointment">
+              <i class="fas fa-calendar-check "></i> Agendar una cita
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/login">
+              <i class="fa-solid fa-tooth active"></i> Ingresar
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+      <h3 class="text-center mb-4">Iniciar sesión</h3>
+      <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+        <div class="mb-3">
+          <label for="username" class="form-label">Nombre de usuario</label>
+          <input
+            type="text"
+            id="username"
+            class="form-control"
+            [(ngModel)]="loginData.username"
+            name="username"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Contraseña</label>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            [(ngModel)]="loginData.password"
+            name="password"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-primary w-100" [disabled]="!loginForm.valid">Iniciar sesión</button>
+      </form>
+    </div>
+  </div>
+  

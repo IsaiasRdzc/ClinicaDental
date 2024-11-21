@@ -1,0 +1,12 @@
+.card {
+    border-radius: 10px;
+    background-color: #ffffff;
+  }
+  
+  .card input {
+    border-radius: 5px;
+  }
+  
+  .card button {
+    border-radius: 5px;
+  }
