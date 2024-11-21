@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using ClinicaDental.ApiService.Appointments;
 using ClinicaDental.ApiService.Appointments.Services;
 using ClinicaDental.ApiService.DataBase;
 using ClinicaDental.ApiService.DataBase.Registries.Appointments;

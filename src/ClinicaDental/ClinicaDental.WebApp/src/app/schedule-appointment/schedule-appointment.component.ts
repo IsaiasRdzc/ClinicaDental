@@ -6,28 +6,132 @@ import { Appointment } from '../../../models/appointment.model';
 import { AsyncPipe } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, NgForm } from '@angular/forms';
 import { ScheduleAppointmentService } from '../shared/schedule-appointment.service';
+import { CommonModule } from '@angular/common';
+
+// @Component({
+//   selector: 'app-schedule-appointment',
+//   standalone: true,
+//   imports: [RouterOutlet, RouterLink, RouterLinkActive, HttpClientModule, AsyncPipe, FormsModule, ReactiveFormsModule, CommonModule],
+//   templateUrl: './schedule-appointment.component.html',
+//   styleUrls: ['./schedule-appointment.component.css']
+// })
+// export class ScheduleAppointmentComponent implements OnInit{
+//   constructor(public service: ScheduleAppointmentService){
+
+//   }
+
+//   onSubmit(form:NgForm){
+//     this.service.scheduleAppointment()
+//     .subscribe({
+//       next: res=>{
+//         this.service.resetForm(form)
+        
+//       },
+//       error: err =>{console.log(err)}
+//     })
+//   }
+
+//   ngOnInit(): void{
+//     this.service.getAllDoctors();
+//   }
+  
+// }
 
 @Component({
   selector: 'app-schedule-appointment',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, HttpClientModule, AsyncPipe, FormsModule, ReactiveFormsModule],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, HttpClientModule, AsyncPipe, FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './schedule-appointment.component.html',
   styleUrls: ['./schedule-appointment.component.css']
 })
-export class ScheduleAppointmentComponent {
-  constructor(public service: ScheduleAppointmentService){
+export class AppointmentComponent {
+ 
+  firstAppointment: boolean | null = null;
+  dateSelected: boolean | null = null;
 
+  // Modelos de datos
+  firstAppointmentData = {
+    id: 0,
+    doctorId: 1,
+    date: '',
+    startTime: "",
+    durationInHours: 0,
+    endTime: '',
+    patientName: '',
+    patientPhone: ''
+  };
+
+  appointmentData = {
+    date: '',
+    startTime: '',
+    duration: 1,
+    patientName: '',
+    patientPhone: ''
+  };
+
+  availableSlots: string[] = [];
+
+  constructor(private http: HttpClient, public service: ScheduleAppointmentService) {}
+
+  isFirstAppointment(choice: boolean) {
+    this.firstAppointment = choice;
+    if (choice) {
+      const yesButton = document.getElementById("yesButton");
+      yesButton?.classList.add("buttonSelected");
+      const noButton = document.getElementById("noButton");
+      noButton?.classList.remove("buttonSelected");
+    }else{
+      const noButton = document.getElementById("noButton");
+      noButton?.classList.add("buttonSelected");
+      const yesButton = document.getElementById("yesButton");
+      yesButton?.classList.remove("buttonSelected");
+    }
   }
 
-  onSubmit(form:NgForm){
-    this.service.scheduleAppointment()
-    .subscribe({
-      next: res=>{
-        this.service.resetForm(form)
-        
-      },
-      error: err =>{console.log(err)}
-    })
+  isADateSelected(choice: boolean) {
+    this.dateSelected = choice;
+    if (choice) {
+      this.fetchAvailableSlots();
+    }
   }
-  
+
+  fetchAvailableSlots() {
+    const doctorId = 1;
+    const date = this.firstAppointmentData.date;
+    const url = `/api/appointments/availableSlots?doctorId=${doctorId}&date=${date}`;
+    this.http.get<string[]>(url)
+      .subscribe((slots) => {this.availableSlots = slots
+        if (slots.length > 0) {
+          this.firstAppointmentData.startTime = slots[0]; 
+        }
+      });
+    
+  }
+
+  onSubmitFirstAppointment(form: any) {
+    if (form.valid) {
+      const appointment = {
+        doctorId: this.firstAppointmentData.doctorId,
+        date: this.firstAppointmentData.date,
+        startTime: this.firstAppointmentData.startTime,
+        durationInHours: 1, // Duración fija de 1 hora
+        patientName: this.firstAppointmentData.patientName,
+        patientPhone: this.firstAppointmentData.patientPhone
+      };
+      console.log("holaaa"+appointment.durationInHours.toString())
+      this.http.post('/api/appointments', appointment)
+        .subscribe(() => alert('Cita registrada exitosamente.'), (error) => {
+          console.error('Error registrando la cita:', error);
+          alert('Hubo un problema al registrar la cita.');
+        });
+    }
+    
+  }
+
+  onSubmitNormalAppointment(form: any) {
+    if (form.valid) {
+      this.http.post('/api/appointments', this.appointmentData)
+        .subscribe(() => alert('Cita registrada exitosamente.'));
+    }
+  }
 }
