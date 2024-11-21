@@ -1,4 +1,4 @@
-﻿namespace ClinicaDental.ApiService.MedicalRecords.Services;
+﻿namespace ClinicaDental.ApiService.MedicalRecords.ErrorRelated;
 
 public static class ErrorOrResultHandler
 {

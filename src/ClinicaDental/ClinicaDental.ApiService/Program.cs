@@ -8,6 +8,7 @@ using ClinicaDental.ApiService.DataBase.Registries.Appointments;
 using ClinicaDental.ApiService.DataBase.Registries.Inventory;
 using ClinicaDental.ApiService.DataBase.Registries.MedicalRecords;
 using ClinicaDental.ApiService.Inventory.Services;
+using ClinicaDental.ApiService.MedicalRecords.Endpoints;
 using ClinicaDental.ApiService.MedicalRecords.Services;
 using ClinicaDental.ApiService.ReynaldoPractices;
 using ClinicaDental.ApiService.ReynaldoPractices.Services;
@@ -43,7 +44,8 @@ builder.Services.AddTransient<ClinicAgenda>();
 builder.Services.AddTransient<ClinicAdmin>();
 builder.Services.AddTransient<PaymentsAdmin>();
 
-builder.Services.AddTransient<MedicalInformationManager>();
+builder.Services.AddTransient<PatientsInformationManager>();
+builder.Services.AddTransient<MedicalRecordsManager>();
 
 // Registries
 builder.Services.AddTransient<SuppliesRegistry>();
@@ -53,6 +55,8 @@ builder.Services.AddTransient<DoctorsRegistry>();
 builder.Services.AddTransient<PaymentDetailRegistry>();
 
 builder.Services.AddTransient<MedicalRecordsRegistry>();
+builder.Services.AddTransient<PatientsRegistry>();
+
 
 var app = builder.Build();
 
