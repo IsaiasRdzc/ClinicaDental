@@ -3,57 +3,42 @@ namespace ClinicaDental.ApiService.DataBase.Registries;
 using ClinicaDental.ApiService.DataBase;
 using ClinicaDental.ApiService.DataBase.Models;
 
-
-//en plural
-public class AppointmentRegistry
+public class AppointmentsRegistry(AppDbContext clinicDataBase)
 {
-    private readonly AppDbContext context;
-
-    public AppointmentRegistry(AppDbContext context)
-    {
-        this.context = context;
-    }
-
     public IQueryable<Appointment> GetAppointmentsList()
     {
-        var appointmentsList = this.context.Appointments.AsQueryable();
-        return appointmentsList;
-    }
-
-    public IQueryable<Appointment> GetAppointmentsList()
-    {
-        var appointmentsList = this.ClinicDataBase.AppointmentsTable.AsQueryable();
+        var appointmentsList = clinicDataBase.AppointmentsTable.AsQueryable();
         return appointmentsList;
     }
 
     public IQueryable<Appointment> GetAppointmentsListByDate(DateOnly date)
     {
-        var appointments = this.context.Appointments
-        .AsQueryable()
-        .Where(appointment => appointment.Date == date);
+        var appointmentsList = clinicDataBase.AppointmentsTable
+        .Where(appointment => appointment.Date == date)
+        .AsQueryable();
 
-        return appointments;
+        return appointmentsList;
     }
 
     public IQueryable<Appointment> GetAppointmentsListByDoctor(int doctorId)
     {
-        var appointments = this.context.Appointments
-        .AsQueryable()
-        .Where(appointment => appointment.DoctorId == doctorId);
+        var appointmentsList = clinicDataBase.AppointmentsTable
+        .Where(appointment => appointment.DoctorId == doctorId)
+        .AsQueryable();
 
-        return appointments;
+        return appointmentsList;
     }
 
     public async Task<Appointment?> GetAppointmentByFolio(int folio)
     {
-        var appointment = await this.context.Appointments.FindAsync(folio);
+        var appointment = await clinicDataBase.AppointmentsTable.FindAsync(folio);
         return appointment;
     }
 
     public async Task CreateAppointment(Appointment appointment)
     {
-        this.context.Appointments.Add(appointment);
-        await this.context.SaveChangesAsync();
+        clinicDataBase.AppointmentsTable.Add(appointment);
+        await clinicDataBase.SaveChangesAsync();
     }
 
     public async Task UpdateAppointment(int folio, DateOnly date, TimeOnly time, int duration)
@@ -69,8 +54,8 @@ public class AppointmentRegistry
         appointment.StartTime = time;
         appointment.DurationInHours = duration;
 
-        this.context.Appointments.Update(appointment);
-        await this.context.SaveChangesAsync();
+        clinicDataBase.AppointmentsTable.Update(appointment);
+        await clinicDataBase.SaveChangesAsync();
     }
 
     public async Task DeleteAppointment(int folio)
@@ -82,10 +67,7 @@ public class AppointmentRegistry
             throw new KeyNotFoundException($"Appointment with folio {folio} not found.");
         }
 
-        this.context.Appointments.Remove(appointment);
-        await this.context.SaveChangesAsync();
+        clinicDataBase.AppointmentsTable.Remove(appointment);
+        await clinicDataBase.SaveChangesAsync();
     }
-
-
 }
-

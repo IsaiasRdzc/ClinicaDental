@@ -3,20 +3,22 @@ namespace ClinicaDental.ApiService.Appointments.Services;
 using ClinicaDental.ApiService.DataBase.Models;
 using ClinicaDental.ApiService.DataBase.Registries;
 
+using Microsoft.EntityFrameworkCore;
+
 public class ClinicAdmin
 {
-    private readonly ScheduleRegistry scheduleRegistry;
-    private readonly DoctorRegistry doctorRegistry;
+    private readonly SchedulesRegistry scheduleRegistry;
+    private readonly DoctorsRegistry doctorRegistry;
 
-    public ClinicAdmin(ScheduleRegistry scheduleRegistry, DoctorRegistry doctorRegistry)
+    public ClinicAdmin(SchedulesRegistry scheduleRegistry, DoctorsRegistry doctorRegistry)
     {
         this.scheduleRegistry = scheduleRegistry;
         this.doctorRegistry = doctorRegistry;
     }
 
-    public async Task<IEnumerable<ClinicDayBussinesHours?>> GetClinicBussinesHours()
+    public async Task<List<ClinicDayBussinesHours>> GetClinicBussinesHours()
     {
-        var clinicHours = await this.scheduleRegistry.GetClinicHoursList();
+        var clinicHours = await this.scheduleRegistry.GetClinicHoursList().ToListAsync();
 
         if (clinicHours is null)
         {
@@ -62,9 +64,9 @@ public class ClinicAdmin
         }
     }
 
-    public async Task<IEnumerable<Doctor>> GetDoctorsList()
+    public async Task<List<Doctor>> GetDoctorsList()
     {
-        var doctors = await this.doctorRegistry.GetDoctorsList();
+        var doctors = await this.doctorRegistry.GetDoctorsList().ToListAsync();
 
         return doctors;
     }

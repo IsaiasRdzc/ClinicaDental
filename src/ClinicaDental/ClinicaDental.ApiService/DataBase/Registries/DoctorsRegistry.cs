@@ -4,31 +4,24 @@ using ClinicaDental.ApiService.DataBase;
 using ClinicaDental.ApiService.DataBase.Models;
 using Microsoft.EntityFrameworkCore;
 
-public class DoctorRegistry
+public class DoctorsRegistry(AppDbContext clinicDataBase)
 {
-    private readonly AppDbContext context;
-
-    public DoctorRegistry(AppDbContext context)
+    public IQueryable<Doctor> GetDoctorsList()
     {
-        this.context = context;
-    }
-
-    public async Task<IEnumerable<Doctor>> GetDoctorsList()
-    {
-        return await this.context.Doctors.ToListAsync();
+        return clinicDataBase.DoctorsTable.AsQueryable();
     }
 
     public async Task<Doctor?> GetDoctorWithId(int id)
     {
-        return await this.context.Doctors
+        return await clinicDataBase.DoctorsTable
         .Include(doctor => doctor.Schedules)
         .FirstOrDefaultAsync(doctor => doctor.Id == id);
     }
 
     public async Task AddDoctor(Doctor doctor)
     {
-        this.context.Doctors.Add(doctor);
-        await this.context.SaveChangesAsync();
+        clinicDataBase.DoctorsTable.Add(doctor);
+        await clinicDataBase.SaveChangesAsync();
     }
 
     public async Task UpdateDoctor(int id, Doctor doctor)
@@ -38,8 +31,8 @@ public class DoctorRegistry
             throw new KeyNotFoundException($"Doctor with ID {id} not found.");
         }
 
-        this.context.Entry(doctor).State = EntityState.Modified;
-        await this.context.SaveChangesAsync();
+        clinicDataBase.Entry(doctor).State = EntityState.Modified;
+        await clinicDataBase.SaveChangesAsync();
     }
 
     public async Task RemoveDoctor(int id)
@@ -51,12 +44,12 @@ public class DoctorRegistry
             throw new KeyNotFoundException($"Doctor with ID {id} not found.");
         }
 
-        this.context.Doctors.Remove(doctor);
-        await this.context.SaveChangesAsync();
+        clinicDataBase.DoctorsTable.Remove(doctor);
+        await clinicDataBase.SaveChangesAsync();
     }
 
     private bool DoctorExists(int id)
     {
-        return this.context.Doctors.Any(e => e.Id == id);
+        return clinicDataBase.DoctorsTable.Any(e => e.Id == id);
     }
 }
