@@ -9,6 +9,7 @@ import { ScheduleAppointmentService } from '../shared/schedule-appointment.servi
 import { CommonModule } from '@angular/common';
 import { routes } from '../app.routes';
 import { Modal } from 'bootstrap';
+import { Doctor } from '../../../models/doctor.model';
 
 // @Component({
 //   selector: 'app-schedule-appointment',
@@ -46,16 +47,16 @@ import { Modal } from 'bootstrap';
   templateUrl: './schedule-appointment.component.html',
   styleUrls: ['./schedule-appointment.component.css']
 })
-export class AppointmentComponent {
+export class AppointmentComponent implements OnInit{
   confirmationData: any = {};
   firstAppointment: boolean | null = null;
   dateSelected: boolean | null = null;
   
 
   // Modelos de datos
-  firstAppointmentData = {
+  appointmentData = {
     id: 0,
-    doctorId: 1,
+    doctorId: 0,
     date: '',
     startTime: "",
     durationInHours: 0,
@@ -64,17 +65,13 @@ export class AppointmentComponent {
     patientPhone: ''
   };
 
-  appointmentData = {
-    date: '',
-    startTime: '',
-    duration: 1,
-    patientName: '',
-    patientPhone: ''
-  };
 
   availableSlots: string[] = [];
 
   constructor(private http: HttpClient, public service: ScheduleAppointmentService, private router: Router) {}
+  ngOnInit(): void {
+    this.service.getAllDoctors();
+  }
 
   isFirstAppointment(choice: boolean) {
     this.firstAppointment = choice;
@@ -91,21 +88,22 @@ export class AppointmentComponent {
     }
   }
 
-  isADateSelected(choice: boolean) {
+  isADateSelected(choice: boolean, id:number) {
+    console.log(choice.valueOf().toString() + id.toString());
     this.dateSelected = choice;
     if (choice) {
-      this.fetchAvailableSlots();
+      this.findAvailableSlots(id);
     }
   }
 
-  fetchAvailableSlots() {
-    const doctorId = 1;
-    const date = this.firstAppointmentData.date;
+  findAvailableSlots(_doctorId: number) {
+    const doctorId = _doctorId;
+    const date = this.appointmentData.date;
     const url = `/api/appointments/availableSlots?doctorId=${doctorId}&date=${date}`;
     this.http.get<string[]>(url)
       .subscribe((slots) => {this.availableSlots = slots
         if (slots.length > 0) {
-          this.firstAppointmentData.startTime = slots[0]; 
+          this.appointmentData.startTime = slots[0]; 
         }
       });
     
@@ -121,12 +119,12 @@ export class AppointmentComponent {
   onSubmitFirstAppointment(form: any) {
     if (form.valid) {
       const appointment = {
-        doctorId: this.firstAppointmentData.doctorId,
-        date: this.firstAppointmentData.date,
-        startTime: this.firstAppointmentData.startTime,
+        doctorId: this.appointmentData.doctorId,
+        date: this.appointmentData.date,
+        startTime: this.appointmentData.startTime,
         durationInHours: 1, // Duración fija de 1 hora
-        patientName: this.firstAppointmentData.patientName,
-        patientPhone: this.firstAppointmentData.patientPhone
+        patientName: this.appointmentData.patientName,
+        patientPhone: this.appointmentData.patientPhone
       };
 
       this.http.post('/api/appointments', appointment)
