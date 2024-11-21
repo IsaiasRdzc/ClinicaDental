@@ -16,6 +16,6 @@ public static class LoginEndpoints
         AccountsManager accountmanager)
     {
         return await ErrorOrResultHandler.HandleResult(async () =>
-            await accountmanager.AttemptLogin(loginRequest.Username, loginRequest.Password));
+            await accountmanager.GetDoctorData(loginRequest.Username, loginRequest.Password));
     }
 }
