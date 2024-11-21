@@ -10,16 +10,19 @@ public class Patient
     public int PatientId { get; private set; }
 
     [Required]
-    public required string PatientNames { get; set; }
+    public required string PatientNames { get; init; }
 
     [Required]
-    public required string PatientSecondNames { get; set; }
+    public required string PatientSecondNames { get; init; }
 
     [Required]
     public required int PatientAge { get; set; }
 
     [Required]
     public required string PatientDirection { get; set; }
+
+    [Required]
+    public required int DoctorId { get; set; }
 
     public string? PatientPhoneNumber { get; set; }
 
