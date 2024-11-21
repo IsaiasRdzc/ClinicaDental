@@ -107,35 +107,16 @@ public class SuppliesRegistry(AppDbContext context)
 
     public async Task<MedicalSupply?> FindExistingMedicalSupply(MedicalSupply newMedicalSupply)
     {
-        if (newMedicalSupply == null)
-        {
-            throw new ArgumentNullException(nameof(newMedicalSupply));
-        }
-
-        return await context.MedicalSupplies
-            .AsNoTracking()
-            .FirstOrDefaultAsync(s => s.Name == newMedicalSupply.Name);
+        return await context.MedicalSupplies.Where(s => s.Name == newMedicalSupply.Name).FirstOrDefaultAsync();
     }
 
     public async Task<SurgicalSupply?> FindExistingSurgicalSupply(SurgicalSupply newSurgicalSupply)
     {
-        if (newSurgicalSupply == null)
-        {
-            throw new ArgumentNullException(nameof(newSurgicalSupply));
-        }
-
-        return await context.SurgicalSupplies
-            .AsNoTracking()
-            .FirstOrDefaultAsync(s => s.Name == newSurgicalSupply.Name);
+        return await context.SurgicalSupplies.Where(s => s.Name == newSurgicalSupply.Name).FirstOrDefaultAsync();
     }
 
     public async Task<CleaningSupply?> FindExistingCleaningSupply(CleaningSupply newCleaningSupply)
     {
-        if (newCleaningSupply == null)
-        {
-            throw new ArgumentNullException(nameof(newCleaningSupply));
-        }
-
         return await context.CleaningSupplies
             .AsNoTracking()
             .FirstOrDefaultAsync(s => s.Name == newCleaningSupply.Name);
