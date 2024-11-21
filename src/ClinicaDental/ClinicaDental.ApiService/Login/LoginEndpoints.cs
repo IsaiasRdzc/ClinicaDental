@@ -12,10 +12,10 @@ public static class LoginEndpoints
     }
 
     public static async Task<IResult> LoginAsDoctor(
-        string username,
-        string password,
+        LoginRequest loginRequest,
         AccountsManager accountmanager)
     {
-        return await ErrorOrResultHandler.HandleResult(async () => await accountmanager.AttemptLogin(username, password));
+        return await ErrorOrResultHandler.HandleResult(async () =>
+            await accountmanager.AttemptLogin(loginRequest.Username, loginRequest.Password));
     }
 }

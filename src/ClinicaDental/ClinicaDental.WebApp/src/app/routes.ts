@@ -2,6 +2,7 @@ import { Routes } from "@angular/router";
 import { HomeComponent } from "./home/home.component";
 import { PaymentDetailsComponent } from "./payment-details/payment-details.component";
 import { LoginComponent } from "./login/login/login.component";
+import { DashboardComponent } from "./dashboard/dashboard.component";
 
 const routeConfig: Routes=[
     {
@@ -18,6 +19,11 @@ const routeConfig: Routes=[
         path: "login",
         component: LoginComponent,
         title: "Dentist Login"
+    },
+    {
+        path: "dashboard",
+        component: DashboardComponent,
+        title: "Dashboard"
     }
    
 ];
