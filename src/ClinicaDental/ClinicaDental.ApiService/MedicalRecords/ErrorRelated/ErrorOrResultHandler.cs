@@ -1,4 +1,4 @@
-﻿namespace ClinicaDental.ApiService.MedicalRecords.Services;
+﻿namespace ClinicaDental.ApiService.MedicalRecords.ErrorRelated;
 
 public static class ErrorOrResultHandler
 {
@@ -16,10 +16,6 @@ public static class ErrorOrResultHandler
         catch (KeyNotFoundException error)
         {
             return Results.NotFound(error.Message);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return Results.Unauthorized();
         }
         catch (Exception)
         {
@@ -41,10 +37,6 @@ public static class ErrorOrResultHandler
         catch (KeyNotFoundException error)
         {
             return Results.NotFound(error.Message);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return Results.Unauthorized();
         }
         catch (Exception)
         {

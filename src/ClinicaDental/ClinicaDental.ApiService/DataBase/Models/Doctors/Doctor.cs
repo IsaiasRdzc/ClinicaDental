@@ -1,7 +1,9 @@
-namespace ClinicaDental.ApiService.DataBase.Models.Appointments;
+namespace ClinicaDental.ApiService.DataBase.Models.Doctors;
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
+using ClinicaDental.ApiService.DataBase.Models.Appointments;
 
 public class Doctor
 {

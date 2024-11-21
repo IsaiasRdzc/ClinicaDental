@@ -58,6 +58,20 @@ public class AppointmentsRegistry(AppDbContext clinicDataBase)
         await clinicDataBase.SaveChangesAsync();
     }
 
+    public async Task UpdateAppointmentPatientId(int folio, int patientientId)
+    {
+        var appointment = await this.GetAppointmentByFolio(folio);
+
+        if (appointment is null)
+        {
+            throw new KeyNotFoundException($"Appointment with ID {folio} not found.");
+        }
+
+        appointment.PatientId = patientientId;
+        clinicDataBase.AppointmentsTable.Update(appointment);
+        await clinicDataBase.SaveChangesAsync();
+    }
+
     public async Task DeleteAppointment(int folio)
     {
         var appointment = await this.GetAppointmentByFolio(folio);

@@ -1,7 +1,9 @@
 ﻿namespace ClinicaDental.ApiService.DataBase;
 
 using ClinicaDental.ApiService.DataBase.Models.Appointments;
+using ClinicaDental.ApiService.DataBase.Models.Doctors;
 using ClinicaDental.ApiService.DataBase.Models.Inventory;
+using ClinicaDental.ApiService.DataBase.Models.Login;
 using ClinicaDental.ApiService.DataBase.Models.MedicalRecords;
 using ClinicaDental.ApiService.DataBase.Models.Purchases;
 
@@ -17,6 +19,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<SurgicalSupply> SurgicalSupplies { get; init; }
 
     public DbSet<CleaningSupply> CleaningSupplies { get; init; }
+
+    public required DbSet<Account> AccountsTable { get; init; }
 
     public required DbSet<Appointment> AppointmentsTable { get; init; }
 
@@ -41,6 +45,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<PurchaseType> PurchaseTypes { get; set; } = null!;
 
     public DbSet<Material> Materials { get; set; } = null!;
+
+    public DbSet<Patient> Patients { get; init; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -70,6 +76,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             new DoctorDaySchedule(5) { DoctorId = 1, DayOfWeek = DayOfWeek.Thursday, StartTime = new TimeOnly(10, 0), EndTime = new TimeOnly(16, 0) },
             new DoctorDaySchedule(6) { DoctorId = 1, DayOfWeek = DayOfWeek.Friday, StartTime = new TimeOnly(10, 0), EndTime = new TimeOnly(16, 0) },
             new DoctorDaySchedule(7) { DoctorId = 1, DayOfWeek = DayOfWeek.Saturday, StartTime = new TimeOnly(10, 0), EndTime = new TimeOnly(14, 0) });
+
+        // Seed Accounts
+        modelBuilder.Entity<Account>().HasData(
+            new Account(1) { Username = "Admin", Password = "123", DoctorId = 1 });
 
         modelBuilder.Entity<Supply>().ToTable("Supplies");
         modelBuilder.Entity<MedicalSupply>().ToTable("MedicalSupplies");
