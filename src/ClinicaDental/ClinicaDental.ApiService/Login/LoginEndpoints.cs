@@ -8,14 +8,14 @@ public static class LoginEndpoints
     {
         var group = app.MapGroup("api/login");
 
-        group.MapPost(string.Empty, LoginAsDoctor);
+        group.MapPost(string.Empty, GetDoctorByLogin);
     }
 
-    public static async Task<IResult> LoginAsDoctor(
+    public static async Task<IResult> GetDoctorByLogin(
         LoginRequest loginRequest,
         AccountsManager accountmanager)
     {
         return await ErrorOrResultHandler.HandleResult(async () =>
-            await accountmanager.GetDoctorData(loginRequest.Username, loginRequest.Password));
+            await accountmanager.GetDoctorByLogin(loginRequest.Username, loginRequest.Password));
     }
 }
