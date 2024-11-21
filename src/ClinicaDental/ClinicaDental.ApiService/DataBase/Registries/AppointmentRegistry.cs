@@ -3,6 +3,8 @@ namespace ClinicaDental.ApiService.DataBase.Registries;
 using ClinicaDental.ApiService.DataBase;
 using ClinicaDental.ApiService.DataBase.Models;
 
+
+//en plural
 public class AppointmentRegistry
 {
     private readonly AppDbContext context;
@@ -15,6 +17,12 @@ public class AppointmentRegistry
     public IQueryable<Appointment> GetAppointmentsList()
     {
         var appointmentsList = this.context.Appointments.AsQueryable();
+        return appointmentsList;
+    }
+
+    public IQueryable<Appointment> GetAppointmentsList()
+    {
+        var appointmentsList = this.ClinicDataBase.AppointmentsTable.AsQueryable();
         return appointmentsList;
     }
 
@@ -77,4 +85,7 @@ public class AppointmentRegistry
         this.context.Appointments.Remove(appointment);
         await this.context.SaveChangesAsync();
     }
+
+
 }
+

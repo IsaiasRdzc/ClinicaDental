@@ -29,84 +29,121 @@
   </div>
 </nav>
 
+<ul class="list-group">
+  <li class="list-group-item d-flex justify-content-between align-items-start mb-2 border px-4 py-3 rounded-3"  *ngFor="let dentist of service.dentists">
+      <div class="flex-grow-1 mouse-hover">
+          <div class="fw-bold">{{dentist.name}}</div>
+      </div>
+  </li> 
+</ul>
 
 <div class="container mt-5">
-  <h2>Registrar una Cita</h2>
-  <form #form="ngForm" (submit)="onSubmit(form)">
-    <!-- Fecha -->
-    <div class="mb-3">
-      <label for="date" class="form-label">Fecha</label>
-      <input 
-        type="date" 
-        id="date" 
-        name="date" 
-        class="form-control" 
-        [(ngModel)]="service.formData.date" 
-        required 
-      />
-    </div>
+  <h2>¿Es tu primera cita?</h2>
+  <div class="mb-3">
+    <button class="btn btn-success me-3" (click)="isFirstAppointment(true)">Sí</button>
+    <button class="btn btn-secondary" (click)="isFirstAppointment(false)">No</button>
+  </div>
 
-    <!-- Hora de inicio -->
-    <div class="mb-3">
-      <label for="startTime" class="form-label">Hora de Inicio</label>
-      <input 
-        type="time" 
-        id="startTime" 
-        name="startTime" 
-        class="form-control" 
-        [(ngModel)]="service.formData.date" 
-        required 
-      />
-    </div>
+  <!-- Vista para primera cita -->
+  <div *ngIf="firstAppointment === true">
+    <h3>Registrar Primera Cita</h3>
+    <p>El doctor asignado será el ID: 1</p>
+    <form #firstForm="ngForm" (submit)="onSubmitFirstAppointment(firstForm)">
+      <!-- Fecha -->
+      <div class="mb-3">
+        <label for="date" class="form-label">Fecha</label>
+        <input 
+          type="date" 
+          id="date" 
+          name="date" 
+          class="form-control" 
+          [(ngModel)]="firstAppointmentData.date" 
+          required 
+        />
+      </div>
 
-    <!-- Duración en horas -->
-    <div class="mb-3">
-      <label for="durationInHours" class="form-label">Duración (en horas)</label>
-      <input 
-        type="number" 
-        id="durationInHours" 
-        name="durationInHours" 
-        class="form-control" 
-        [(ngModel)]="service.formData.duration" 
-        min="0" 
-        step="1" 
-        required 
-      />
-    </div>
+      <!-- Horarios disponibles -->
+      <div class="mb-3">
+        <label for="time" class="form-label">Seleccionar Horario</label>
+        <select 
+          id="time" 
+          name="time" 
+          class="form-select" 
+          [(ngModel)]="firstAppointmentData.time" 
+          required
+        >
+          <option *ngFor="let slot of availableSlots" [value]="slot">{{ slot }}</option>
+        </select>
+      </div>
 
-    <!-- Nombre del paciente -->
-    <div class="mb-3">
-      <label for="patientName" class="form-label">Nombre del Paciente</label>
-      <input 
-        type="text" 
-        id="patientName" 
-        name="patientName" 
-        class="form-control" 
-        [(ngModel)]="service.formData.patientName" 
-        required 
-      />
-    </div>
+      <!-- Nombre -->
+      <div class="mb-3">
+        <label for="name" class="form-label">Nombre del Paciente</label>
+        <input 
+          type="text" 
+          id="name" 
+          name="name" 
+          class="form-control" 
+          [(ngModel)]="firstAppointmentData.patientName" 
+          required 
+        />
+      </div>
 
-    <!-- Teléfono del paciente -->
-    <div class="mb-3">
-      <label for="patientPhone" class="form-label">Teléfono del Paciente</label>
-      <input 
-        type="tel" 
-        id="patientPhone" 
-        name="patientPhone" 
-        class="form-control" 
-        [(ngModel)]="service.formData.patientPhone" 
-        pattern="[0-9]{10}" 
-        required 
-      />
-      <small class="form-text text-muted">Debe contener 10 dígitos.</small>
-    </div>
+      <!-- Teléfono -->
+      <div class="mb-3">
+        <label for="phone" class="form-label">Teléfono</label>
+        <input 
+          type="tel" 
+          id="phone" 
+          name="phone" 
+          class="form-control" 
+          [(ngModel)]="firstAppointmentData.patientPhone" 
+          pattern="[0-9]{10}" 
+          required 
+        />
+        <small class="form-text text-muted">Debe contener 10 dígitos.</small>
+      </div>
 
-    <!-- Botón de enviar -->
-    <button type="submit" class="btn btn-primary" [disabled]="!form.valid">
-      Registrar Cita
-    </button>
-  </form>
+      <button type="submit" class="btn btn-primary" [disabled]="!firstForm.valid">
+        Confirmar
+      </button>
+    </form>
+  </div>
+
+  <!-- Vista para formulario normal -->
+  <div *ngIf="firstAppointment === false">
+    <h3>Registrar una Cita</h3>
+    <!-- Formulario normal -->
+    <form #form="ngForm" (submit)="onSubmitNormalAppointment(form)">
+      <div class="mb-3">
+        <label for="date" class="form-label">Fecha</label>
+        <input type="date" id="date" name="date" class="form-control" [(ngModel)]="appointmentData.date" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="startTime" class="form-label">Hora de Inicio</label>
+        <input type="time" id="startTime" name="startTime" class="form-control" [(ngModel)]="appointmentData.startTime" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="durationInHours" class="form-label">Duración (en horas)</label>
+        <input type="number" id="durationInHours" name="durationInHours" class="form-control" [(ngModel)]="appointmentData.duration" min="0" step="1" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="patientName" class="form-label">Nombre del Paciente</label>
+        <input type="text" id="patientName" name="patientName" class="form-control" [(ngModel)]="appointmentData.patientName" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="patientPhone" class="form-label">Teléfono</label>
+        <input type="tel" id="patientPhone" name="patientPhone" class="form-control" [(ngModel)]="appointmentData.patientPhone" pattern="[0-9]{10}" required />
+        <small class="form-text text-muted">Debe contener 10 dígitos.</small>
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="!form.valid">Registrar Cita</button>
+    </form>
+  </div>
 </div>
 
 
