@@ -1,29 +1,22 @@
-import { Component } from '@angular/core';
-import { PaymentDetailService } from '../../shared/payment-detail.service';
-import { FormsModule, NgForm } from '@angular/forms';
-import { PaymentDetail } from '../../shared/payment-detail.model';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { PaymentDetailFormComponent } from './payment-detail-form/payment-detail-form.component';
+import { PaymentDetailService } from '../shared/payment-detail.service';
 
 @Component({
-  selector: 'app-payment-detail-form',
+  selector: 'app-payment-details',
   standalone: true,
-  imports: [FormsModule],
-  templateUrl: './payment-detail-form.component.html',
-  styleUrl: './payment-detail-form.component.css'
+  imports: [PaymentDetailFormComponent, CommonModule],
+  templateUrl: './payment-details.component.html',
+  styleUrl: './payment-details.component.css'
 })
-export class PaymentDetailFormComponent {
-  constructor(public service: PaymentDetailService){
+export class PaymentDetailsComponent implements OnInit {
+  constructor(public service: PaymentDetailService) {
 
   }
-
-  onSubmit(form:NgForm){
-    this.service.postPaymentDetail()
-    .subscribe({
-      next: res=>{
-        this.service.refreshList();
-        this.service.resetForm(form)
-      },
-      error: err => {console.log(err)}
-    }
-    )
+  ngOnInit(): void {
+    this.service.refreshList();
   }
+
+
 }
