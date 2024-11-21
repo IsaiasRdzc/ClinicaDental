@@ -58,9 +58,12 @@ public class MedicalRecordsRegistry(AppDbContext context)
         }
     }
 
-    public async Task DeleteMedicalRecordByRecordId(int medicalRecordId)
+    public async Task DeleteMedicalRecordByRecordId(MedicalRecord existingMedicalRecord)
     {
-        var existingMedicalRecord = this.GetMedicalRecordByMedicalRecordId(medicalRecordId);
+        this.RemoveOldDiagnosisInfo(existingMedicalRecord);
+        this.RemoveOldTeethInfo(existingMedicalRecord);
+        this.RemoveOldMedicalProceduresInfo(existingMedicalRecord);
+
         this.context.Remove(existingMedicalRecord);
         await this.context.SaveChangesAsync();
     }

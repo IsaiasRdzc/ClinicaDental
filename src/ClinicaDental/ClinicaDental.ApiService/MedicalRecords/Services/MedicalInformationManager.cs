@@ -38,7 +38,7 @@ public class MedicalInformationManager(MedicalRecordsRegistry medicalRecordsRegi
                 throw new ArgumentException("The time for modification has elapsed");
             }
 
-            await this.medicalRecordsRegistry.DeleteMedicalRecordByRecordId(existingRecord.MedicalRecordId);
+            await this.medicalRecordsRegistry.DeleteMedicalRecordByRecordId(existingRecord);
         }
         else
         {
