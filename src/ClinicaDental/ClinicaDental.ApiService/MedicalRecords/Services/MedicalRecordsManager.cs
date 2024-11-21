@@ -7,11 +7,11 @@ using ClinicaDental.ApiService.DataBase.Registries.MedicalRecords;
 
 using Microsoft.EntityFrameworkCore;
 
-public class MedicalRecordsManager(MedicalRecordsRegistry medicalRecordsRegistry)
+public class MedicalRecordsManager(MedicalRecordsRegistry medicalRecordsRegistry, PatientsRegistry patientsRegistry)
 {
     public async Task SaveMedicalRecord(MedicalRecord medicalRecord)
     {
-        if (MedicalRecordInformationChecker.HasValidMedicalRecordInformation(medicalRecord) && MedicalRecordInformationChecker.IsInAcceptableTime(medicalRecord.DateCreated))
+        if (MedicalRecordInformationChecker.HasValidMedicalRecordInformation(medicalRecord) && MedicalRecordInformationChecker.IsInAcceptableTime(medicalRecord.DateCreated) && this.IsPatientValid(medicalRecord.PatientId))
         {
             await medicalRecordsRegistry.CreateMedicalRecord(medicalRecord);
         }
@@ -103,5 +103,10 @@ public class MedicalRecordsManager(MedicalRecordsRegistry medicalRecordsRegistry
         {
             throw new KeyNotFoundException("Record not found");
         }
+    }
+
+    private bool IsPatientValid(int patientId)
+    {
+        return patientsRegistry.GetPatientByPatientId(patientId) is not null;
     }
 }
