@@ -7,15 +7,15 @@ public static class MedicalInformationEndpoints
     public static void MapMedicalRecordsEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("api/medicalRecords");
-        group.MapPost("newMedicalRecord", CreateRecord);
+        group.MapPost("MedicalRecord", CreateRecord);
 
-        group.MapGet("searchRecordById/{medicalRecordId}", SearchRecordById);
-        group.MapGet("searchRecordsByDoctorId/{doctorId}", SearchRecordsByDoctorId);
-        group.MapGet("searchRecordsByPatientId/{patientId}", SearchRecordsByPatientId);
+        group.MapGet("RecordById/{medicalRecordId}", SearchRecordById);
+        group.MapGet("RecordsByDoctorId/{doctorId}", SearchRecordsByDoctorId);
+        group.MapGet("RecordsByPatientId/{patientId}", SearchRecordsByPatientId);
 
-        group.MapPut("updateRecord/{medicalRecordId}", UpdateRecord);
+        group.MapPut("Record/{medicalRecordId}", UpdateRecord);
 
-        group.MapDelete("deleteRecordById/{medicalRecordId}", DeleteMedicalRecordByRecordId);
+        group.MapDelete("RecordById/{medicalRecordId}", DeleteMedicalRecordByRecordId);
     }
 
     public static async Task<IResult> CreateRecord(MedicalRecord medicalRecord, MedicalInformationManager medicalRecordsManager)

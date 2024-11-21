@@ -2,7 +2,6 @@
 
 using System;
 
-using ClinicaDental.ApiService.DataBase.Models.Appointments;
 using ClinicaDental.ApiService.DataBase.Models.MedicalRecords;
 using ClinicaDental.ApiService.DataBase.Registries.MedicalRecords;
 
@@ -77,7 +76,7 @@ public class MedicalInformationManager(MedicalRecordsRegistry medicalRecordsRegi
         else
         {
             throw new KeyNotFoundException("Record not found");
-        };
+        }
     }
 
     public Task<List<MedicalRecord>> SearchMedicalRecordsByPatientId(int patientId)
