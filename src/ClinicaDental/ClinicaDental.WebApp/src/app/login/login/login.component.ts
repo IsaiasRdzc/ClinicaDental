@@ -33,7 +33,7 @@ export class LoginComponent {
       // Realiza el POST al backend
       this.http.post('/api/login', loginPayload).subscribe({
         next: (response: any) => {
-          if (response.success) {
+          if (response===true) {
             // Si la respuesta es positiva, redirige a otra página
             this.router.navigate(['/payment']); // Ajusta la ruta de destino
           } else {
