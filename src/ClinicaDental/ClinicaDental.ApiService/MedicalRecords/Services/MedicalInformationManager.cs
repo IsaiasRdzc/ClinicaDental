@@ -7,15 +7,83 @@ using ClinicaDental.ApiService.DataBase.Registries.MedicalRecords;
 
 using Microsoft.EntityFrameworkCore;
 
-public class MedicalInformationManager(MedicalRecordsRegistry medicalRecordsRegistry)
+public class MedicalInformationManager(MedicalRecordsRegistry medicalInformationRegistry)
 {
-    private readonly MedicalRecordsRegistry medicalRecordsRegistry = medicalRecordsRegistry;
+    private readonly MedicalRecordsRegistry medicalInformationRegistry = medicalInformationRegistry;
+
+    public async Task<int> SavePatient(Patient patient)
+    {
+        if (MedicalRecordInformationChecker.HasValidPatientInfo(patient))
+        {
+            return await this.medicalInformationRegistry.CreatePatient(patient);
+        }
+        else
+        {
+            throw new ArgumentException("The data of the record is incorrect");
+        }
+    }
+
+    public async Task DeletePatientById(int patientId)
+    {
+        var existingPatient = await this.medicalInformationRegistry.GetPatientByPatientId(patientId);
+
+        if (existingPatient is not null)
+        {
+            await this.medicalInformationRegistry.DeletePatient(existingPatient);
+        }
+        else
+        {
+            throw new KeyNotFoundException($"Patient with id {patientId} not found.");
+        }
+    }
+
+    public async Task UpdatePatientByPatientId(int patientId, Patient updatedPatient)
+    {
+        var existingPatient = await this.medicalInformationRegistry.GetPatientByPatientId(patientId);
+
+        if (existingPatient is not null && MedicalRecordInformationChecker.HasValidPatientInfo(updatedPatient))
+        {
+            await this.medicalInformationRegistry.UpdatePatient(existingPatient,updatedPatient);
+        }
+        else
+        {
+            throw new KeyNotFoundException($"Patient with id {patientId} not found.");
+        }
+    }
+
+    public async Task<Patient> SearchPatientById(int patientId)
+    {
+        var existingPatient = await this.medicalInformationRegistry.GetPatientByPatientId(patientId);
+
+        if (existingPatient is not null)
+        {
+            return existingPatient;
+        }
+        else
+        {
+            throw new KeyNotFoundException("Record not found");
+        }
+    }
+
+    public Task<List<Patient>> SearchPatientByDoctorId(int doctorId)
+    {
+        var existingPatients = this.medicalInformationRegistry.GetPatientsByDoctorId(doctorId);
+
+        if (existingPatients.FirstOrDefault() is not null)
+        {
+            return existingPatients.ToListAsync();
+        }
+        else
+        {
+            throw new KeyNotFoundException("Record not found");
+        }
+    }
 
     public async Task SaveMedicalRecord(MedicalRecord medicalRecord)
     {
-        if (MedicalRecordInformationChecker.HasValidMedicalInformation(medicalRecord) && MedicalRecordInformationChecker.IsInAcceptableTime(medicalRecord.DateCreated))
+        if (MedicalRecordInformationChecker.HasValidMedicalRecordInformation(medicalRecord) && MedicalRecordInformationChecker.IsInAcceptableTime(medicalRecord.DateCreated))
         {
-            await this.medicalRecordsRegistry.CreateMedicalRecord(medicalRecord);
+            await this.medicalInformationRegistry.CreateMedicalRecord(medicalRecord);
         }
         else if (!MedicalRecordInformationChecker.IsInAcceptableTime(medicalRecord.DateCreated))
         {
@@ -29,7 +97,7 @@ public class MedicalInformationManager(MedicalRecordsRegistry medicalRecordsRegi
 
     public async Task DeleteMedicalRecordByRecordId(int medicalRecordId)
     {
-        var existingRecord = await this.medicalRecordsRegistry.GetMedicalRecordByMedicalRecordId(medicalRecordId);
+        var existingRecord = await this.medicalInformationRegistry.GetMedicalRecordByMedicalRecordId(medicalRecordId);
 
         if (existingRecord is not null)
         {
@@ -38,7 +106,7 @@ public class MedicalInformationManager(MedicalRecordsRegistry medicalRecordsRegi
                 throw new ArgumentException("The time for modification has elapsed");
             }
 
-            await this.medicalRecordsRegistry.DeleteMedicalRecordByRecordId(existingRecord);
+            await this.medicalInformationRegistry.DeleteMedicalRecord(existingRecord);
         }
         else
         {
@@ -46,9 +114,9 @@ public class MedicalInformationManager(MedicalRecordsRegistry medicalRecordsRegi
         }
     }
 
-    public async Task UpdateMedicalRecord(int medicalRecordId, MedicalRecord updatedmedicalRecord)
+    public async Task UpdateMedicalRecordById(int medicalRecordId, MedicalRecord updatedmedicalRecord)
     {
-        var existingRecord = await this.medicalRecordsRegistry.GetMedicalRecordByMedicalRecordId(medicalRecordId);
+        var existingRecord = await this.medicalInformationRegistry.GetMedicalRecordByMedicalRecordId(medicalRecordId);
 
         if (existingRecord is not null)
         {
@@ -57,7 +125,7 @@ public class MedicalInformationManager(MedicalRecordsRegistry medicalRecordsRegi
                 throw new ArgumentException("The time for modification has elapsed");
             }
 
-            await this.medicalRecordsRegistry.UpdateMedicalRecord(existingRecord, updatedmedicalRecord);
+            await this.medicalInformationRegistry.UpdateMedicalRecord(existingRecord, updatedmedicalRecord);
         }
         else
         {
@@ -67,7 +135,7 @@ public class MedicalInformationManager(MedicalRecordsRegistry medicalRecordsRegi
 
     public Task<List<MedicalRecord>> SearchMedicalRecordsByDoctorId(int doctorId)
     {
-        var existingRrecords = this.medicalRecordsRegistry.GetMedicalRecordsByDoctortId(doctorId);
+        var existingRrecords = this.medicalInformationRegistry.GetMedicalRecordsByDoctortId(doctorId);
 
         if (existingRrecords.FirstOrDefault() is not null)
         {
@@ -81,7 +149,7 @@ public class MedicalInformationManager(MedicalRecordsRegistry medicalRecordsRegi
 
     public Task<List<MedicalRecord>> SearchMedicalRecordsByPatientId(int patientId)
     {
-        var existingRrecords = this.medicalRecordsRegistry.GetMedicalRecordsByPatientId(patientId);
+        var existingRrecords = this.medicalInformationRegistry.GetMedicalRecordsByPatientId(patientId);
 
         if (existingRrecords.FirstOrDefault() is not null)
         {
@@ -95,7 +163,7 @@ public class MedicalInformationManager(MedicalRecordsRegistry medicalRecordsRegi
 
     public async Task<MedicalRecord> SearchMedicalRecordByRecordId(int medicalRecordId)
     {
-        var existingRecord = await this.medicalRecordsRegistry.GetMedicalRecordByMedicalRecordId(medicalRecordId);
+        var existingRecord = await this.medicalInformationRegistry.GetMedicalRecordByMedicalRecordId(medicalRecordId);
 
         if (existingRecord is not null)
         {

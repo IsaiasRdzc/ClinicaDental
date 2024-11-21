@@ -17,10 +17,6 @@ public static class ErrorOrResultHandler
         {
             return Results.NotFound(error.Message);
         }
-        catch (UnauthorizedAccessException)
-        {
-            return Results.Unauthorized();
-        }
         catch (Exception)
         {
             return Results.StatusCode(500);
@@ -41,10 +37,6 @@ public static class ErrorOrResultHandler
         catch (KeyNotFoundException error)
         {
             return Results.NotFound(error.Message);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return Results.Unauthorized();
         }
         catch (Exception)
         {

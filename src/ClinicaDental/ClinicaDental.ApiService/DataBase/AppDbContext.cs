@@ -31,6 +31,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 
     public DbSet<MedicalRecord> MedicalRecords { get; init; }
 
+    public DbSet<Patient> Patients { get; init; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

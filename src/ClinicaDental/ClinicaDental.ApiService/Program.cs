@@ -65,6 +65,7 @@ app.MapDefaultEndpoints();
 app.MapAppointmentsEndpoints();
 app.MapSuppliesEndpoints();
 app.MapMedicalRecordsEndpoints();
+app.MapPatientInformationEndpoints();
 app.MapPaymentEndpoints();
 
 // Initialize the database
