@@ -4,6 +4,7 @@ import { PaymentDetailsComponent } from "./payment-details/payment-details.compo
 import { LoginComponent } from "./login/login/login.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
 import { InventorySectionComponent } from "./inventory/inventory-section/inventory-section.component";
+import { PatientsSectionComponent } from "./patients/patients-section/patients-section.component";
 
 const routeConfig: Routes=[
     {
@@ -30,6 +31,12 @@ const routeConfig: Routes=[
         path: "inventory-section",
         component: InventorySectionComponent,
         title: "Inventory"
+    },
+    {
+        path: "patients-section",
+        component: PatientsSectionComponent,
+        title: "Pacientes"
+
     }
 
     
