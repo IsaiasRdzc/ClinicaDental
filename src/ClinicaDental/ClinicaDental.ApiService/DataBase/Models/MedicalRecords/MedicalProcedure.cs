@@ -10,12 +10,10 @@ public class MedicalProcedure
     public int MedicalProcedureId { get; private set; }
 
     [Required]
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     [Required]
-    public string Description { get; set; }
+    public required string Description { get; set; }
 
-    private double ProcedureCost { get; set; }
-
-    public int MedicalRecordId { get; private set; }
+    public double ProcedureCost { get; set; }
 }

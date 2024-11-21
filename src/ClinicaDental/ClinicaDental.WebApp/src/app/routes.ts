@@ -25,6 +25,7 @@ const routeConfig: Routes=[
         component: DashboardComponent,
         title: "Dashboard"
     }
+   
 ];
 
 export default routeConfig;
