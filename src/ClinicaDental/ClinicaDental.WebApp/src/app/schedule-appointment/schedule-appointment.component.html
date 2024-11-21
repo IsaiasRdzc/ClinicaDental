@@ -189,6 +189,34 @@
     </div>
   </div>
 
+  <!-- Modal para confirmar cita agendada -->
+<div 
+class="modal fade" 
+id="appointmentConfirmationModal" 
+tabindex="-1" 
+aria-labelledby="appointmentConfirmationModalLabel" 
+aria-hidden="true"
+>
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="appointmentConfirmationModalLabel">Cita Agendada</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <p><strong>Folio:</strong> {{ confirmationData.folio }}</p>
+      <p><strong>Nombre:</strong> {{ confirmationData.patientName }}</p>
+      <p><strong>Fecha:</strong> {{ confirmationData.date }}</p>
+      <p><strong>Hora:</strong> {{ confirmationData.startTime }}</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="redirectToHomepage()">Confirmar</button>
+    </div>
+  </div>
+</div>
+</div>
+
+
 
   <div class="vertical-bar"></div>
 </div>
