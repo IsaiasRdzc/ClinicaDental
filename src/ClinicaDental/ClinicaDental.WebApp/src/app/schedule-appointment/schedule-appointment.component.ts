@@ -47,12 +47,16 @@ import { CommonModule } from '@angular/common';
 export class AppointmentComponent {
  
   firstAppointment: boolean | null = null;
+  dateSelected: boolean | null = null;
 
   // Modelos de datos
   firstAppointmentData = {
+    id: 0,
     doctorId: 1,
     date: '',
-    time: '',
+    startTime: "",
+    duration: "",
+    endTime: '',
     patientName: '',
     patientPhone: ''
   };
@@ -72,27 +76,46 @@ export class AppointmentComponent {
   isFirstAppointment(choice: boolean) {
     this.firstAppointment = choice;
     if (choice) {
+      //this.fetchAvailableSlots();
+    }
+  }
+
+  isADateSelected(choice: boolean) {
+    this.dateSelected = choice;
+    if (choice) {
       this.fetchAvailableSlots();
     }
   }
 
   fetchAvailableSlots() {
-    const doctorId = this.firstAppointmentData.doctorId;
+    const doctorId = 1;
     const date = this.firstAppointmentData.date;
-
-    this.http.get<string[]>(`/api/appointments/availableSlots?doctorId=${doctorId}&date=${date}`)
-      .subscribe((slots) => this.availableSlots = slots);
+    const url = `/api/appointments/availableSlots?doctorId=${doctorId}&date=${date}`;
+    this.http.get<string[]>(url)
+      .subscribe((slots) => {this.availableSlots = slots
+        if (slots.length > 0) {
+          this.firstAppointmentData.startTime = slots[0]; 
+        }
+      });
+    
   }
 
   onSubmitFirstAppointment(form: any) {
     if (form.valid) {
       const appointment = {
-        ...this.firstAppointmentData,
-        duration: 1
+        doctorId: this.firstAppointmentData.doctorId,
+        date: this.firstAppointmentData.date,
+        startTime: this.firstAppointmentData.startTime,
+        duration: 1, // Duración fija de 1 hora
+        patientName: this.firstAppointmentData.patientName,
+        patientPhone: this.firstAppointmentData.patientPhone
       };
-
+  
       this.http.post('/api/appointments', appointment)
-        .subscribe(() => alert('Cita registrada exitosamente.'));
+        .subscribe(() => alert('Cita registrada exitosamente.'), (error) => {
+          console.error('Error registrando la cita:', error);
+          alert('Hubo un problema al registrar la cita.');
+        });
     }
   }
 
