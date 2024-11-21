@@ -4,7 +4,12 @@ using System.ComponentModel.DataAnnotations;
 
 public class MedicalSupply : Supply
 {
-    public DateTime ExpirationDate { get; set; }
+    public MedicalSupply(int id)
+        : base(id)
+    {
+    }
+
+    public DateOnly ExpirationDate { get; set; }
 
     public required string MedicationType { get; set; }
 

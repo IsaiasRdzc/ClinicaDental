@@ -9,6 +9,8 @@ using ClinicaDental.ApiService.DataBase.Models.Inventory;
 
 using Microsoft.EntityFrameworkCore;
 
+using Polly;
+
 public class SuppliesRegistry(AppDbContext context)
 {
     public async Task AddSupply(Supply supply)
@@ -105,34 +107,37 @@ public class SuppliesRegistry(AppDbContext context)
 
     public async Task<MedicalSupply?> FindExistingMedicalSupply(MedicalSupply newMedicalSupply)
     {
-        var existingSupply = await this.GetSupplies().OfType<MedicalSupply>()
-            .AsNoTracking()
-            .Where(s => s.Name == newMedicalSupply.Name && s.MedicationType == newMedicalSupply.MedicationType &&
-            s.LotNumber == newMedicalSupply.LotNumber && s.ExpirationDate == newMedicalSupply.ExpirationDate)
-            .FirstOrDefaultAsync();
+        if (newMedicalSupply == null)
+        {
+            throw new ArgumentNullException(nameof(newMedicalSupply));
+        }
 
-        return existingSupply;
+        return await context.MedicalSupplies
+            .AsNoTracking()
+            .FirstOrDefaultAsync(s => s.Name == newMedicalSupply.Name);
     }
 
     public async Task<SurgicalSupply?> FindExistingSurgicalSupply(SurgicalSupply newSurgicalSupply)
     {
-        var existingSupply = await this.GetSupplies().OfType<SurgicalSupply>()
-            .AsNoTracking()
-            .Where(s => s.Name == newSurgicalSupply.Name && s.SurgicalType == newSurgicalSupply.SurgicalType &&
-            s.SterilizationMethod == newSurgicalSupply.SterilizationMethod && s.SterilizationDate == newSurgicalSupply.SterilizationDate)
-            .FirstOrDefaultAsync();
+        if (newSurgicalSupply == null)
+        {
+            throw new ArgumentNullException(nameof(newSurgicalSupply));
+        }
 
-        return existingSupply;
+        return await context.SurgicalSupplies
+            .AsNoTracking()
+            .FirstOrDefaultAsync(s => s.Name == newSurgicalSupply.Name);
     }
 
     public async Task<CleaningSupply?> FindExistingCleaningSupply(CleaningSupply newCleaningSupply)
     {
-        var existingSupply = await this.GetSupplies().OfType<CleaningSupply>()
-            .AsNoTracking()
-            .Where(s => s.Name == newCleaningSupply.Name && s.CleaningType == newCleaningSupply.CleaningType &&
-            s.CleaningMethod == newCleaningSupply.CleaningMethod && s.CleaningDate == newCleaningSupply.CleaningDate)
-            .FirstOrDefaultAsync();
+        if (newCleaningSupply == null)
+        {
+            throw new ArgumentNullException(nameof(newCleaningSupply));
+        }
 
-        return existingSupply;
+        return await context.CleaningSupplies
+            .AsNoTracking()
+            .FirstOrDefaultAsync(s => s.Name == newCleaningSupply.Name);
     }
 }

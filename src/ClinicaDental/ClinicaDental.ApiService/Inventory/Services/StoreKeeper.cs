@@ -13,7 +13,7 @@ public class StoreKeeper(SuppliesRegistry suppliesRegistry)
     {
         if (newMedicalSupply == null)
         {
-            throw new ArgumentNullException(nameof(newMedicalSupply));
+            throw new ArgumentException("El insumo médico no puede ser nulo.");
         }
 
         if (string.IsNullOrWhiteSpace(newMedicalSupply.MedicationType) || string.IsNullOrWhiteSpace(newMedicalSupply.LotNumber))
@@ -42,7 +42,7 @@ public class StoreKeeper(SuppliesRegistry suppliesRegistry)
     {
         if (newSurgicalSupply == null)
         {
-            throw new ArgumentNullException(nameof(newSurgicalSupply));
+            throw new ArgumentException("El insumo quirúrgico no puede ser nulo");
         }
 
         if (string.IsNullOrWhiteSpace(newSurgicalSupply.SurgicalType) || string.IsNullOrWhiteSpace(newSurgicalSupply.SterilizationMethod))
@@ -71,7 +71,7 @@ public class StoreKeeper(SuppliesRegistry suppliesRegistry)
     {
         if (newCleaningSupply == null)
         {
-            throw new ArgumentNullException(nameof(newCleaningSupply));
+            throw new ArgumentException("El insumo clínico no puede ser nulo");
         }
 
         if (string.IsNullOrWhiteSpace(newCleaningSupply.CleaningType) || string.IsNullOrWhiteSpace(newCleaningSupply.CleaningMethod))

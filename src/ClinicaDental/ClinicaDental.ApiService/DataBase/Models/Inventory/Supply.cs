@@ -9,6 +9,11 @@ using System.Text.Json.Serialization;
 [JsonDerivedType(typeof(CleaningSupply))]
 public class Supply
 {
+    public Supply(int id)
+    {
+        this.Id = id;
+    }
+
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; private set; }
