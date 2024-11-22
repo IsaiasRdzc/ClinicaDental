@@ -11,13 +11,17 @@ public static class MedicalIRecordsEndpoints
         var group = app.MapGroup("api/medicalRecords");
         group.MapPost("MedicalRecord", CreateRecord);
 
-        group.MapGet("RecordById/{medicalRecordId}", SearchRecordById);
-        group.MapGet("RecordsByDoctorId/{doctorId}", SearchRecordsByDoctorId);
-        group.MapGet("RecordsByPatientId/{patientId}", SearchRecordsByPatientId);
+        group.MapGet("RecordById", SearchDetailedRecordById);
 
-        group.MapPut("Record/{medicalRecordId}", UpdateRecordById);
+        group.MapGet("DetailedRecordsByDoctorId", SearchDetailedRecordsByDoctorId);
+        group.MapGet("RecordsByDoctorId", SearchRecordsByDoctorId);
 
-        group.MapDelete("RecordById/{medicalRecordId}", DeleteMedicalRecordByRecordId);
+        group.MapGet("DetailedRecordsByPatientId", SearchDetailedRecordsByPatientId);
+        group.MapGet("RecordsByPatientId", SearchRecordsByPatientId);
+
+        group.MapPut("Record", UpdateRecordById);
+
+        group.MapDelete("RecordById", DeleteMedicalRecordByRecordId);
     }
 
     public static async Task<IResult> CreateRecord(MedicalRecord medicalRecord, MedicalRecordsManager medicalRecordsManager)
@@ -35,9 +39,14 @@ public static class MedicalIRecordsEndpoints
         return await ErrorOrResultHandler.HandleResult(async () => await medicalRecordsManager.DeleteMedicalRecordByRecordId(medicalRecordId));
     }
 
-    public static async Task<IResult> SearchRecordById(int medicalRecordId, MedicalRecordsManager medicalRecordsManager)
+    public static async Task<IResult> SearchDetailedRecordById(int medicalRecordId, MedicalRecordsManager medicalRecordsManager)
     {
-        return await ErrorOrResultHandler.HandleResult(async () => await medicalRecordsManager.SearchMedicalRecordByRecordId(medicalRecordId));
+        return await ErrorOrResultHandler.HandleResult(async () => await medicalRecordsManager.SearchDetailedMedicalRecordByRecordId(medicalRecordId));
+    }
+
+    public static async Task<IResult> SearchDetailedRecordsByPatientId(int patientId, MedicalRecordsManager medicalRecordsManager)
+    {
+        return await ErrorOrResultHandler.HandleResult(async () => await medicalRecordsManager.SearchDetailedMedicalRecordsByPatientId(patientId));
     }
 
     public static async Task<IResult> SearchRecordsByPatientId(int patientId, MedicalRecordsManager medicalRecordsManager)
@@ -48,5 +57,10 @@ public static class MedicalIRecordsEndpoints
     public static async Task<IResult> SearchRecordsByDoctorId(int doctorId, MedicalRecordsManager medicalRecordsManager)
     {
         return await ErrorOrResultHandler.HandleResult(async () => await medicalRecordsManager.SearchMedicalRecordsByDoctorId(doctorId));
+    }
+
+    public static async Task<IResult> SearchDetailedRecordsByDoctorId(int doctorId, MedicalRecordsManager medicalRecordsManager)
+    {
+        return await ErrorOrResultHandler.HandleResult(async () => await medicalRecordsManager.SearchDetailedMedicalRecordsByDoctorId(doctorId));
     }
 }

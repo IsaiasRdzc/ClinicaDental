@@ -10,6 +10,15 @@ public class MedicalRecordsRegistry(AppDbContext database)
     {
         var medicalRecords = database.MedicalRecords
         .AsQueryable()
+        .Where(medicalRecord => medicalRecord.PatientId == patientId);
+
+        return medicalRecords;
+    }
+
+    public IQueryable<MedicalRecord> GetDetailedMedicalRecordsByPatientId(int patientId)
+    {
+        var medicalRecords = database.MedicalRecords
+        .AsQueryable()
         .Where(medicalRecord => medicalRecord.PatientId == patientId)
             .Include(medicalRecord => medicalRecord.Diagnosis).ThenInclude(illness => illness.Treatments)
             .Include(medicalRecord => medicalRecord.MedicalProcedures)
@@ -18,7 +27,7 @@ public class MedicalRecordsRegistry(AppDbContext database)
         return medicalRecords;
     }
 
-    public async Task<MedicalRecord?> GetMedicalRecordByMedicalRecordId(int medicalRecordId)
+    public async Task<MedicalRecord?> GetDetailedMedicalRecordByMedicalRecordId(int medicalRecordId)
     {
         var medicalRecord = await database.MedicalRecords
             .Where(medicalRecord => medicalRecord.MedicalRecordId == medicalRecordId)
@@ -34,10 +43,19 @@ public class MedicalRecordsRegistry(AppDbContext database)
     {
         var medicalRecords = database.MedicalRecords
         .AsQueryable()
-        .Where(medicalRecord => medicalRecord.PatientId == doctorId)
+        .Where(medicalRecord => medicalRecord.DoctorId == doctorId);
+
+        return medicalRecords;
+    }
+
+    public IQueryable<MedicalRecord> GetDetailedMedicalRecordsByDoctortId(int doctorId)
+    {
+        var medicalRecords = database.MedicalRecords
+        .AsQueryable()
+        .Where(medicalRecord => medicalRecord.DoctorId == doctorId)
             .Include(medicalRecord => medicalRecord.Diagnosis).ThenInclude(illness => illness.Treatments)
             .Include(medicalRecord => medicalRecord.MedicalProcedures)
-            .Include(medicalRecord => medicalRecord.Teeths); 
+            .Include(medicalRecord => medicalRecord.Teeths);
 
         return medicalRecords;
     }
@@ -70,26 +88,6 @@ public class MedicalRecordsRegistry(AppDbContext database)
 
         database.MedicalRecords.Update(existingMedicalRecord);
         await database.SaveChangesAsync();
-    }
-
-    public IQueryable<MedicalRecord> GetMedicalRecordsByPatientIdWithinTimeSpan(int patientId,DateTime startDate, DateTime finalDate)
-    {
-        var medicalRecords = this.GetMedicalRecordsByPatientId(patientId)
-            .Include(medicalRecord => medicalRecord.Diagnosis).ThenInclude(illness => illness.Treatments)
-            .Include(medicalRecord => medicalRecord.MedicalProcedures)
-            .Include(medicalRecord => medicalRecord.Teeths);
-
-        return medicalRecords.Where(medicalRecord => medicalRecord.DateCreated >= startDate && medicalRecord.DateCreated <= finalDate);
-    }
-
-    public IQueryable<MedicalRecord> GetMedicalRecordsByDoctorIdWithinTimeSpan(int patientId, DateTime startDate, DateTime finalDate)
-    {
-        var medicalRecords = this.GetMedicalRecordsByDoctortId(patientId)
-            .Include(medicalRecord => medicalRecord.Diagnosis).ThenInclude(illness => illness.Treatments)
-            .Include(medicalRecord => medicalRecord.MedicalProcedures)
-            .Include(medicalRecord => medicalRecord.Teeths);
-
-        return medicalRecords.Where(medicalRecord => medicalRecord.DateCreated >= startDate && medicalRecord.DateCreated <= finalDate);
     }
 
     private void RemoveOldDiagnosisInfo(MedicalRecord existingMedicalRecord)

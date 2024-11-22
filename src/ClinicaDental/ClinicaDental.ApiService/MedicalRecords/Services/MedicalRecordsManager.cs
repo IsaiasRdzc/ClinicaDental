@@ -11,7 +11,9 @@ public class MedicalRecordsManager(MedicalRecordsRegistry medicalRecordsRegistry
 {
     public async Task SaveMedicalRecord(MedicalRecord medicalRecord)
     {
-        if (MedicalRecordInformationChecker.HasValidMedicalRecordInformation(medicalRecord) && MedicalRecordInformationChecker.IsInAcceptableTime(medicalRecord.DateCreated) && this.IsPatientValid(medicalRecord.PatientId))
+        var existingPatient = await patientsRegistry.GetPatientByPatientId(medicalRecord.PatientId);
+
+        if (MedicalRecordInformationChecker.HasValidMedicalRecordInformation(medicalRecord) && MedicalRecordInformationChecker.IsInAcceptableTime(medicalRecord.DateCreated) && existingPatient is not null)
         {
             await medicalRecordsRegistry.CreateMedicalRecord(medicalRecord);
         }
@@ -27,7 +29,7 @@ public class MedicalRecordsManager(MedicalRecordsRegistry medicalRecordsRegistry
 
     public async Task DeleteMedicalRecordByRecordId(int medicalRecordId)
     {
-        var existingRecord = await medicalRecordsRegistry.GetMedicalRecordByMedicalRecordId(medicalRecordId);
+        var existingRecord = await medicalRecordsRegistry.GetDetailedMedicalRecordByMedicalRecordId(medicalRecordId);
 
         if (existingRecord is not null)
         {
@@ -46,7 +48,7 @@ public class MedicalRecordsManager(MedicalRecordsRegistry medicalRecordsRegistry
 
     public async Task UpdateMedicalRecordById(int medicalRecordId, MedicalRecord updatedmedicalRecord)
     {
-        var existingRecord = await medicalRecordsRegistry.GetMedicalRecordByMedicalRecordId(medicalRecordId);
+        var existingRecord = await medicalRecordsRegistry.GetDetailedMedicalRecordByMedicalRecordId(medicalRecordId);
 
         if (existingRecord is not null)
         {
@@ -63,9 +65,37 @@ public class MedicalRecordsManager(MedicalRecordsRegistry medicalRecordsRegistry
         }
     }
 
+    public Task<List<MedicalRecord>> SearchDetailedMedicalRecordsByDoctorId(int doctorId)
+    {
+        var existingRrecords = medicalRecordsRegistry.GetDetailedMedicalRecordsByDoctortId(doctorId);
+
+        if (existingRrecords.FirstOrDefault() is not null)
+        {
+            return existingRrecords.ToListAsync();
+        }
+        else
+        {
+            throw new KeyNotFoundException("Record not found");
+        }
+    }
+
     public Task<List<MedicalRecord>> SearchMedicalRecordsByDoctorId(int doctorId)
     {
         var existingRrecords = medicalRecordsRegistry.GetMedicalRecordsByDoctortId(doctorId);
+
+        if (existingRrecords.FirstOrDefault() is not null)
+        {
+            return existingRrecords.ToListAsync();
+        }
+        else
+        {
+            throw new KeyNotFoundException("Record not found");
+        }
+    }
+
+    public Task<List<MedicalRecord>> SearchDetailedMedicalRecordsByPatientId(int patientId)
+    {
+        var existingRrecords = medicalRecordsRegistry.GetDetailedMedicalRecordsByPatientId(patientId);
 
         if (existingRrecords.FirstOrDefault() is not null)
         {
@@ -91,9 +121,9 @@ public class MedicalRecordsManager(MedicalRecordsRegistry medicalRecordsRegistry
         }
     }
 
-    public async Task<MedicalRecord> SearchMedicalRecordByRecordId(int medicalRecordId)
+    public async Task<MedicalRecord> SearchDetailedMedicalRecordByRecordId(int medicalRecordId)
     {
-        var existingRecord = await medicalRecordsRegistry.GetMedicalRecordByMedicalRecordId(medicalRecordId);
+        var existingRecord = await medicalRecordsRegistry.GetDetailedMedicalRecordByMedicalRecordId(medicalRecordId);
 
         if (existingRecord is not null)
         {
@@ -103,10 +133,5 @@ public class MedicalRecordsManager(MedicalRecordsRegistry medicalRecordsRegistry
         {
             throw new KeyNotFoundException("Record not found");
         }
-    }
-
-    private bool IsPatientValid(int patientId)
-    {
-        return patientsRegistry.GetPatientByPatientId(patientId) is not null;
     }
 }

@@ -14,15 +14,6 @@ export class ScheduleAppointmentService {
   formData: Appointment = new Appointment();
   constructor(private http: HttpClient) { }
 
-  scheduleAppointment(){
-    return this.http.post(this.url, this.formData);
-  }
-
-  resetForm(form: NgForm){
-    form.form.reset();
-    this.formData = new Appointment();
-  }
-
   getAllDoctors(){
     this.http.get(this.url+"/doctor")
     .subscribe({

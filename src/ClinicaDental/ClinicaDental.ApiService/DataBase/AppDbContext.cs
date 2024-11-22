@@ -34,7 +34,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 
     public required DbSet<PaymentDetail> PaymentDetails { get; init; }
 
-    public DbSet<MedicalRecord> MedicalRecords { get; init; }
+    public required DbSet<MedicalRecord> MedicalRecords { get; init; }
+
+
+    public required DbSet<Patient> Patients { get; init; }
 
     public DbSet<Purchase> Purchases { get; set; } = null!;
 
@@ -47,6 +50,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<Material> Materials { get; set; } = null!;
 
     public DbSet<Patient> Patients { get; init; }
+
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
