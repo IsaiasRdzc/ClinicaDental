@@ -20,8 +20,9 @@ import { environment } from '../../environments/environment';
 export class AppointmentComponent implements OnInit{
   appointmentConfirmationDetails: any = {};
   isPatientFirstAppointment: boolean | null = null;
-  formVisibility: boolean = false;
+  canDisplayForm: boolean = false;
   availableSlots: string[] = [];
+  dentists: Doctor[]=[];
   
   constructor(private http: HttpClient, private router: Router) {}
   ngOnInit(): void {
@@ -44,6 +45,10 @@ export class AppointmentComponent implements OnInit{
   showAppointmentInfoForm(choice: boolean) {
     this.resetformVisibility();
     this.isPatientFirstAppointment = choice;
+    this.styleButtonDecision(this.isPatientFirstAppointment)
+  }
+
+  styleButtonDecision(choice: boolean){
     if (choice) {
       this.styleButtonForYes();
     }else{
@@ -51,42 +56,59 @@ export class AppointmentComponent implements OnInit{
     }
   }
 
-  scheduleAppointment(form: any) {
+  
+  scheduleAppointment(form: any): void {
     if (form.valid) {
-      const appointment = {
-        doctorId: this.appointmentData.doctorId,
-        patientId: this.appointmentData.patientId,
-        date: this.appointmentData.date,
-        startTime: this.appointmentData.startTime,
-        durationInHours: 1, // Duración fija de 1 hora
-        patientName: this.appointmentData.patientName,
-        patientPhone: this.appointmentData.patientPhone
-      };
-
-
-      this.http.post('/api/appointments',appointment)
-        .subscribe((response: any) => {
-          // Manejar el folio recibido del backend
-          this.appointmentConfirmationDetails = {
-            folio: response,
-            patientName: appointment.patientName,
-            date: appointment.date,
-            startTime: appointment.startTime
-          };
-
-          console.log(response)
-          const confirmationAppointmentWindow = new Modal(document.getElementById('appointmentConfirmationModal')!);
-          confirmationAppointmentWindow.show();
-        }, (error) => {
-          console.error('Error registrando la cita:', error);
-          alert('Hubo un problema al registrar la cita.');
-        });
+      const appointment = this.createAppointmentData();
+  
+      this.saveAppointment(appointment).subscribe({
+        next: (response) => this.showAppointmentConfirmationDetailsModal(response, appointment),
+        error: (error) => this.handleError(error)
+      });
     }
   }
 
+  private createAppointmentData(): any {
+    return {
+      doctorId: this.appointmentData.doctorId,
+      patientId: this.appointmentData.patientId,
+      date: this.appointmentData.date,
+      startTime: this.appointmentData.startTime,
+      durationInHours: 1, // Todas las citas duran una hora
+      patientName: this.appointmentData.patientName,
+      patientPhone: this.appointmentData.patientPhone
+    };
+  }
+
+  private saveAppointment(appointment: any): Observable<any> {
+    return this.http.post('/api/appointments', appointment);
+  }
+
+  private showAppointmentConfirmationDetailsModal(response: any, appointment: any): void {
+    this.appointmentConfirmationDetails = {
+      folio: response,
+      patientName: appointment.patientName,
+      date: appointment.date,
+      startTime: appointment.startTime
+    };
+  
+    console.log(response);
+  
+    const modalElement = document.getElementById('appointmentConfirmationModal');
+    if (modalElement) {
+      const confirmationModal = new Modal(modalElement);
+      confirmationModal.show();
+    }
+  }
+
+  private handleError(error: any): void {
+    console.error('Error registrando la cita:', error);
+    alert('Hubo un problema al registrar la cita.');
+  }
+  
+
 
   findAvailableSlots(doctorId:number) {
-    console.log(doctorId.toString());
     this.getAvailableSlots(doctorId);
     this.continueScheduling();
   }
@@ -105,19 +127,13 @@ export class AppointmentComponent implements OnInit{
   }
 
   continueScheduling(){
-    this.formVisibility = true;
+    this.canDisplayForm = true;
   }
 
   resetformVisibility(){
-    this.formVisibility = false;
+    this.canDisplayForm = false;
   }
 
-  onSubmitNormalAppointment(form: any) {
-    if (form.valid) {
-      this.http.post('/api/appointments', this.appointmentData)
-        .subscribe(() => alert('Cita registrada exitosamente.'));
-    }
-  }
 
   styleButtonForYes(){
     const yesButton = document.getElementById("yesButton");
@@ -145,10 +161,7 @@ export class AppointmentComponent implements OnInit{
     this.router.navigate(['/']);
 
   }
-
-  url: string=environment.apiBaseUrl+"/appointments";
-  dentists: Doctor[]=[];
-
+  
   getAllDoctors(){
     this.http.get("/api/HR/doctor")
     .subscribe({
