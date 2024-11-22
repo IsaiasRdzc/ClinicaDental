@@ -40,10 +40,10 @@
         <h2 class="text-center mb-4">¿Es tu primera cita?</h2>
 
         <div class="d-flex justify-content-center mb-4">
-          <button class="btn  me-3" (click)="showAppointmentInfoForm(true)" id="yesButton">
+          <button class="btn  me-3" (click)="patientIsOnFirstAppointment()" id="yesButton">
             Sí
           </button>
-          <button class="btn " (click)="showAppointmentInfoForm(false)" id="noButton">
+          <button class="btn " (click)="patientIsNotOnFirstAppointment()" id="noButton">
             No
           </button>
         </div>

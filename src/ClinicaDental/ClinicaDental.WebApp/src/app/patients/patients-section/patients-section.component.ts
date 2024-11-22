@@ -22,9 +22,13 @@ export class PatientsSectionComponent implements OnInit{
   
   ngOnInit(): void {
     this.getDoctorIdFromStorage();
+
     if(this.doctorId){
       this.loadPatients();
     }
+
+    this.loadPatients();
+
   }
   
   getDoctorIdFromStorage(){
