@@ -33,8 +33,10 @@ export class LoginComponent {
       // Realiza el POST al backend
       this.http.post('/api/login', loginPayload).subscribe({
         next: (response: any) => {
-          if (response===true) {
-            // Si la respuesta es positiva, redirige a otra página
+          console.log(response);
+          if (response != null) {
+            localStorage.setItem('DoctorID', response.id);
+            localStorage.setItem('DoctorName', response.name);
             this.router.navigate(['/dashboard']); // Ajusta la ruta de destino
           } else {
             // Manejo de error si el login es incorrecto

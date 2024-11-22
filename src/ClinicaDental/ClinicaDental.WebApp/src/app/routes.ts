@@ -1,10 +1,12 @@
 import { Routes } from "@angular/router";
+import { Component } from "../../node_modules/@angular/core/index";
 import { HomeComponent } from "./home/home.component";
 import { PaymentDetailsComponent } from "./payment-details/payment-details.component";
-import { LoginComponent } from "./login/login/login.component";
+import { LoginComponent } from "./login/login.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
 import { InventorySectionComponent } from "./inventory/inventory-section/inventory-section.component";
 import { PatientsSectionComponent } from "./patients/patients-section/patients-section.component";
+
 
 const routeConfig: Routes=[
     {
@@ -16,7 +18,8 @@ const routeConfig: Routes=[
         path: "payment",
         component: PaymentDetailsComponent,
         title: "PaymentReynaldo"
-    },
+  },
+
     {
         path: "login",
         component: LoginComponent,
@@ -36,7 +39,6 @@ const routeConfig: Routes=[
         path: "patients-section",
         component: PatientsSectionComponent,
         title: "Pacientes"
-
     }
 
     
