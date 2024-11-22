@@ -9,6 +9,8 @@ using ClinicaDental.ApiService.DataBase.Models.Inventory;
 
 using Microsoft.EntityFrameworkCore;
 
+using Polly;
+
 public class SuppliesRegistry(AppDbContext context)
 {
     public async Task AddSupply(Supply supply)
@@ -23,16 +25,9 @@ public class SuppliesRegistry(AppDbContext context)
         await context.SaveChangesAsync();
     }
 
-    public async Task UpdateSupplyAsync(Supply supply)
-    {
-        context.Supplies.Update(supply);
-        await context.SaveChangesAsync();
-    }
-
     public async Task UpdateMedicalSupplyAsync(MedicalSupply existingSupply, MedicalSupply updatedSupply)
     {
         existingSupply.Name = updatedSupply.Name;
-        existingSupply.Description = updatedSupply.Description;
         existingSupply.Stock = updatedSupply.Stock;
         existingSupply.MedicationType = updatedSupply.MedicationType;
         existingSupply.ExpirationDate = updatedSupply.ExpirationDate;
@@ -45,7 +40,6 @@ public class SuppliesRegistry(AppDbContext context)
     public async Task UpdateSurgicalSupplyAsync(SurgicalSupply existingSupply, SurgicalSupply updatedSupply)
     {
         existingSupply.Name = updatedSupply.Name;
-        existingSupply.Description = updatedSupply.Description;
         existingSupply.Stock = updatedSupply.Stock;
         existingSupply.SurgicalType = updatedSupply.SurgicalType;
         existingSupply.SterilizationMethod = updatedSupply.SterilizationMethod;
@@ -58,7 +52,6 @@ public class SuppliesRegistry(AppDbContext context)
     public async Task UpdateCleaningSupplyAsync(CleaningSupply existingSupply, CleaningSupply updatedSupply)
     {
         existingSupply.Name = updatedSupply.Name;
-        existingSupply.Description = updatedSupply.Description;
         existingSupply.Stock = updatedSupply.Stock;
         existingSupply.CleaningType = updatedSupply.CleaningType;
         existingSupply.CleaningMethod = updatedSupply.CleaningMethod;
@@ -68,14 +61,24 @@ public class SuppliesRegistry(AppDbContext context)
         await context.SaveChangesAsync();
     }
 
-    public IQueryable<Supply> GetSupplies()
+    public IQueryable<SupplyDto> GetSupplies()
     {
-        return context.Supplies.AsQueryable().AsNoTracking();
+        return context.Supplies
+            .AsNoTracking()
+            .Select(s => new SupplyDto
+            {
+                Id = s.Id,
+                Name = s.Name,
+                Stock = s.Stock,
+                Type = GetSupplyType(s),
+            });
     }
 
-    public Supply? GetSupplyById(int id)
+    public Task<Supply?> GetSupplyById(int id)
     {
-        return context.Supplies.FirstOrDefault(s => s.Id == id);
+        var supply = context.Supplies.FirstOrDefaultAsync(s => s.Id == id);
+
+        return supply;
     }
 
     public async Task<MedicalSupply?> GetMedicalSupplyByIdAsync(int id)
@@ -107,6 +110,44 @@ public class SuppliesRegistry(AppDbContext context)
             SupplyType.Surgical => context.Supplies.OfType<SurgicalSupply>(),
             SupplyType.Cleaning => context.Supplies.OfType<CleaningSupply>(),
             _ => throw new InvalidOperationException("Unknown supply type."),
+        };
+    }
+
+    public async Task<MedicalSupply?> FindExistingMedicalSupply(MedicalSupply newMedicalSupply)
+    {
+        return await context.MedicalSupplies.
+            Where(s => s.Name == newMedicalSupply.Name &&
+        s.ExpirationDate == newMedicalSupply.ExpirationDate &&
+        s.MedicationType == newMedicalSupply.MedicationType).
+        FirstOrDefaultAsync();
+    }
+
+    public async Task<SurgicalSupply?> FindExistingSurgicalSupply(SurgicalSupply newSurgicalSupply)
+    {
+        return await context.SurgicalSupplies.
+            Where(s => s.Name == newSurgicalSupply.Name &&
+        s.SterilizationDate == newSurgicalSupply.SterilizationDate &&
+        s.SterilizationMethod == newSurgicalSupply.SterilizationMethod).
+        FirstOrDefaultAsync();
+    }
+
+    public async Task<CleaningSupply?> FindExistingCleaningSupply(CleaningSupply newCleaningSupply)
+    {
+        return await context.CleaningSupplies.
+             Where(s => s.Name == newCleaningSupply.Name &&
+             s.CleaningDate == newCleaningSupply.CleaningDate &&
+             s.CleaningType == newCleaningSupply.CleaningType).
+            FirstOrDefaultAsync();
+    }
+
+    private static string GetSupplyType(Supply supply)
+    {
+        return supply switch
+        {
+            MedicalSupply => "Medical",
+            SurgicalSupply => "Surgical",
+            CleaningSupply => "Cleaning",
+            _ => "Unknown",
         };
     }
 }

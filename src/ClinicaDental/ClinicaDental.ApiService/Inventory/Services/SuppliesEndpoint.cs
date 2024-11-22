@@ -1,6 +1,7 @@
 namespace ClinicaDental.ApiService.Inventory.Services;
 
 using ClinicaDental.ApiService.DataBase.Models.Inventory;
+using ClinicaDental.ApiService.MedicalRecords.Services;
 
 public static class SuppliesEndpoint
 {
@@ -22,130 +23,57 @@ public static class SuppliesEndpoint
 
     public static async Task<IResult> GetSupplies(StoreKeeper storeKeeper)
     {
-        var supplies = await storeKeeper.GetSupplies();
-        return TypedResults.Ok(supplies);
+        return await ErrorOrResultHandler.HandleResult(async () => await storeKeeper.GetSupplies());
     }
 
     public static async Task<IResult> GetSuppliesByType(
     SupplyType type,
     StoreKeeper storeKeeper)
     {
-        try
-        {
-            var supplies = await storeKeeper.GetSuppliesByType(type);
-            return TypedResults.Ok(supplies);
-        }
-        catch (InvalidOperationException error)
-        {
-            return Results.BadRequest(error.Message);
-        }
-        catch (ArgumentException error)
-        {
-            return Results.BadRequest(error.Message);
-        }
+        return await ErrorOrResultHandler.HandleResult(async () => await storeKeeper.GetSuppliesByType(type));
     }
 
     public static async Task<IResult> AddMedicalSupply(
         MedicalSupply supply,
         StoreKeeper storeKeeper)
     {
-        try
-        {
-            await storeKeeper.AddMedicalSupply(supply);
-
-            return Results.Created($"/api/supplies/medical/{supply.Id}", supply);
-        }
-        catch (ArgumentNullException error)
-        {
-            return Results.BadRequest(error.Message);
-        }
-        catch (ArgumentException error)
-        {
-            return Results.BadRequest(error.Message);
-        }
+        return await ErrorOrResultHandler.HandleResult(async () => await storeKeeper.AddMedicalSupply(supply));
     }
 
     public static async Task<IResult> AddSurgicalSupply(
        SurgicalSupply supply,
        StoreKeeper storeKeeper)
     {
-        try
-        {
-            await storeKeeper.AddSurgicalSupply(supply);
-            return Results.Created($"/api/supplies/surgical/{supply.Id}", supply);
-        }
-        catch (ArgumentNullException error)
-        {
-            return Results.BadRequest(error.Message);
-        }
-        catch (ArgumentException error)
-        {
-            return Results.BadRequest(error.Message);
-        }
+        return await ErrorOrResultHandler.HandleResult(async () => await storeKeeper.AddSurgicalSupply(supply));
     }
 
     public static async Task<IResult> AddCleaningSupply(
        CleaningSupply supply,
        StoreKeeper storeKeeper)
     {
-        try
-        {
-            await storeKeeper.AddCleaningSupply(supply);
-            return Results.Created($"/api/supplies/cleaning/{supply.Id}", supply);
-        }
-        catch (ArgumentNullException error)
-        {
-            return Results.BadRequest(error.Message);
-        }
-        catch (ArgumentException error)
-        {
-            return Results.BadRequest(error.Message);
-        }
+        return await ErrorOrResultHandler.HandleResult(async () => await storeKeeper.AddCleaningSupply(supply));
     }
 
-    public static IResult GetSupplyById(
+    public static async Task<IResult> GetSupplyById(
         int id,
         StoreKeeper storeKeeper)
     {
-        try
-        {
-            var supply = storeKeeper.GetSupplyById(id);
-            return Results.Ok(supply);
-        }
-        catch (KeyNotFoundException error)
-        {
-            return Results.BadRequest(error.Message);
-        }
+        return await ErrorOrResultHandler.HandleResult(async () => await storeKeeper.GetSupplyById(id));
     }
 
     public static async Task<IResult> RemoveSupply(
     int id,
     StoreKeeper storeKeeper)
     {
-        try
-        {
-            await storeKeeper.RemoveSupply(id);
-            return Results.NoContent();
-        }
-        catch (KeyNotFoundException error)
-        {
-            return Results.BadRequest(error.Message);
-        }
+        return await ErrorOrResultHandler.HandleResult(async () => await storeKeeper.RemoveSupply(id));
     }
 
     public static async Task<IResult> UpdateMedicalSupply(
+        int id,
         MedicalSupply updatedSupply,
         StoreKeeper storeKeeper)
     {
-        try
-        {
-            await storeKeeper.UpdateMedicalSupply(updatedSupply);
-            return Results.Ok("El suministro fue actualizado correctamente.");
-        }
-        catch (KeyNotFoundException error)
-        {
-            return Results.BadRequest(error.Message);
-        }
+        return await ErrorOrResultHandler.HandleResult(async () => await storeKeeper.UpdateMedicalSupply(id, updatedSupply));
     }
 
     public static async Task<IResult> UpdateSurgicalSupply(
@@ -153,15 +81,7 @@ public static class SuppliesEndpoint
         SurgicalSupply updatedSupply,
         StoreKeeper storeKeeper)
     {
-        try
-        {
-            await storeKeeper.UpdateSurgicalSupply(updatedSupply);
-            return Results.Ok("El suministro fue actualizado correctamente.");
-        }
-        catch (KeyNotFoundException error)
-        {
-            return Results.BadRequest(error.Message);
-        }
+        return await ErrorOrResultHandler.HandleResult(async () => await storeKeeper.UpdateSurgicalSupply(id, updatedSupply));
     }
 
     public static async Task<IResult> UpdateCleaningSupply(
@@ -169,14 +89,6 @@ public static class SuppliesEndpoint
         CleaningSupply updatedSupply,
         StoreKeeper storeKeeper)
     {
-        try
-        {
-            await storeKeeper.UpdateCleaningSupply(updatedSupply);
-            return Results.Ok("El suministro fue actualizado correctamente.");
-        }
-        catch (KeyNotFoundException error)
-        {
-            return Results.BadRequest(error.Message);
-        }
+        return await ErrorOrResultHandler.HandleResult(async () => await storeKeeper.UpdateCleaningSupply(id, updatedSupply));
     }
 }
