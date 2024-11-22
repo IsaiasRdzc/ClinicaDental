@@ -19,5 +19,16 @@ export class DashboardComponent implements OnInit{
     {
       this.doctorName = doctorName;
     }
+    this.getDoctorIdFromStorage();
   }
+
+  getDoctorIdFromStorage(){
+    const doctorId = localStorage.getItem('doctorID');
+    if(doctorId != null){
+      console.log(doctorId)
+    }else{
+      console.error('No se encontró el ID del doctor en localStorage');
+    }
+  }
+
 }

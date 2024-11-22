@@ -32,7 +32,7 @@ export class PatientProfileCreationComponent implements OnInit{
   }
 
   getDoctorIdFromStorage(){
-    const doctorId = localStorage.getItem('DoctorID');
+    const doctorId = localStorage.getItem('doctorID');
     if(doctorId != null){
       this.doctorId = doctorId;
       console.log(this.doctorId)
