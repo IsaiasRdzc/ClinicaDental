@@ -1,10 +1,11 @@
-
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { Router, RouterLink} from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Component, inject, OnInit } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Observable } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { routes } from '../app.routes';
 import { Modal } from 'bootstrap';
 import { Doctor } from '../../../models/doctor.model';
 import { environment } from '../../environments/environment';
@@ -12,13 +13,11 @@ import { environment } from '../../environments/environment';
 @Component({
   selector: 'app-schedule-appointment',
   standalone: true,
-  imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, HttpClientModule, AsyncPipe, FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './schedule-appointment.component.html',
   styleUrls: ['./schedule-appointment.component.css']
 })
-
 export class AppointmentComponent implements OnInit{
-
   appointmentConfirmationDetails: any = {};
   isPatientFirstAppointment: boolean | null = null;
   canDisplayForm: boolean = false;
@@ -31,19 +30,17 @@ export class AppointmentComponent implements OnInit{
     this.getAllDoctors();
   }
 
-
-  confirmationData: any = {};
+  //model
   appointmentData = {
     id: 0,
     doctorId: 1,
     patientId: 0,
     date: '',
     startTime: "",
-    durationInHours: 1,
+    durationInHours: 0,
     patientName: '',
     patientPhone: ''
   };
-
 
   showAppointmentInfoForm(choice: boolean) {
     this.resetformVisibility();
@@ -112,11 +109,10 @@ export class AppointmentComponent implements OnInit{
 
   findAvailableSlots(doctorId:number) {
     this.getAvailableSlots(doctorId);
-    this.showCompleteForm();
+    this.continueScheduling();
   }
 
-  getAvailableSlots(_doctorId: number) 
-  {
+  getAvailableSlots(_doctorId: number) {
     const doctorId = _doctorId;
     const date = this.appointmentData.date;
     const url = `/api/appointments/availableSlots?doctorId=${doctorId}&date=${date}`;
@@ -128,7 +124,6 @@ export class AppointmentComponent implements OnInit{
       });
     
   }
-
 
   continueScheduling(){
     this.canDisplayForm = true;
@@ -144,9 +139,14 @@ export class AppointmentComponent implements OnInit{
     yesButton?.classList.add("buttonSelected");
     const noButton = document.getElementById("noButton");
     noButton?.classList.remove("buttonSelected");
-
   }
 
+  styleButtonForNo(){
+    const noButton = document.getElementById("noButton");
+    noButton?.classList.add("buttonSelected");
+    const yesButton = document.getElementById("yesButton");
+    yesButton?.classList.remove("buttonSelected");
+  }
   
 
   redirectToHomepage() {
@@ -154,19 +154,13 @@ export class AppointmentComponent implements OnInit{
     const modal = new Modal(document.getElementById('appointmentConfirmationModal')!);
     modal.dispose();
     const backdrop = document.querySelector('.modal-backdrop');
-    if (backdrop) 
-    {
+    if (backdrop) {
       backdrop.remove();  // Elimina el fondo atenuado
     }
     this.router.navigate(['/']);
 
-    modal.dispose();
-    const body = document.body;
-    body.classList.remove('modal-open');
-    body.style.overflow = '';
-    body.style.paddingRight = '';
   }
-
+  
   getAllDoctors(){
     this.http.get("/api/HR/doctor")
     .subscribe({
