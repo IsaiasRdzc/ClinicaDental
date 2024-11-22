@@ -41,8 +41,4 @@ public static class PurchasesEndpoints
         return await ErrorOrResultHandler.HandleResult(async () => await purchaseManager.UpdatePurchaseAsync(purchase));
     }
 
-    public static async Task<IResult> DeletePurchaseById(int purchaseId, PurchaseManager purchaseManager)
-    {
-        return await ErrorOrResultHandler.HandleResult(async () => await purchaseManager.DeletePurchaseAsync(purchaseId));
-    }
-}
+    public stati¿

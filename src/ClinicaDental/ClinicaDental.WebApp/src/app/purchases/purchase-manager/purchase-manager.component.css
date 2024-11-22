@@ -1,0 +1,139 @@
+/* Main content */
+.content {
+  margin: 20px auto;
+  max-width: 80%; /* Limita el ancho del contenido */
+  text-align: center;
+}
+
+  .content h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+/* Table styles */
+.purchase-table {
+  margin: 0 auto;
+  border-collapse: collapse;
+  width: 80%; /* Ancho limitado */
+}
+
+  .purchase-table th,
+  .purchase-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .purchase-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+
+/* Navbar styles */
+.navbar {
+  background-color: #f5f5f5;
+  border-bottom: 2px solid #ccc;
+  width: 100%;
+}
+
+.navbar-links {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+  .navbar-links li {
+    flex: 1;
+    text-align: center;
+    border-right: 1px solid #ccc;
+  }
+
+    .navbar-links li:last-child {
+      border-right: none;
+    }
+
+  .navbar-links a {
+    display: block;
+    padding: 1rem 0;
+    text-decoration: none;
+    font-size: 1rem;
+    color: #000;
+    font-weight: bold;
+    background-color: #f5f5f5;
+    transition: background-color 0.3s ease;
+  }
+
+    /* Estilo para el enlace activo 'Compras' */
+    .navbar-links a.active-link {
+      background-color: #ddd; /* Gris claro */
+      color: #000;
+    }
+
+    /* Efecto de hover */
+    .navbar-links a:hover:not(.active-link) {
+      background-color: #ddd; /* Gris claro para hover en los otros enlaces */
+    }
+
+    .navbar-links a.active-link:hover {
+      background-color: #ddd; /* El mismo gris para 'Compras' al pasar el cursor */
+    }
+
+  /* Register Section */
+.register-section {
+  margin: 40px auto;
+  padding: 20px;
+  padding-left: 30px; /* Espacio a la izquierda */
+  border-radius: 5px;
+  max-width: 400px;
+  text-align: left;
+}
+
+    .register-section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+  .register-section {
+    margin: 20px 0;
+  }
+
+  .register-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-left: 0; /* Asegura que los inputs no tengan márgenes adicionales */
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .register-input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 100%;
+  }
+
+  .register-button {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+    .register-button:hover {
+      background-color: #45a049;
+    }

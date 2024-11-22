@@ -1,0 +1,95 @@
+<div class="dashboard">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <ul class="navbar-links">
+      <li><a routerLink="/" routerLinkActive="active-link">Finanzas</a></li>
+      <li><a routerLink="/purchases" routerLinkActive="active-link" class="compras-link">Compras</a></li>
+      <li class="insumos"><a routerLink="/inventory-section">Insumos</a></li>
+      <li><a routerLink="/patients-section">Pacientes</a></li>
+      <li><a routerLink="/">Citas</a></li>
+      <li><a routerLink="/">Cerrar Sesión</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="content">
+    <h1>Compras</h1>
+    <table class="purchase-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha de Creación</th>
+          <th>Fecha Requerida</th>
+          <th>Tipo</th>
+          <th>Proveedor</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let purchase of purchases">
+          <td>{{ purchase.id }}</td>
+          <td>{{ purchase.createdDate }}</td>
+          <td>{{ purchase.requiredDate }}</td>
+          <td>{{ purchase.type?.name }}</td>
+          <td>{{ purchase.supplier?.name }}</td>
+          <td>
+            <button (click)="getPurchaseById(purchase.id)">Detalles</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Registro Section -->
+  <div class="register-section">
+    <h2>Agregar Registro</h2>
+    <div class="register-inputs">
+      <div class="input-group">
+        <label for="idInput">ID</label>
+        <input id="idInput" type="text" placeholder="ID" #idInput class="register-input" />
+      </div>
+      <div class="input-group">
+        <label for="createdDateInput">Fecha de Creación</label>
+        <input id="createdDateInput" type="text" placeholder="Fecha de Creación" #createdDateInput class="register-input" />
+      </div>
+      <div class="input-group">
+        <label for="requiredDateInput">Fecha Requerida</label>
+        <input id="requiredDateInput" type="text" placeholder="Fecha Requerida" #requiredDateInput class="register-input" />
+      </div>
+      <div class="input-group">
+        <label for="typeInput">Tipo</label>
+        <input id="typeInput" type="text" placeholder="Tipo" #typeInput class="register-input" />
+      </div>
+      <div class="input-group">
+        <label for="supplierInput">Proveedor</label>
+        <input id="supplierInput" type="text" placeholder="Proveedor" #supplierInput class="register-input" />
+      </div>
+
+      <!-- Campos dinámicos para agregar materiales -->
+      <div class="materials-section">
+        <h3>Detalles de Materiales</h3>
+        <div *ngFor="let material of materials; let i = index" class="material-group">
+          <div class="input-group">
+            <label for="materialIdInput{{ i }}">ID del Material</label>
+            <input id="materialIdInput{{ i }}" type="text" placeholder="ID del Material" [(ngModel)]="material.materialId" class="register-input" />
+          </div>
+          <div class="input-group">
+            <label for="materialNameInput{{ i }}">Nombre del Material</label>
+            <input id="materialNameInput{{ i }}" type="text" placeholder="Nombre del Material" [(ngModel)]="material.materialName" class="register-input" />
+          </div>
+          <div class="input-group">
+            <label for="quantityInput{{ i }}">Cantidad</label>
+            <input id="quantityInput{{ i }}" type="number" placeholder="Cantidad" [(ngModel)]="material.quantity" class="register-input" />
+          </div>
+          <div class="input-group">
+            <label for="unitCostInput{{ i }}">Costo Unitario</label>
+            <input id="unitCostInput{{ i }}" type="number" placeholder="Costo Unitario" [(ngModel)]="material.unitCost" class="register-input" />
+          </div>
+          <button (click)="removeMaterial(i)" class="remove-button">Eliminar Material</button>
+        </div>
+        <button (click)="addMaterial()" class="add-button">Agregar Material</button>
+      </div>
+      <button (click)="addNewPurchase()" class="register-button">Agregar</button>
+    </div>
+  </div>
+</div>

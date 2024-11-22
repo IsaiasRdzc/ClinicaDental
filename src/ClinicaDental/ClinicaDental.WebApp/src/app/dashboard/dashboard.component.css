@@ -1,64 +1,79 @@
-/* Dashboard container */
-.dashboard {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-}
-
 /* Navbar styles */
 .navbar {
-    background-color: #f5f5f5; /* Example color, adjust as needed */
-    border-bottom: 2px solid #ccc;
+  background-color: #f5f5f5;
+  border-bottom: 2px solid #ccc;
 }
 
 .navbar-links {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 0;
-    margin: 0;
-    list-style: none;
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .navbar-links li {
-    flex: 1; /* Ensures equal width for each item */
-    text-align: center;
-    border-right: 1px solid #ccc; /* Divider between items */
+  flex: 1;
+  text-align: center;
+  border-right: 1px solid #ccc;
 }
 
 .navbar-links li:last-child {
-    border-right: none; /* Remove divider from the last item */
+  border-right: none;
 }
 
 .navbar-links a {
-    display: block;
-    padding: 1rem 0;
-    text-decoration: none;
-    font-size: 1rem;
-    color: #000;
-    font-weight: bold;
+  display: block;
+  padding: 1rem 0;
+  text-decoration: none;
+  font-size: 1rem;
+  color: #000;
+  font-weight: bold;
+  background-color: #f5f5f5;
+  transition: background-color 0.3s ease;
+}
+
+.navbar-links a.active-link {
+  background-color: #555; /* Más claro */
+  color: #fff;
 }
 
 .navbar-links a:hover {
-    background-color: #ddd; /* Highlight on hover */
+  background-color: #ddd;
 }
 
-/* Main content styles */
+.navbar-links a.active-link:hover {
+  background-color: #555; /* Mantén activo el color oscuro */
+}
+
+/* Main content */
 .content {
-    margin: 10pt;
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: top;
-    background-color: #fff;
+  margin: 20px auto;
+  max-width: 80%; /* Limita el ancho del contenido */
+  text-align: center;
 }
 
 .content h1 {
-    font-size: 2rem;
-    font-weight: bold;
-    margin: 0;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
 }
 
-.insumos:hover{
-    background-color: orange;
+/* Table styles */
+.purchase-table {
+  margin: 0 auto;
+  border-collapse: collapse;
+  width: 80%; /* Ancho limitado */
+}
+
+.purchase-table th,
+.purchase-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.purchase-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
 }
