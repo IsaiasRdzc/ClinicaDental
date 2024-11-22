@@ -2,7 +2,7 @@ namespace ClinicaDental.ApiService.Appointments.Services;
 
 using ClinicaDental.ApiService.DataBase.Models.Appointments;
 using ClinicaDental.ApiService.DataBase.Registries.Appointments;
-using ClinicaDental.ApiService.DataBase.Registries.Doctors;
+using ClinicaDental.ApiService.DataBase.Registries.HumanResources;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -112,10 +112,10 @@ public class ClinicAgenda
 
     public async Task<List<Appointment>> GetAppointmentsForDoctorInRange(int doctorId, DateOnly dateStart, DateOnly dateEnd)
     {
-        var doctorAppointments = this.appointmentRegistry.GetAppointmentsListByDoctor(doctorId);
+        var doctorAppointments = await this.appointmentRegistry.GetAppointmentsListByDoctor(doctorId).ToListAsync();
 
-        var appointmentsInRange = await doctorAppointments
-            .Where(appointment => IsDateBetween(appointment.Date, dateStart, dateEnd)).ToListAsync();
+        var appointmentsInRange = doctorAppointments
+            .Where(appointment => IsDateBetween(appointment.Date, dateStart, dateEnd)).ToList();
 
         return appointmentsInRange;
     }
@@ -132,10 +132,10 @@ public class ClinicAgenda
 
     public async Task<List<Appointment>> GetAllAppointmentsInRange(DateOnly dateStart, DateOnly dateEnd)
     {
-        var appointments = this.appointmentRegistry.GetAppointmentsList();
+        var appointments = await this.appointmentRegistry.GetAppointmentsList().ToListAsync();
 
-        var appointmentsInRange = await appointments
-            .Where(appointment => IsDateBetween(appointment.Date, dateStart, dateEnd)).ToListAsync();
+        var appointmentsInRange = appointments
+            .Where(appointment => IsDateBetween(appointment.Date, dateStart, dateEnd)).ToList();
 
         return appointmentsInRange;
     }

@@ -1,6 +1,6 @@
 namespace ClinicaDental.ApiService.Login;
 
-public class LoginRequest
+public class LoginCredentials
 {
     public required string Username { get; set; }
 

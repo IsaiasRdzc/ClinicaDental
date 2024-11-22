@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { not } from 'rxjs/internal/util/not';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,9 +11,13 @@ import { not } from 'rxjs/internal/util/not';
 export class DashboardComponent implements OnInit{
   doctorName!: String | null;
   
-  ngOnInit(): void {
-    if(localStorage.getItem("DoctorName") != null){
-      this.doctorName = localStorage.getItem("DoctorName");
+  ngOnInit(): void 
+  {
+    var doctorName = localStorage.getItem("DoctorName");
+
+    if(doctorName != null)
+    {
+      this.doctorName = doctorName;
     }
   }
 }
