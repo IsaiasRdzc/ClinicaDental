@@ -28,7 +28,7 @@ export class PatientsSectionComponent implements OnInit{
   }
   
   getDoctorIdFromStorage(){
-    const doctorId = localStorage.getItem('doctorId');
+    const doctorId = localStorage.getItem('DoctorID');
     if(doctorId != null){
       this.doctorId = doctorId;
       console.log(this.doctorId)

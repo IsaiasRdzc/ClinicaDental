@@ -73,4 +73,9 @@ export class PatientDetailsComponent implements OnInit {
     console.log('ID del registro seleccionado:', recordId);
     this.router.navigate(['/medicalRecordDetails', recordId]);
   }
+
+  redirectToNewRecord(patientId: string): void {
+    console.log('ID del paciente seleccionado:', patientId);
+    this.router.navigate(['/newMedicalRecord', patientId]);
+  }
 }
