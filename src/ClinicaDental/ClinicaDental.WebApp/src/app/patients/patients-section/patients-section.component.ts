@@ -25,20 +25,20 @@ export class PatientsSectionComponent implements OnInit{
     if(this.doctorId){
       this.loadPatients();
     }
-    this.loadPatients();
   }
   
   getDoctorIdFromStorage(){
     const doctorId = localStorage.getItem('doctorId');
     if(doctorId != null){
       this.doctorId = doctorId;
+      console.log(this.doctorId)
     }else{
       console.error('No se encontró el ID del doctor en localStorage');
     }
   }
 
   getPatientsByDoctorId(): Observable<any[]> {
-    const url = `api/patientsInformation/PatientsByDoctorId?doctorId=${1}`; 
+    const url = `api/patientsInformation/PatientsByDoctorId?doctorId=${this.doctorId}`; 
     return this.http.get<any[]>(url);
   }
 
@@ -56,5 +56,14 @@ export class PatientsSectionComponent implements OnInit{
   redirectToPatientDetails(patientId: string): void {
     console.log('ID del paciente seleccionado:', patientId);
     this.router.navigate(['/patientDetails', patientId]);
+  }
+
+  redirectToNewRecord(patientId: string): void {
+    console.log('ID del paciente seleccionado:', patientId);
+    this.router.navigate(['/newMedicalRecord', patientId]);
+  }
+
+  redirectToNewPatient(): void {
+    this.router.navigate(['/newPatient',this.doctorId]);
   }
 }
