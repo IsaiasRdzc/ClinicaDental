@@ -2,7 +2,7 @@ namespace ClinicaDental.ApiService.Appointments;
 
 using ClinicaDental.ApiService.Appointments.Services;
 using ClinicaDental.ApiService.DataBase.Models.Appointments;
-using ClinicaDental.ApiService.DataBase.Models.Doctors;
+using ClinicaDental.ApiService.DataBase.Models.HumanResources;
 
 public static class AppointmentsEndpoints
 {
@@ -11,27 +11,18 @@ public static class AppointmentsEndpoints
         var group = app.MapGroup("api/appointments");
 
         group.MapPost(string.Empty, ScheduleAppointment);
-        group.MapPost("doctor", SetDoctorSchedule);
         group.MapPost("clinicHours", SetClinicHours);
-        group.MapPost("initializeDoctor", CreateDoctorAccount);
 
         group.MapGet("{id}", GetAppointment);
         group.MapGet(string.Empty, GetAppointmentsInRange);
-        group.MapGet("doctor", GetDoctorsList);
         group.MapGet("doctor/{doctorId}", GetAppointmentsForDoctorInRange);
         group.MapGet("availableSlots", GetAvailableSlots);
         group.MapGet("clinicHours", GetClinicHours);
 
         group.MapPut("reschedule/{id}", ReScheduleAppointment);
+        group.MapPut("appointment/{appointmentId,newPatientId}", UpdateAppointmentPatientId);
 
         group.MapDelete("{id}", DeleteAppointment);
-    }
-
-    public static async Task<IResult> CreateDoctorAccount(
-        Doctor doctor,
-        ClinicAdmin clinicAdmin)
-    {
-        return await ErrorOrResultHandler.HandleResult(async () => await clinicAdmin.CreateDoctorAccount(doctor));
     }
 
     public static async Task<IResult> GetAvailableSlots(
@@ -88,6 +79,15 @@ public static class AppointmentsEndpoints
             async () => await scheduler.ReScheduleAppointment(appointmentId, date, time, duration));
     }
 
+    public static async Task<IResult> UpdateAppointmentPatientId(
+        int folio,
+        int newPatientId,
+        ClinicReceptionist scheduler)
+    {
+        return await ErrorOrResultHandler.HandleResult(
+            async () => await scheduler.UpdateAppointmentPatientId(folio, newPatientId));
+    }
+
     public static async Task<IResult> DeleteAppointment(
         int appointmentId,
         ClinicReceptionist scheduler)
@@ -98,29 +98,16 @@ public static class AppointmentsEndpoints
 
     public static async Task<IResult> SetClinicHours(
         ClinicDayBussinesHours clinicHours,
-        ClinicAdmin clinicAdmin)
+        ClinicSchedulingAdmin clinicAdmin)
     {
         return await ErrorOrResultHandler.HandleResult(
             async () => await clinicAdmin.SetClinicBussinesHours(clinicHours));
     }
 
     public static async Task<IResult> GetClinicHours(
-        ClinicAdmin clinicAdmin)
+        ClinicSchedulingAdmin clinicAdmin)
     {
         return await ErrorOrResultHandler.HandleResult(
             async () => await clinicAdmin.GetClinicBussinesHours());
-    }
-
-    public static async Task<IResult> SetDoctorSchedule(
-        DoctorDaySchedule doctorSchedule,
-        ClinicAdmin clinicAdmin)
-    {
-        return await ErrorOrResultHandler.HandleResult(async () => await clinicAdmin.SetDoctorDaySchedule(doctorSchedule));
-    }
-
-    public static async Task<IResult> GetDoctorsList(
-        ClinicAdmin clinicAdmin)
-    {
-        return await ErrorOrResultHandler.HandleResult(async () => await clinicAdmin.GetDoctorsList());
     }
 }

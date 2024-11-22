@@ -1,0 +1,95 @@
+<!-- Navbar -->
+<nav class="navbar">
+    <ul class="navbar-links">
+        <li><a routerLink="/">Finanzas</a></li>
+        <li class="insumos"><a routerLink="/inventory-section">Insumos</a></li>
+        <li><a routerLink="/patients-section">Pacientes</a></li>
+        <li><a routerLink="/appointments-view">Citas</a></li>
+        <li><a routerLink="/">Cerrar Sesión</a></li>
+    </ul>
+</nav>
+
+<div class="container mt-4">
+    <h1 class="text-center">Citas en Rango de Tiempo</h1>
+  
+    <!-- Formulario para rango de fechas -->
+    <form class="row g-3 my-4" (submit)="fetchAppointments(); $event.preventDefault()">
+      <div class="col-md-6">
+        <label for="dateStart" class="form-label">Fecha de inicio:</label>
+        <input
+          type="date"
+          id="dateStart"
+          [(ngModel)]="dateStart"
+          name="dateStart"
+          class="form-control"
+          required
+        />
+      </div>
+      <div class="col-md-6">
+        <label for="dateEnd" class="form-label">Fecha de fin:</label>
+        <input
+          type="date"
+          id="dateEnd"
+          [(ngModel)]="dateEnd"
+          name="dateEnd"
+          class="form-control"
+          required
+        />
+      </div>
+      <div class="col-12 text-center">
+        <button type="submit" class="btn btn-primary">Consultar</button>
+      </div>
+    </form>
+  
+    <!-- Mensaje de error -->
+    <div *ngIf="errorMessage" class="alert alert-danger text-center">
+      {{ errorMessage }}
+    </div>
+  
+    <!-- Tabla de citas -->
+    <div *ngIf="appointments.length > 0" class="table-responsive">
+      <table class="table table-bordered table-hover text-center">
+        <thead class="table-dark">
+          <tr>
+            <th>Folio</th>
+            <th>Paciente</th>
+            <th>Teléfono</th>
+            <th>Doctor</th>
+            <th>Fecha</th>
+            <th>Hora de inicio</th>
+            <th>Duración</th>
+            <th>Hora de fin</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let appointment of appointments">
+            <td>{{ appointment.folio }}</td>
+            <td>{{ appointment.patientName || 'Sin asignar' }}</td>
+            <td>{{ appointment.patientPhone || '-' }}</td>
+            <td>{{ appointment.doctorId }}</td>
+            <td>{{ appointment.date }}</td>
+            <td>{{ appointment.startTime }}</td>
+            <td>{{ appointment.durationInHours }} horas</td>
+            <td>{{ appointment.endTime }}</td>
+            <td>
+              <!-- Botón visible solo si PatientId es 0 -->
+              <button
+                *ngIf="appointment.patientId === 0"
+                class="btn btn-warning btn-sm"
+                (click)="Tyrone(appointment.folio)"
+              >
+                Acción Tyrone
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Mensaje si no hay citas -->
+    <div *ngIf="appointments.length === 0" class="alert alert-info text-center">
+      No hay citas en el rango seleccionado.
+    </div>
+  </div>
+  

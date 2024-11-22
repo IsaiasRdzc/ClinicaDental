@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -8,6 +8,16 @@ import { RouterLink } from '@angular/router';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit{
+  doctorName!: String | null;
+  
+  ngOnInit(): void 
+  {
+    var doctorName = localStorage.getItem("DoctorName");
 
+    if(doctorName != null)
+    {
+      this.doctorName = doctorName;
+    }
+  }
 }

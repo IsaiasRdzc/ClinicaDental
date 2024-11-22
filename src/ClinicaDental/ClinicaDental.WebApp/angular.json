@@ -5,7 +5,14 @@
   "projects": {
     "ClinicaDental.WebApp": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+    "skipTests": true
+  },
+  "@schematics/angular:service": {
+    "skipTests": true
+  }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -100,5 +107,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "6d16ae8f-4735-45dc-9287-bbf52251105b"
   }
 }

@@ -5,40 +5,11 @@ import { Observable } from 'rxjs';
 import { Appointment } from '../../../models/appointment.model';
 import { AsyncPipe } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, NgForm } from '@angular/forms';
-import { ScheduleAppointmentService } from '../shared/schedule-appointment.service';
 import { CommonModule } from '@angular/common';
 import { routes } from '../app.routes';
 import { Modal } from 'bootstrap';
 import { Doctor } from '../../../models/doctor.model';
-
-// @Component({
-//   selector: 'app-schedule-appointment',
-//   standalone: true,
-//   imports: [RouterOutlet, RouterLink, RouterLinkActive, HttpClientModule, AsyncPipe, FormsModule, ReactiveFormsModule, CommonModule],
-//   templateUrl: './schedule-appointment.component.html',
-//   styleUrls: ['./schedule-appointment.component.css']
-// })
-// export class ScheduleAppointmentComponent implements OnInit{
-//   constructor(public service: ScheduleAppointmentService){
-
-//   }
-
-//   onSubmit(form:NgForm){
-//     this.service.scheduleAppointment()
-//     .subscribe({
-//       next: res=>{
-//         this.service.resetForm(form)
-
-//       },
-//       error: err =>{console.log(err)}
-//     })
-//   }
-
-//   ngOnInit(): void{
-//     this.service.getAllDoctors();
-//   }
-
-// }
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-schedule-appointment',
@@ -49,14 +20,20 @@ import { Doctor } from '../../../models/doctor.model';
 })
 export class AppointmentComponent implements OnInit {
   confirmationData: any = {};
-  firstAppointment: boolean | null = null;
-  dateSelected: boolean | null = null;
+  isPatientFirstAppointment: boolean | null = null;
+  formVisibility: boolean = false;
+  availableSlots: string[] = [];
 
+  constructor(private http: HttpClient, private router: Router) { }
+  ngOnInit(): void {
+    this.getAllDoctors();
+  }
 
-  // Modelos de datos
+  //model
   appointmentData = {
     id: 0,
     doctorId: 1,
+    patientId: 0,
     date: '',
     startTime: "",
     durationInHours: 0,
@@ -64,69 +41,28 @@ export class AppointmentComponent implements OnInit {
     patientPhone: ''
   };
 
-
-  availableSlots: string[] = [];
-
-  constructor(private http: HttpClient, public service: ScheduleAppointmentService, private router: Router) { }
-  ngOnInit(): void {
-    this.service.getAllDoctors();
-  }
-
-  isFirstAppointment(choice: boolean) {
-    this.firstAppointment = choice;
+  showAppointmentInfoForm(choice: boolean) {
+    this.resetformVisibility();
+    this.isPatientFirstAppointment = choice;
     if (choice) {
-      const yesButton = document.getElementById("yesButton");
-      yesButton?.classList.add("buttonSelected");
-      const noButton = document.getElementById("noButton");
-      noButton?.classList.remove("buttonSelected");
+      this.styleButtonForYes();
     } else {
-      const noButton = document.getElementById("noButton");
-      noButton?.classList.add("buttonSelected");
-      const yesButton = document.getElementById("yesButton");
-      yesButton?.classList.remove("buttonSelected");
+      this.styleButtonForNo();
     }
   }
 
-  isADateSelected(choice: boolean, id: number) {
-    console.log(choice.valueOf().toString() + id.toString());
-    this.dateSelected = choice;
-    if (choice) {
-      this.findAvailableSlots(id);
-    }
-  }
-
-  findAvailableSlots(_doctorId: number) {
-    const doctorId = _doctorId;
-    const date = this.appointmentData.date;
-    const url = `/api/appointments/availableSlots?doctorId=${doctorId}&date=${date}`;
-    this.http.get<string[]>(url)
-      .subscribe((slots) => {
-        this.availableSlots = slots
-        if (slots.length > 0) {
-          this.appointmentData.startTime = slots[0];
-        }
-      });
-
-  }
-
-  onSubmitNormalAppointment(form: any) {
-    if (form.valid) {
-      this.http.post('/api/appointments', this.appointmentData)
-        .subscribe(() => alert('Cita registrada exitosamente.'));
-    }
-  }
-
-  onSubmitFirstAppointment(form: any) {
+  scheduleAppointment(form: any) {
     if (form.valid) {
       const appointment = {
         doctorId: this.appointmentData.doctorId,
-
+        patientId: this.appointmentData.patientId,
         date: this.appointmentData.date,
         startTime: this.appointmentData.startTime,
         durationInHours: 1, // Duración fija de 1 hora
         patientName: this.appointmentData.patientName,
         patientPhone: this.appointmentData.patientPhone
       };
+
 
       this.http.post('/api/appointments', appointment)
         .subscribe((response: any) => {
@@ -140,9 +76,9 @@ export class AppointmentComponent implements OnInit {
 
           console.log(response)
 
-          // Mostrar el modal
-          const modal = new Modal(document.getElementById('appointmentConfirmationModal')!);
-          modal.show();
+
+          const confirmationAppointmentWindow = new Modal(document.getElementById('appointmentConfirmationModal')!);
+          confirmationAppointmentWindow.show();
         }, (error) => {
           console.error('Error registrando la cita:', error);
           alert('Hubo un problema al registrar la cita.');
@@ -151,15 +87,83 @@ export class AppointmentComponent implements OnInit {
   }
 
 
+  findAvailableSlots(doctorId: number) {
+    console.log(doctorId.toString());
+    this.getAvailableSlots(doctorId);
+    this.continueScheduling();
+  }
+
+  getAvailableSlots(_doctorId: number) {
+    const doctorId = _doctorId;
+    const date = this.appointmentData.date;
+    const url = `/api/appointments/availableSlots?doctorId=${doctorId}&date=${date}`;
+    this.http.get<string[]>(url)
+      .subscribe((slots) => {
+        this.availableSlots = slots
+        if (slots.length > 0) {
+          this.appointmentData.startTime = slots[0];
+        }
+      });
+
+  }
+
+  continueScheduling() {
+    this.formVisibility = true;
+  }
+
+  resetformVisibility() {
+    this.formVisibility = false;
+  }
+
+  onSubmitNormalAppointment(form: any) {
+    if (form.valid) {
+      this.http.post('/api/appointments', this.appointmentData)
+        .subscribe(() => alert('Cita registrada exitosamente.'));
+    }
+  }
+
+  styleButtonForYes() {
+    const yesButton = document.getElementById("yesButton");
+    yesButton?.classList.add("buttonSelected");
+    const noButton = document.getElementById("noButton");
+    noButton?.classList.remove("buttonSelected");
+  }
+
+  styleButtonForNo() {
+    const noButton = document.getElementById("noButton");
+    noButton?.classList.add("buttonSelected");
+    const yesButton = document.getElementById("yesButton");
+    yesButton?.classList.remove("buttonSelected");
+  }
+
+
   redirectToHomepage() {
     // Cierra el modal y redirige al homepage
     const modal = new Modal(document.getElementById('appointmentConfirmationModal')!);
-    modal.hide();
+    modal.dispose();
     const backdrop = document.querySelector('.modal-backdrop');
     if (backdrop) {
       backdrop.remove();  // Elimina el fondo atenuado
     }
-    this.router.navigate(['/']); // Ajusta el path del homepage según tu configuración
+    this.router.navigate(['/']);
+    modal.dispose();
+    const body = document.body;
+    body.classList.remove('modal-open');
+    body.style.overflow = '';
+    body.style.paddingRight = '';
+  }
+
+  url: string = environment.apiBaseUrl + "/appointments";
+  dentists: Doctor[] = [];
+
+  getAllDoctors() {
+    this.http.get(this.url + "/doctor")
+      .subscribe({
+        next: res => {
+          this.dentists = res as Doctor[];
+        },
+        error: err => { console.log(err) }
+      })
   }
 
 }

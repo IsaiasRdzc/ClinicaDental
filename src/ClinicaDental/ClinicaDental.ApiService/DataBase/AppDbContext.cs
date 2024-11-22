@@ -1,10 +1,11 @@
 ﻿namespace ClinicaDental.ApiService.DataBase;
 
 using ClinicaDental.ApiService.DataBase.Models.Appointments;
-using ClinicaDental.ApiService.DataBase.Models.Doctors;
+using ClinicaDental.ApiService.DataBase.Models.HumanResources;
 using ClinicaDental.ApiService.DataBase.Models.Inventory;
 using ClinicaDental.ApiService.DataBase.Models.Login;
 using ClinicaDental.ApiService.DataBase.Models.MedicalRecords;
+using ClinicaDental.ApiService.DataBase.Models.Purchases;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -13,11 +14,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 {
     public required DbSet<Supply> Supplies { get; init; }
 
-    public DbSet<MedicalSupply> MedicalSupplies { get; init; }
+    public required DbSet<MedicalSupply> MedicalSupplies { get; init; }
 
-    public DbSet<SurgicalSupply> SurgicalSupplies { get; init; }
+    public required DbSet<SurgicalSupply> SurgicalSupplies { get; init; }
 
-    public DbSet<CleaningSupply> CleaningSupplies { get; init; }
+    public required DbSet<CleaningSupply> CleaningSupplies { get; init; }
 
     public required DbSet<Account> AccountsTable { get; init; }
 
@@ -33,9 +34,19 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 
     public required DbSet<PaymentDetail> PaymentDetails { get; init; }
 
-    public DbSet<MedicalRecord> MedicalRecords { get; init; }
+    public required DbSet<MedicalRecord> MedicalRecords { get; init; }
 
-    public DbSet<Patient> Patients { get; init; }
+    public required DbSet<Patient> Patients { get; init; }
+
+    public DbSet<Purchase> Purchases { get; set; } = null!;
+
+    public DbSet<PurchaseDetail> PurchaseDetails { get; set; } = null!;
+
+    public DbSet<Supplier> Suppliers { get; set; } = null!;
+
+    public DbSet<PurchaseType> PurchaseTypes { get; set; } = null!;
+
+    public DbSet<Material> Materials { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -117,5 +128,48 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             new CleaningSupply(13) { Name = "Alcohol 70%", Stock = 60, CleaningType = "Desinfección", CleaningMethod = "Aplicación directa", CleaningDate = new DateOnly(2023, 11, 4) },
             new CleaningSupply(14) { Name = "Cloro", Stock = 25, CleaningType = "Limpieza profunda", CleaningMethod = "Mezcla con agua", CleaningDate = new DateOnly(2023, 11, 3) },
             new CleaningSupply(15) { Name = "Toallas Desinfectantes", Stock = 40, CleaningType = "Limpieza rápida", CleaningMethod = "Uso directo", CleaningDate = new DateOnly(2023, 11, 2) });
+        // Configuración para la entidad Purchase
+            modelBuilder.Entity<Purchase>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.CreatedDate).IsRequired();
+                entity.HasOne(e => e.Supplier)
+                    .WithMany() // Ya no hay relación con Purchases
+                    .HasForeignKey(e => e.SupplierId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+        // Configuración para la entidad PurchaseDetail
+        modelBuilder.Entity<PurchaseDetail>(entity =>
+        {
+            entity.HasKey(e => e.Id); // Primary Key
+            entity.HasOne<Material>(e => e.Material)
+                .WithMany()
+                .HasForeignKey(e => e.MaterialId)
+                .OnDelete(DeleteBehavior.Restrict); // Relación con Material
+        });
+
+        // Configuración para la entidad Supplier
+        modelBuilder.Entity<Supplier>(entity =>
+        {
+            entity.HasKey(e => e.Id); // Primary Key
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(100); // Campo requerido
+            entity.Property(e => e.PhoneNumber).HasMaxLength(15); // Opcional
+        });
+
+        // Configuración para la entidad Material
+        modelBuilder.Entity<Material>(entity =>
+        {
+            entity.HasKey(e => e.Id); // Primary Key
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(100); // Campo requerido
+            entity.Property(e => e.Price).HasColumnType("decimal(18,2)"); // Definir precisión decimal
+        });
+
+        // Configuración para la entidad PurchaseType
+        modelBuilder.Entity<PurchaseType>(entity =>
+        {
+            entity.HasKey(e => e.Id); // Primary Key
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(50); // Campo requerido
+        });
     }
 }
