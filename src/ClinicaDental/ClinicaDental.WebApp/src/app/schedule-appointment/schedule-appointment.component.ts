@@ -28,7 +28,7 @@ import { Doctor } from '../../../models/doctor.model';
 //     .subscribe({
 //       next: res=>{
 //         this.service.resetForm(form)
-        
+
 //       },
 //       error: err =>{console.log(err)}
 //     })
@@ -37,7 +37,7 @@ import { Doctor } from '../../../models/doctor.model';
 //   ngOnInit(): void{
 //     this.service.getAllDoctors();
 //   }
-  
+
 // }
 
 @Component({
@@ -47,11 +47,11 @@ import { Doctor } from '../../../models/doctor.model';
   templateUrl: './schedule-appointment.component.html',
   styleUrls: ['./schedule-appointment.component.css']
 })
-export class AppointmentComponent implements OnInit{
+export class AppointmentComponent implements OnInit {
   confirmationData: any = {};
   firstAppointment: boolean | null = null;
   dateSelected: boolean | null = null;
-  
+
 
   // Modelos de datos
   appointmentData = {
@@ -67,7 +67,7 @@ export class AppointmentComponent implements OnInit{
 
   availableSlots: string[] = [];
 
-  constructor(private http: HttpClient, public service: ScheduleAppointmentService, private router: Router) {}
+  constructor(private http: HttpClient, public service: ScheduleAppointmentService, private router: Router) { }
   ngOnInit(): void {
     this.service.getAllDoctors();
   }
@@ -79,7 +79,7 @@ export class AppointmentComponent implements OnInit{
       yesButton?.classList.add("buttonSelected");
       const noButton = document.getElementById("noButton");
       noButton?.classList.remove("buttonSelected");
-    }else{
+    } else {
       const noButton = document.getElementById("noButton");
       noButton?.classList.add("buttonSelected");
       const yesButton = document.getElementById("yesButton");
@@ -87,7 +87,7 @@ export class AppointmentComponent implements OnInit{
     }
   }
 
-  isADateSelected(choice: boolean, id:number) {
+  isADateSelected(choice: boolean, id: number) {
     console.log(choice.valueOf().toString() + id.toString());
     this.dateSelected = choice;
     if (choice) {
@@ -100,12 +100,13 @@ export class AppointmentComponent implements OnInit{
     const date = this.appointmentData.date;
     const url = `/api/appointments/availableSlots?doctorId=${doctorId}&date=${date}`;
     this.http.get<string[]>(url)
-      .subscribe((slots) => {this.availableSlots = slots
+      .subscribe((slots) => {
+        this.availableSlots = slots
         if (slots.length > 0) {
-          this.appointmentData.startTime = slots[0]; 
+          this.appointmentData.startTime = slots[0];
         }
       });
-    
+
   }
 
   onSubmitNormalAppointment(form: any) {
@@ -119,7 +120,7 @@ export class AppointmentComponent implements OnInit{
     if (form.valid) {
       const appointment = {
         doctorId: this.appointmentData.doctorId,
-        
+
         date: this.appointmentData.date,
         startTime: this.appointmentData.startTime,
         durationInHours: 1, // Duración fija de 1 hora
@@ -127,7 +128,7 @@ export class AppointmentComponent implements OnInit{
         patientPhone: this.appointmentData.patientPhone
       };
 
-      this.http.post('/api/appointments',appointment)
+      this.http.post('/api/appointments', appointment)
         .subscribe((response: any) => {
           // Manejar el folio recibido del backend
           this.confirmationData = {

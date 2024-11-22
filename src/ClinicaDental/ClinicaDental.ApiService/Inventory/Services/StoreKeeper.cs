@@ -125,7 +125,7 @@ public class StoreKeeper(SuppliesRegistry suppliesRegistry)
         return supplies;
     }
 
-    public async Task<List<Supply>> GetSupplies()
+    public async Task<List<SupplyDto>> GetSupplies()
     {
         return await suppliesRegistry.GetSupplies().ToListAsync();
     }

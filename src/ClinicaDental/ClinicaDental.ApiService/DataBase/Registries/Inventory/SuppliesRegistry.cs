@@ -61,9 +61,17 @@ public class SuppliesRegistry(AppDbContext context)
         await context.SaveChangesAsync();
     }
 
-    public IQueryable<Supply> GetSupplies()
+    public IQueryable<SupplyDto> GetSupplies()
     {
-        return context.Supplies.AsQueryable().AsNoTracking();
+        return context.Supplies
+            .AsNoTracking()
+            .Select(s => new SupplyDto
+            {
+                Id = s.Id,
+                Name = s.Name,
+                Stock = s.Stock,
+                Type = GetSupplyType(s),
+            });
     }
 
     public Task<Supply?> GetSupplyById(int id)
@@ -130,5 +138,16 @@ public class SuppliesRegistry(AppDbContext context)
              s.CleaningDate == newCleaningSupply.CleaningDate &&
              s.CleaningType == newCleaningSupply.CleaningType).
             FirstOrDefaultAsync();
+    }
+
+    private static string GetSupplyType(Supply supply)
+    {
+        return supply switch
+        {
+            MedicalSupply => "Medical",
+            SurgicalSupply => "Surgical",
+            CleaningSupply => "Cleaning",
+            _ => "Unknown",
+        };
     }
 }
