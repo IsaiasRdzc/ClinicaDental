@@ -156,7 +156,7 @@ export class AppointmentComponent implements OnInit{
   dentists: Doctor[]=[];
 
   getAllDoctors(){
-    this.http.get(this.url+"/doctor")
+    this.http.get("/api/HR/doctor")
     .subscribe({
       next: res=>{
         this.dentists = res as Doctor[]; 
