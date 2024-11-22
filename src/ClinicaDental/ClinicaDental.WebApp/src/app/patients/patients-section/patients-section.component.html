@@ -2,11 +2,11 @@
   <!-- Navbar -->
   <nav class="navbar">
       <ul class="navbar-links">
-          <li><a routerLink="/">Finanzas</a></li>
-          <li class="insumos"><a routerLink="/inventory-section">Insumos</a></li>
-          <li><a routerLink="/patients-section">Pacientes</a></li>
-          <li><a routerLink="/">Citas</a></li>
-          <li><a routerLink="/">Cerrar Sesión</a></li>
+        <li><a routerLink="/">Finanzas</a></li>
+        <li class="insumos"><a routerLink="/inventory-section">Insumos</a></li>
+        <li><a routerLink="/patients-section">Pacientes</a></li>
+        <li><a routerLink="/appointments-view">Citas</a></li>
+        <li><a routerLink="/">Cerrar Sesión</a></li>
       </ul>
   </nav>
 </div>
@@ -16,6 +16,9 @@
       <thead>
         <tr>
           <th id="title" colspan="5">Pacientes</th>
+        </tr>
+        <tr>
+          <th colspan="5" style="text-align: center;"><button class="btn btn-primary"  (click)="redirectToNewPatient()">Agregar Paciente</button></th>
         </tr>
         <tr id="headers">
           <th>ID</th>
@@ -31,7 +34,11 @@
           <td>{{ patient.patientNames }}</td>
           <td>{{ patient.patientSecondNames }}</td>
           <td>{{ patient.patientPhoneNumber }}</td>
-          <td id="options"><button class="btn btn-primary" (click)="redirectToPatientDetails(patient.patientId)">Ver Detalles</button></td>
+          <td id="options"><div>
+            <button class="btn btn-primary" (click)="redirectToPatientDetails(patient.patientId)">Ver Historial</button>
+            <dd></dd>
+            <button class="btn btn-primary" (click)="redirectToNewRecord(patient.patientId)">Agregar Registro Medico</button>
+          </div></td>
         </tr>
       </tbody>
     </table>
@@ -41,6 +48,7 @@
     <div id="empty">
       <h1>Pacientes</h1>
       <p>No se encontraron pacientes para este doctor.</p>
+      <button class="btn btn-primary"  (click)="redirectToNewPatient()">Agregar Paciente</button>
     </div>
   </ng-template>
   

@@ -1,11 +1,11 @@
 <!-- Navbar -->
 <nav class="navbar">
     <ul class="navbar-links">
-        <li><a routerLink="/">Finanzas</a></li>
-        <li class="insumos"><a routerLink="/inventory-section">Insumos</a></li>
-        <li><a routerLink="/patients-section">Pacientes</a></li>
-        <li><a routerLink="/appointments-view">Citas</a></li>
-        <li><a routerLink="/">Cerrar Sesión</a></li>
+      <li><a routerLink="/">Finanzas</a></li>
+      <li class="insumos"><a routerLink="/inventory-section">Insumos</a></li>
+      <li><a routerLink="/patients-section">Pacientes</a></li>
+      <li><a routerLink="/appointments-view">Citas</a></li>
+      <li><a routerLink="/">Cerrar Sesión</a></li>
     </ul>
 </nav>
 
@@ -74,13 +74,24 @@
             <td>{{ appointment.endTime }}</td>
             <td>
               <!-- Botón visible solo si PatientId es 0 -->
-              <button
-                *ngIf="appointment.patientId === 0"
-                class="btn btn-warning btn-sm"
-                (click)="Tyrone(appointment.folio)"
-              >
-                Acción Tyrone
-              </button>
+              <ng-container *ngIf="appointment.patientId === 0; else addRecord">
+                <button
+                  class="btn btn-warning btn-sm"
+                  (click)="saveNewPatient(appointment.doctorId)"
+                >
+                  Guardar Paciente
+                </button>
+              </ng-container>
+              
+              <ng-template #addRecord>
+                <button
+                  class="btn btn-primary btn-sm"
+                  (click)="addNewRecordToPatient(appointment.folio)"
+                >
+                  Añadir Registro Medico
+                </button>
+              </ng-template>
+              
             </td>
           </tr>
         </tbody>

@@ -40,10 +40,10 @@
         <h2 class="text-center mb-4">¿Es tu primera cita?</h2>
 
         <div class="d-flex justify-content-center mb-4">
-          <button class="btn  me-3" (click)="patientIsOnFirstAppointment()" id="yesButton">
+          <button class="btn  me-3" (click)="showAppointmentInfoForm(true)" id="yesButton">
             Sí
           </button>
-          <button class="btn " (click)="patientIsNotOnFirstAppointment()" id="noButton">
+          <button class="btn " (click)="showAppointmentInfoForm(false)" id="noButton">
             No
           </button>
         </div>
@@ -89,7 +89,7 @@
               </button>
             </div>
 
-            <div *ngIf="formVisibility === true">
+            <div *ngIf="canDisplayForm === true">
               <div class="mb-3">
                 <label for="time" class="form-label">Seleccionar Horario</label>
                 <select
@@ -182,7 +182,7 @@
               </button>
             </div>
 
-            <div *ngIf="formVisibility === true">
+            <div *ngIf="canDisplayForm === true">
               <div class="mb-3">
                 <label for="time" class="form-label">Seleccionar Horario</label>
                 <select
@@ -244,10 +244,10 @@ aria-hidden="true"
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
     <div class="modal-body">
-      <p><strong>Folio:</strong> {{ confirmationData.folio }}</p>
-      <p><strong>Nombre:</strong> {{ confirmationData.patientName }}</p>
-      <p><strong>Fecha:</strong> {{ confirmationData.date }}</p>
-      <p><strong>Hora:</strong> {{ confirmationData.startTime }}</p>
+      <p><strong>Folio:</strong> {{ appointmentConfirmationDetails.folio }}</p>
+      <p><strong>Nombre:</strong> {{ appointmentConfirmationDetails.patientName }}</p>
+      <p><strong>Fecha:</strong> {{ appointmentConfirmationDetails.date }}</p>
+      <p><strong>Hora:</strong> {{ appointmentConfirmationDetails.startTime }}</p>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-primary" (click)="redirectToHomepage()">Confirmar</button>
