@@ -1,51 +1,236 @@
-<h1>AGENDAR UNA CITA</h1>
-<h2>Schedule Appointment</h2>
-
-<form [formGroup]="appointmentsForm" (ngSubmit)="onFormSubmit()">
-  <!-- Doctor Field -->
-  <div>
-    <label for="doctorId">Doctor ID:</label> <!-- Cambiado "Date" a "Doctor ID" -->
-    <input type="text" id="doctorId" formControlName="doctorId" />
+<!-- Navbar Superior -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+    <a class="navbar-brand" href="#">Clínica Dental</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/schedule-appointment">
+            <i class="fas fa-calendar-check active"></i> Agendar una cita
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/login">
+            <i class="fa-solid fa-tooth"></i> Ingresar
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
-  
-  <!-- Date Field -->
-  <div>
-    <label for="date">Date:</label>
-    <input type="date" id="date" formControlName="date" />
+</nav>
+
+<div class="d-flex allContainer">
+  <div class="vertical-bar"></div>
+
+  <!-- Contenido Principal -->
+  <div class="container containerForm my-5 citasform">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 col-md-8 col-sm-10">
+        <h2 class="text-center mb-4">¿Es tu primera cita?</h2>
+
+        <div class="d-flex justify-content-center mb-4">
+          <button class="btn  me-3" (click)="isPatientFirstAppointment(true)" id="yesButton">
+            Sí
+          </button>
+          <button class="btn " (click)="isPatientFirstAppointment(false)" id="noButton">
+            No
+          </button>
+        </div>
+
+        <!-- Formulario Primera Cita -->
+        <div *ngIf="firstAppointment === true">
+          <h2>Registrar Primera Cita</h2>
+          <h3 class="text-center">¡Estás a punto de dar un paso hacia una mejor salud bucal!</h3>
+          <p class="text-center">La dentista asignada por defecto es Ángela María Rubio</p>
+          <form #firstTimeVisitingForm="ngForm" (submit)="scheduleAppointment(firstTimeVisitingForm)">
+            <div class="mb-3">
+              <label for="date" class="form-label">Fecha</label>
+              <input
+                type="date"
+                id="date"
+                name="date"
+                class="form-control"
+                [(ngModel)]="appointmentData.date"
+                required
+              />
+              <button
+                class="btn btn-primary mt-2 w-100"
+                type="button"
+                (click)="findAvailableSlots(1)"
+                [disabled]="!appointmentData.date"
+              >
+                Ver horarios disponibles
+              </button>
+            </div>
+
+            <div *ngIf="formVisibility === true">
+              <div class="mb-3">
+                <label for="time" class="form-label">Seleccionar Horario</label>
+                <select
+                  id="time"
+                  name="time"
+                  class="form-select"
+                  [(ngModel)]="appointmentData.startTime"
+                  required
+                >
+                  <option *ngFor="let slot of availableSlots" [value]="slot">{{ slot }}</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="name" class="form-label">Nombre del Paciente</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  class="form-control"
+                  [(ngModel)]="appointmentData.patientName"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="phone" class="form-label">Teléfono</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  class="form-control"
+                  [(ngModel)]="appointmentData.patientPhone"
+                  pattern="[0-9]{10}"
+                  required
+                />
+                <small class="form-text text-muted">Debe contener 10 dígitos.</small>
+              </div>
+              <button type="submit" class="btn btn-primary w-100" [disabled]="!firstTimeVisitingForm.valid">
+                Confirmar
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Formulario Normal -->
+        <div *ngIf="firstAppointment === false">
+          <h3 class="text-center">Registrar una Cita</h3>
+          <form #form="ngForm" (submit)="onSubmitNormalAppointment(form)">
+            <div class="mb-3">
+              <label for="dentist" class="form-label">Selecciona tu dentista</label>
+              <select
+                id="dentist"
+                name="dentist"
+                class="form-select"
+                [(ngModel)]="appointmentData.doctorId"
+                required
+              >
+                <option *ngFor="let dentist of dentists" [value]="dentist.id">
+                  {{ dentist.name }}
+                </option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="date" class="form-label">Fecha</label>
+              <input
+                type="date"
+                id="date"
+                name="date"
+                class="form-control"
+                [(ngModel)]="appointmentData.date"
+                required
+              />
+              <button
+                class="btn btn-primary mt-2 w-100"
+                type="button"
+                (click)="findAvailableSlots(appointmentData.doctorId)"
+                [disabled]="!appointmentData.doctorId"
+              >
+                Ver horarios disponibles
+              </button>
+            </div>
+
+            <div *ngIf="formVisibility === true">
+              <div class="mb-3">
+                <label for="time" class="form-label">Seleccionar Horario</label>
+                <select
+                  id="againtime"
+                  name="againtime"
+                  class="form-select"
+                  [(ngModel)]="appointmentData.startTime"
+                  required
+                >
+                  <option *ngFor="let slot of availableSlots" [value]="slot">{{ slot }}</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="name" class="form-label">Nombre del Paciente</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  class="form-control"
+                  [(ngModel)]="appointmentData.patientName"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="phone" class="form-label">Teléfono</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  class="form-control"
+                  [(ngModel)]="appointmentData.patientPhone"
+                  pattern="[0-9]{10}"
+                  required
+                />
+                <small class="form-text text-muted">Debe contener 10 dígitos.</small>
+              </div>
+              <button type="submit" class="btn btn-primary w-100" [disabled]="!form.valid">
+                Confirmar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Start Time Field -->
-  <div>
-    <label for="startTime">Start Time:</label>
-    <input type="time" id="startTime" formControlName="startTime" />
+  <!-- Modal para confirmar cita agendada -->
+<div 
+class="modal fade" 
+id="appointmentConfirmationModal" 
+tabindex="-1" 
+aria-labelledby="appointmentConfirmationModalLabel" 
+aria-hidden="true"
+>
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="appointmentConfirmationModalLabel">Cita Agendada</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <p><strong>Folio:</strong> {{ confirmationData.folio }}</p>
+      <p><strong>Nombre:</strong> {{ confirmationData.patientName }}</p>
+      <p><strong>Fecha:</strong> {{ confirmationData.date }}</p>
+      <p><strong>Hora:</strong> {{ confirmationData.startTime }}</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="redirectToHomepage()">Confirmar</button>
+    </div>
   </div>
+</div>
+</div>
 
-  <!-- Duration Field -->
-  <div>
-    <label for="duration">Duration (minutes):</label>
-    <input type="number" id="duration" formControlName="duration" min="1" />
-  </div>
 
-  <!-- Patient Name Field -->
-  <div>
-    <label for="patientName">Patient Name:</label>
-    <input type="text" id="patientName" formControlName="patientName" />
-  </div>
 
-  <!-- Patient Phone Field -->
-  <div>
-    <label for="patientPhone">Patient Phone:</label>
-    <input type="tel" id="patientPhone" formControlName="patientPhone" />
-  </div>
-
-  <!-- End Time Display -->
-  <div>
-    <label for="endTime">End Time:</label>
-    <input type="time" id="endTime" formControlName="endTime" /> <!-- Solo `disabled` -->
-  </div>
-
-  <!-- Submit Button -->
-  <button type="submit" [disabled]="appointmentsForm.invalid">Schedule Appointment</button>
-</form>
-
-<router-outlet></router-outlet>
+  <div class="vertical-bar"></div>
+</div>

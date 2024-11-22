@@ -1,0 +1,73 @@
+/* Estilos generales */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #0d47a1;
+  }
+  
+  .navbar {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .homepage {
+    
+    background-image: url('/pexels-shvetsa-3845744.jpg');
+    background-size: cover;
+    background-position: center;
+    height: calc(100vh - 56px); /* Altura del viewport menos la barra de navegación */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .homepage-title {
+    color: white;
+    font-size: 4rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+  }
+
+  .navbar-nav .nav-link:hover, .active {
+    color: #0d48a1; 
+  }
+  
+  .navbar-nav .nav-link i {
+    margin-right: 8px; /* Espacio entre el ícono y el texto */
+    font-size: 1rem;   /* Ajusta el tamaño del ícono si es necesario */
+  }
+
+ .btn:hover{
+  background-color: #0d47a1;
+  color: white;
+ }
+
+ .btn{
+  border: 2px solid #0d47a1;
+  border-radius: 10px;
+ }
+
+ .buttonSelected{
+  background-color: #0d47a1;
+  color: white;
+ }
+
+ .vertical-bar {
+  width: 100px;
+  min-height: 100vh;
+}
+
+.containerForm{
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.allContainer{
+  background-color: rgba(13, 72, 161, 0.44);
+}
+
+.citasform{
+  width: 700px;
+}
+
