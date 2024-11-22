@@ -23,5 +23,5 @@ public class MedicalRecord
 
     public ICollection<MedicalProcedure> MedicalProcedures { get; set; } = new List<MedicalProcedure>();
 
-    public string? Coment {get; set; }
+    public string? Coment { get; set; }
 }

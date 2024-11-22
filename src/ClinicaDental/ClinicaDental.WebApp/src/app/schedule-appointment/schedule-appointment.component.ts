@@ -20,8 +20,8 @@ import { environment } from '../../environments/environment';
 })
 export class AppointmentComponent implements OnInit{
   confirmationData: any = {};
-  firstAppointment: boolean | null = null;
-  formVisibility: boolean | null = null;
+  isPatientFirstAppointment: boolean | null = null;
+  formVisibility: boolean = false;
   availableSlots: string[] = [];
   
   constructor(private http: HttpClient, private router: Router) {}
@@ -41,18 +41,13 @@ export class AppointmentComponent implements OnInit{
     patientPhone: ''
   };
 
-  isPatientFirstAppointment(choice: boolean) {
-    this.firstAppointment = choice;
+  showAppointmentInfoForm(choice: boolean) {
+    this.resetformVisibility();
+    this.isPatientFirstAppointment = choice;
     if (choice) {
-      const yesButton = document.getElementById("yesButton");
-      yesButton?.classList.add("buttonSelected");
-      const noButton = document.getElementById("noButton");
-      noButton?.classList.remove("buttonSelected");
+      this.styleButtonForYes();
     }else{
-      const noButton = document.getElementById("noButton");
-      noButton?.classList.add("buttonSelected");
-      const yesButton = document.getElementById("yesButton");
-      yesButton?.classList.remove("buttonSelected");
+      this.styleButtonForNo();
     }
   }
 
@@ -60,12 +55,15 @@ export class AppointmentComponent implements OnInit{
     if (form.valid) {
       const appointment = {
         doctorId: this.appointmentData.doctorId,
+        patientId: this.appointmentData.patientId,
         date: this.appointmentData.date,
         startTime: this.appointmentData.startTime,
         durationInHours: 1, // Duración fija de 1 hora
         patientName: this.appointmentData.patientName,
         patientPhone: this.appointmentData.patientPhone
       };
+
+      console.log("pelanaaa"+ appointment.doctorId.toString())
 
       this.http.post('/api/appointments',appointment)
         .subscribe((response: any) => {
@@ -79,9 +77,9 @@ export class AppointmentComponent implements OnInit{
 
           console.log(response)
 
-          // Mostrar el modal
-          const modal = new Modal(document.getElementById('appointmentConfirmationModal')!);
-          modal.show();
+
+          const confirmationAppointmentWindow = new Modal(document.getElementById('appointmentConfirmationModal')!);
+          confirmationAppointmentWindow.show();
         }, (error) => {
           console.error('Error registrando la cita:', error);
           alert('Hubo un problema al registrar la cita.');
@@ -110,7 +108,11 @@ export class AppointmentComponent implements OnInit{
   }
 
   continueScheduling(){
-    this.formVisibility= true;
+    this.formVisibility = true;
+  }
+
+  resetformVisibility(){
+    this.formVisibility = false;
   }
 
   onSubmitNormalAppointment(form: any) {
@@ -120,18 +122,35 @@ export class AppointmentComponent implements OnInit{
     }
   }
 
-  
+  styleButtonForYes(){
+    const yesButton = document.getElementById("yesButton");
+    yesButton?.classList.add("buttonSelected");
+    const noButton = document.getElementById("noButton");
+    noButton?.classList.remove("buttonSelected");
+  }
 
+  styleButtonForNo(){
+    const noButton = document.getElementById("noButton");
+    noButton?.classList.add("buttonSelected");
+    const yesButton = document.getElementById("yesButton");
+    yesButton?.classList.remove("buttonSelected");
+  }
+  
 
   redirectToHomepage() {
     // Cierra el modal y redirige al homepage
     const modal = new Modal(document.getElementById('appointmentConfirmationModal')!);
-    modal.hide();
+    modal.dispose();
     const backdrop = document.querySelector('.modal-backdrop');
     if (backdrop) {
       backdrop.remove();  // Elimina el fondo atenuado
     }
-    this.router.navigate(['/']); // Ajusta el path del homepage según tu configuración
+    this.router.navigate(['/']);
+    modal.dispose();
+    const body = document.body;
+    body.classList.remove('modal-open');
+    body.style.overflow = '';
+    body.style.paddingRight = '';
   }
 
   url: string=environment.apiBaseUrl+"/appointments";
