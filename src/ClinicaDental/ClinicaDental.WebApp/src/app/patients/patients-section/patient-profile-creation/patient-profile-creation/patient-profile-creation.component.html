@@ -1,1 +1,58 @@
-<p>patient-profile-creation works!</p>
+<h1 style="text-align: center;">Nuevo Paciente</h1>
+
+<form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="patientNames">Nombres</label>
+      <input id="patientNames" formControlName="patientNames" required/>
+      <div class="error-message" *ngIf="patientForm.get('patientNames')?.invalid && patientForm.get('patientNames')?.touched">
+        El nombre es obligatorio.
+      </div>
+    </div>
+  
+    <div>
+      <label for="patientSecondNames">Apellidos</label>
+      <input id="patientSecondNames" formControlName="patientSecondNames" />
+      <div class="error-message" *ngIf="patientForm.get('patientSecondNames')?.invalid && patientForm.get('patientSecondNames')?.touched">
+        Los apellidos son obligatorios.
+      </div>
+    </div>
+  
+    <div>
+      <label for="patientAge">Edad</label>
+      <input id="patientAge" type="number" min="0" max="100" formControlName="patientAge" />
+      <div class="error-message" *ngIf="patientForm.get('patientAge')?.invalid && patientForm.get('patientAge')?.touched">
+        Ingresa una edad válida.
+      </div>
+    </div>
+  
+    <div>
+      <label for="patientDirection">Dirección</label>
+      <input id="patientDirection" formControlName="patientDirection" />
+      <div class="error-message" *ngIf="patientForm.get('patientDirection')?.invalid && patientForm.get('patientDirection')?.touched">
+        La dirección es obligatoria.
+      </div>
+    </div>
+  
+    <div>
+      <input id="doctorId" type="number" formControlName="doctorId" hidden/>
+    </div>
+  
+    <div>
+      <label for="patientPhoneNumber">Teléfono</label>
+      <input id="patientPhoneNumber" formControlName="patientPhoneNumber" />
+      <div class="error-message" *ngIf="patientForm.get('patientPhoneNumber')?.invalid && patientForm.get('patientPhoneNumber')?.touched">
+        Ingresa un teléfono válido.
+      </div>
+    </div>
+  
+    <div>
+      <label for="patientEmail">Email</label>
+      <input id="patientEmail" formControlName="patientEmail" type="email" />
+      <div class="error-message" *ngIf="patientForm.get('patientEmail')?.invalid && patientForm.get('patientEmail')?.touched">
+        Ingresa un email válido.
+      </div>
+    </div>
+  
+    <button type="submit">Enviar</button>
+  </form>
+  

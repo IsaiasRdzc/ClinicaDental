@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -16,7 +16,7 @@ export class MedicalRecordCreationComponent implements OnInit{
   medicalRecordForm: FormGroup;
   patientId: string|null = "";
 
-  constructor(private fb: FormBuilder,private route: ActivatedRoute,private http: HttpClient ) {
+  constructor(private fb: FormBuilder,private route: ActivatedRoute,private http: HttpClient,private router:Router ) {
     this.medicalRecordForm = this.fb.group({
       doctorId: [0, Validators.required],
       patientId: [0],
@@ -96,7 +96,7 @@ export class MedicalRecordCreationComponent implements OnInit{
       this.fb.group({
         name: ['', Validators.required],
         description: ['', Validators.required],
-        procedureCost: [0, Validators.required]
+        procedureCost: [0, Validators.required, Validators.min(0)]
       })
     );
   }
@@ -111,6 +111,7 @@ export class MedicalRecordCreationComponent implements OnInit{
         next: (response) => {
           console.log('Formulario enviado con éxito', response);
           alert('El registro médico fue creado correctamente.');
+          this.redirectToPatients();
         },
         error: (error) => {
           console.error('Error al enviar el formulario', error);
@@ -120,6 +121,10 @@ export class MedicalRecordCreationComponent implements OnInit{
     } else {
       alert('Por favor, completa todos los campos obligatorios.');
     }
+  }
+
+  redirectToPatients(): void {
+    this.router.navigate(['/patients-section']);
   }
 }
 

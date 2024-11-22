@@ -10,47 +10,47 @@
     </label>
   
     <label>
-      Comment:
+      Comentario:
       <textarea formControlName="coment"></textarea>
     </label>
   
     <div formArrayName="diagnosis">
-        <h3>Diagnosis</h3>
-        <button type="button" (click)="addDiagnosis()">Add Diagnosis</button>
+        <h3>Diagnosticos</h3>
+        <button type="button" (click)="addDiagnosis()">Añadir diagnosticos</button>
         <div *ngFor="let diag of diagnosis.controls; let i = index" [formGroupName]="i">
-          <label>Name: <input formControlName="name" /></label>
-          <label>Description: <input formControlName="description" /></label>
+          <label>Nombre: <input formControlName="name" /></label>
+          <label>Descripción: <input formControlName="description" /></label>
           <div formArrayName="treatments">
-            <h4>Treatments</h4>
-            <button type="button" (click)="addTreatment(i)">Add Treatment</button>
+            <h4>Tratamientos</h4>
+            <button type="button" (click)="addTreatment(i)">Añadir Tratamiento</button>
             <div *ngFor="let treat of getTreatments(i).controls; let j = index" [formGroupName]="j">
-                <label>Description: <input formControlName="description" /></label>
-                <label>Dose: <input formControlName="dose" /></label>
+                <label>Descripción: <input formControlName="description" /></label>
+                <label>Dosis: <input formControlName="dose" /></label>
               </div>               
           </div>
         </div>
       </div>
     
     <div formArrayName="teeths">
-      <h3>Teeths</h3>
-      <button type="button" (click)="addTeeth()">Add Teeth</button>
+      <h3>Dientes</h3>
+      <button type="button" (click)="addTeeth()">Añadir diente</button>
       <div *ngFor="let tooth of teeths.controls; let i = index" [formGroupName]="i">
-        <label>Name: <input formControlName="name" /></label>
-        <label>Description: <input formControlName="description" /></label>
+        <label>Nombre: <input formControlName="name" /></label>
+        <label>Descripción: <input formControlName="description" /></label>
         <label>
-          Is SuperNumerary:
+          Es Supernumerario?:
           <input formControlName="isSuperNumerary" type="checkbox" />
         </label>
       </div>
     </div>
   
     <div formArrayName="medicalProcedures">
-      <h3>Medical Procedures</h3>
-      <button type="button" (click)="addMedicalProcedure()">Add Medical Procedure</button>
+      <h3>Procedimientos Médicos</h3>
+      <button type="button" (click)="addMedicalProcedure()">Añadir procedimiento médico</button>
       <div *ngFor="let proc of medicalProcedures.controls; let i = index" [formGroupName]="i">
-        <label>Name: <input formControlName="name" /></label>
-        <label>Description: <input formControlName="description" /></label>
-        <label>Procedure Cost: <input formControlName="procedureCost" type="number" /></label>
+        <label>Nombre: <input formControlName="name" /></label>
+        <label>Descripción: <input formControlName="description" /></label>
+        <label>Costo: <input formControlName="procedureCost" type="number" min="0"/></label>
       </div>
     </div>
   
