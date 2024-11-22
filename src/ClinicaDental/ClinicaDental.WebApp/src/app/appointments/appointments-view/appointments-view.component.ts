@@ -1,15 +1,18 @@
 import { CommonModule } from '@angular/common';
+
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
+
 @Component({
   selector: 'app-appointments-view',
   standalone: true,
-  imports: [HttpClientModule, FormsModule, ReactiveFormsModule, CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
+
+  imports: [ FormsModule, ReactiveFormsModule, CommonModule,RouterLink, RouterOutlet, RouterLinkActive],
   templateUrl: './appointments-view.component.html',
-  styleUrls: ['./appointments-view.component.css'],
+  styleUrls: ['./appointments-view.component.css','../../dashboard/dashboard.component.css'],
 })
 export class AppointmentsViewComponent implements OnInit {
   appointments: any[] = []; 
@@ -18,7 +21,6 @@ export class AppointmentsViewComponent implements OnInit {
   errorMessage: string = ''; 
 
   constructor(private http: HttpClient, private router: Router) {}
-
   ngOnInit() {
     const today = new Date();
     this.dateStart = today.toISOString().split('T')[0];
@@ -49,8 +51,12 @@ export class AppointmentsViewComponent implements OnInit {
     });
   }
 
-  Tyrone(folio: number) {
-    console.log(`Acción Tyrone llamada para la cita con Folio: ${folio}`);
-    // Aquí puedes implementar la funcionalidad adicional necesaria.
+  saveNewPatient(doctorId:string){
+      this.router.navigate(['/newPatient',doctorId]);
+  }
+
+  addNewRecordToPatient(patientId:string){
+      console.log('ID del paciente seleccionado:', patientId);
+      this.router.navigate(['/newMedicalRecord', patientId]);
   }
 }
