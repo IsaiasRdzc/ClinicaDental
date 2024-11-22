@@ -63,7 +63,6 @@ export class AppointmentComponent implements OnInit{
         patientPhone: this.appointmentData.patientPhone
       };
 
-      console.log("pelanaaa"+ appointment.doctorId.toString())
 
       this.http.post('/api/appointments',appointment)
         .subscribe((response: any) => {
@@ -155,7 +154,6 @@ export class AppointmentComponent implements OnInit{
 
   url: string=environment.apiBaseUrl+"/appointments";
   dentists: Doctor[]=[];
-  formData: Appointment = new Appointment();
 
   getAllDoctors(){
     this.http.get(this.url+"/doctor")
