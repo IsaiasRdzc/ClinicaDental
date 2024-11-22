@@ -48,7 +48,7 @@ public class ClinicAgenda
 
         if (doctor is null)
         {
-            return new List<TimeOnly>();
+            throw new KeyNotFoundException("The selected doctor does not exist");
         }
 
         var dayOfWeek = date.DayOfWeek;
