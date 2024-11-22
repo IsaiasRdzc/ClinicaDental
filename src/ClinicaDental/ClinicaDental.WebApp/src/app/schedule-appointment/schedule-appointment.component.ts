@@ -18,11 +18,6 @@ import { environment } from '../../environments/environment';
   styleUrls: ['./schedule-appointment.component.css']
 })
 export class AppointmentComponent implements OnInit {
-  appointmentConfirmationDetails: any = {};
-  isPatientFirstAppointment: boolean | null = null;
-  canDisplayForm: boolean = false;
-  availableSlots: string[] = [];
-  dentists: Doctor[] = [];
 
   constructor(private http: HttpClient, private router: Router) { }
   ngOnInit(): void {
@@ -42,6 +37,8 @@ export class AppointmentComponent implements OnInit {
     patientPhone: ''
   };
 
+
+  isPatientFirstAppointment: boolean | null = null;
   showAppointmentInfoForm(choice: boolean) {
     this.resetformVisibility();
     this.isPatientFirstAppointment = choice;
@@ -83,6 +80,7 @@ export class AppointmentComponent implements OnInit {
     return this.http.post('/api/appointments', appointment);
   }
 
+  appointmentConfirmationDetails: any = {};
   private showAppointmentConfirmationDetailsModal(response: any, appointment: any): void {
     this.appointmentConfirmationDetails = {
       folio: response,
@@ -112,6 +110,7 @@ export class AppointmentComponent implements OnInit {
     this.continueScheduling();
   }
 
+  availableSlots: string[] = [];
   getAvailableSlots(_doctorId: number) {
     const doctorId = _doctorId;
     const date = this.appointmentData.date;
@@ -126,6 +125,7 @@ export class AppointmentComponent implements OnInit {
 
   }
 
+  canDisplayForm: boolean = false;
   continueScheduling() {
     this.canDisplayForm = true;
   }
@@ -162,6 +162,7 @@ export class AppointmentComponent implements OnInit {
   }
 
 
+  dentists: Doctor[] = [];
   getAllDoctors() {
     this.http.get("/api/HR/doctor")
       .subscribe({
