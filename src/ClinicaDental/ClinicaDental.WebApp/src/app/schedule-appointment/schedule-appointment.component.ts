@@ -11,35 +11,6 @@ import { routes } from '../app.routes';
 import { Modal } from 'bootstrap';
 import { Doctor } from '../../../models/doctor.model';
 
-// @Component({
-//   selector: 'app-schedule-appointment',
-//   standalone: true,
-//   imports: [RouterOutlet, RouterLink, RouterLinkActive, HttpClientModule, AsyncPipe, FormsModule, ReactiveFormsModule, CommonModule],
-//   templateUrl: './schedule-appointment.component.html',
-//   styleUrls: ['./schedule-appointment.component.css']
-// })
-// export class ScheduleAppointmentComponent implements OnInit{
-//   constructor(public service: ScheduleAppointmentService){
-
-//   }
-
-//   onSubmit(form:NgForm){
-//     this.service.scheduleAppointment()
-//     .subscribe({
-//       next: res=>{
-//         this.service.resetForm(form)
-        
-//       },
-//       error: err =>{console.log(err)}
-//     })
-//   }
-
-//   ngOnInit(): void{
-//     this.service.getAllDoctors();
-//   }
-  
-// }
-
 @Component({
   selector: 'app-schedule-appointment',
   standalone: true,
@@ -51,6 +22,7 @@ export class AppointmentComponent implements OnInit{
   confirmationData: any = {};
   firstAppointment: boolean | null = null;
   dateSelected: boolean | null = null;
+  availableSlots: string[] = [];
   
   //model
   appointmentData = {
@@ -63,11 +35,6 @@ export class AppointmentComponent implements OnInit{
     patientName: '',
     patientPhone: ''
   };
-
-  
-
-
-  availableSlots: string[] = [];
 
   constructor(private http: HttpClient, public service: ScheduleAppointmentService, private router: Router) {}
   ngOnInit(): void {
