@@ -5,10 +5,11 @@ using ClinicaDental.ApiService.Appointments;
 using ClinicaDental.ApiService.Appointments.Services;
 using ClinicaDental.ApiService.DataBase;
 using ClinicaDental.ApiService.DataBase.Registries.Appointments;
-using ClinicaDental.ApiService.DataBase.Registries.Doctors;
+using ClinicaDental.ApiService.DataBase.Registries.HumanResources;
 using ClinicaDental.ApiService.DataBase.Registries.Inventory;
 using ClinicaDental.ApiService.DataBase.Registries.Login;
 using ClinicaDental.ApiService.DataBase.Registries.MedicalRecords;
+using ClinicaDental.ApiService.HumanResources;
 using ClinicaDental.ApiService.Inventory.Services;
 using ClinicaDental.ApiService.Login;
 using ClinicaDental.ApiService.MedicalRecords.Endpoints;
@@ -44,11 +45,12 @@ builder.AddNpgsqlDbContext<AppDbContext>("ClinicaDentalDb");
 builder.Services.AddTransient<StoreKeeper>();
 builder.Services.AddTransient<ClinicReceptionist>();
 builder.Services.AddTransient<ClinicAgenda>();
-builder.Services.AddTransient<ClinicAdmin>();
+builder.Services.AddTransient<ClinicSchedulingAdmin>();
 builder.Services.AddTransient<PaymentsAdmin>();
 builder.Services.AddTransient<AccountsManager>();
 builder.Services.AddTransient<MedicalRecordsManager>();
 builder.Services.AddTransient<PatientsInformationManager>();
+builder.Services.AddTransient<PersonelAdmin>();
 
 // Registries
 builder.Services.AddTransient<SuppliesRegistry>();
@@ -75,6 +77,7 @@ app.MapMedicalRecordsEndpoints();
 app.MapPatientInformationEndpoints();
 app.MapPaymentEndpoints();
 app.MapLoginEndpoints();
+app.MapHREndpoints();
 
 // Initialize the database
 await app.InitializeDatabase();

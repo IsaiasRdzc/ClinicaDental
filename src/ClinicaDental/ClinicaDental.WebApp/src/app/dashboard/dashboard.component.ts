@@ -11,10 +11,12 @@ import { RouterLink } from '@angular/router';
 export class DashboardComponent implements OnInit{
   doctorName!: String | null;
   
-  ngOnInit(): void {
+  ngOnInit(): void 
+  {
     var doctorName = localStorage.getItem("DoctorName");
 
-    if(doctorName != null){
+    if(doctorName != null)
+    {
       this.doctorName = doctorName;
     }
   }

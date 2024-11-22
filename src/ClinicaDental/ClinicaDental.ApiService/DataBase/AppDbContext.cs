@@ -1,7 +1,7 @@
 ﻿namespace ClinicaDental.ApiService.DataBase;
 
 using ClinicaDental.ApiService.DataBase.Models.Appointments;
-using ClinicaDental.ApiService.DataBase.Models.Doctors;
+using ClinicaDental.ApiService.DataBase.Models.HumanResources;
 using ClinicaDental.ApiService.DataBase.Models.Inventory;
 using ClinicaDental.ApiService.DataBase.Models.Login;
 using ClinicaDental.ApiService.DataBase.Models.MedicalRecords;

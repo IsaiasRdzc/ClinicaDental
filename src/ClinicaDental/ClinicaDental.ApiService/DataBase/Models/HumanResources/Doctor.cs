@@ -1,4 +1,4 @@
-namespace ClinicaDental.ApiService.DataBase.Models.Doctors;
+namespace ClinicaDental.ApiService.DataBase.Models.HumanResources;
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

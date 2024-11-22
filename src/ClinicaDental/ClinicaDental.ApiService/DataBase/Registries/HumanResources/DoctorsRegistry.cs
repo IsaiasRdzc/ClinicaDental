@@ -1,7 +1,7 @@
-namespace ClinicaDental.ApiService.DataBase.Registries.Doctors;
+namespace ClinicaDental.ApiService.DataBase.Registries.HumanResources;
 
 using ClinicaDental.ApiService.DataBase;
-using ClinicaDental.ApiService.DataBase.Models.Doctors;
+using ClinicaDental.ApiService.DataBase.Models.HumanResources;
 
 using Microsoft.EntityFrameworkCore;
 

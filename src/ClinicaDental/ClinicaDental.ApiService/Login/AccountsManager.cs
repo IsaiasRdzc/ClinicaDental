@@ -2,9 +2,8 @@ namespace ClinicaDental.ApiService.Login;
 
 using System.Data;
 
-using ClinicaDental.ApiService.DataBase.Models.Doctors;
-using ClinicaDental.ApiService.DataBase.Models.Login;
-using ClinicaDental.ApiService.DataBase.Registries.Doctors;
+using ClinicaDental.ApiService.DataBase.Models.HumanResources;
+using ClinicaDental.ApiService.DataBase.Registries.HumanResources;
 using ClinicaDental.ApiService.DataBase.Registries.Login;
 
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +19,7 @@ public class AccountsManager
         this.doctorsRegistry = doctorsRegistry;
     }
 
-    public async Task<Doctor?> GetDoctorByLogin(string username, string password)
+    public async Task<Doctor?> ResolveDoctorFromCredentials(string username, string password)
     {
         var validAccounts = await this.accountsRegistry.GetAccountsList().ToListAsync();
 
@@ -34,6 +33,12 @@ public class AccountsManager
 
         var doctors = await this.doctorsRegistry.GetDoctorsList().ToListAsync();
         var doctor = doctors.Find(doctor => doctor.Id == doctorAccount.DoctorId);
+
+        if (doctor is null)
+        {
+            throw new KeyNotFoundException("Account doesnt have a valid doctor");
+        }
+
         return doctor;
     }
 }

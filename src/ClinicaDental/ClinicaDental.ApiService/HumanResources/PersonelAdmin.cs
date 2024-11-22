@@ -1,54 +1,30 @@
-namespace ClinicaDental.ApiService.Appointments.Services;
+namespace ClinicaDental.ApiService.HumanResources;
 
 using ClinicaDental.ApiService.DataBase.Models.Appointments;
-using ClinicaDental.ApiService.DataBase.Models.Doctors;
+using ClinicaDental.ApiService.DataBase.Models.HumanResources;
 using ClinicaDental.ApiService.DataBase.Registries.Appointments;
-using ClinicaDental.ApiService.DataBase.Registries.Doctors;
+using ClinicaDental.ApiService.DataBase.Registries.HumanResources;
 
 using Microsoft.EntityFrameworkCore;
 
-public class ClinicAdmin
+public class PersonelAdmin
 {
     private readonly SchedulesRegistry scheduleRegistry;
     private readonly DoctorsRegistry doctorRegistry;
 
-    public ClinicAdmin(SchedulesRegistry scheduleRegistry, DoctorsRegistry doctorRegistry)
+    public PersonelAdmin(SchedulesRegistry scheduleRegistry, DoctorsRegistry doctorRegistry)
     {
         this.scheduleRegistry = scheduleRegistry;
         this.doctorRegistry = doctorRegistry;
-    }
-
-    public async Task<List<ClinicDayBussinesHours>> GetClinicBussinesHours()
-    {
-        var clinicHours = await this.scheduleRegistry.GetClinicHoursList().ToListAsync();
-
-        if (clinicHours is null)
-        {
-            throw new KeyNotFoundException("The clinic has no default schedule");
-        }
-
-        return clinicHours;
-    }
-
-    public async Task SetClinicBussinesHours(ClinicDayBussinesHours clinicHours)
-    {
-        var existingSchedule = await this.scheduleRegistry.GetClinicHoursByDay(clinicHours.DayOfWeek);
-
-        if (existingSchedule is null)
-        {
-            await this.scheduleRegistry.AddClinicHours(clinicHours);
-        }
-        else
-        {
-            await this.scheduleRegistry.UpdateClinicHours(clinicHours);
-        }
     }
 
     public async Task CreateDoctorAccount(Doctor doctor)
     {
         await this.doctorRegistry.AddDoctor(doctor);
 
-        foreach (ClinicDayBussinesHours? schedule in await this.GetClinicBussinesHours())
+        var clinicBussinesHours = await this.scheduleRegistry.GetClinicHoursList().ToListAsync();
+
+        foreach (ClinicDayBussinesHours? schedule in clinicBussinesHours)
         {
             if (schedule is null)
             {
