@@ -40,19 +40,20 @@
         <h2 class="text-center mb-4">¿Es tu primera cita?</h2>
 
         <div class="d-flex justify-content-center mb-4">
-          <button class="btn  me-3" (click)="isFirstAppointment(true)" id="yesButton">
+          <button class="btn  me-3" (click)="isPatientFirstAppointment(true)" id="yesButton">
             Sí
           </button>
-          <button class="btn " (click)="isFirstAppointment(false)" id="noButton">
+          <button class="btn " (click)="isPatientFirstAppointment(false)" id="noButton">
             No
           </button>
         </div>
 
         <!-- Formulario Primera Cita -->
         <div *ngIf="firstAppointment === true">
-          <h3 class="text-center">Registrar Primera Cita</h3>
+          <h2>Registrar Primera Cita</h2>
+          <h3 class="text-center">¡Estás a punto de dar un paso hacia una mejor salud bucal!</h3>
           <p class="text-center">La dentista asignada por defecto es Ángela María Rubio</p>
-          <form #firstForm="ngForm" (submit)="onSubmitFirstAppointment(firstForm)">
+          <form #firstTimeVisitingForm="ngForm" (submit)="scheduleAppointment(firstTimeVisitingForm)">
             <div class="mb-3">
               <label for="date" class="form-label">Fecha</label>
               <input
@@ -66,14 +67,14 @@
               <button
                 class="btn btn-primary mt-2 w-100"
                 type="button"
-                (click)="isADateSelected(true, 1)"
+                (click)="findAvailableSlots(1)"
                 [disabled]="!appointmentData.date"
               >
                 Ver horarios disponibles
               </button>
             </div>
 
-            <div *ngIf="dateSelected === true">
+            <div *ngIf="formVisibility === true">
               <div class="mb-3">
                 <label for="time" class="form-label">Seleccionar Horario</label>
                 <select
@@ -110,7 +111,7 @@
                 />
                 <small class="form-text text-muted">Debe contener 10 dígitos.</small>
               </div>
-              <button type="submit" class="btn btn-primary w-100" [disabled]="!firstForm.valid">
+              <button type="submit" class="btn btn-primary w-100" [disabled]="!firstTimeVisitingForm.valid">
                 Confirmar
               </button>
             </div>
@@ -130,7 +131,7 @@
                 [(ngModel)]="appointmentData.doctorId"
                 required
               >
-                <option *ngFor="let dentist of service.dentists" [value]="dentist.id">
+                <option *ngFor="let dentist of dentists" [value]="dentist.id">
                   {{ dentist.name }}
                 </option>
               </select>
@@ -148,14 +149,14 @@
               <button
                 class="btn btn-primary mt-2 w-100"
                 type="button"
-                (click)="isADateSelected(true, appointmentData.doctorId)"
+                (click)="findAvailableSlots(appointmentData.doctorId)"
                 [disabled]="!appointmentData.doctorId"
               >
                 Ver horarios disponibles
               </button>
             </div>
 
-            <div *ngIf="dateSelected === true">
+            <div *ngIf="formVisibility === true">
               <div class="mb-3">
                 <label for="time" class="form-label">Seleccionar Horario</label>
                 <select
