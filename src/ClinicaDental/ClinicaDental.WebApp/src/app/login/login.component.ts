@@ -32,8 +32,8 @@ export class LoginComponent
     this.http.post('/api/login', this.loginData).subscribe({
       next: (response: any) => 
       {
-        localStorage.setItem('DoctorID', response.id);
-        localStorage.setItem('DoctorName', response.name);
+        localStorage.setItem('doctorID', response.id);
+        localStorage.setItem('doctorName', response.name);
         this.router.navigate(['/dashboard']);
       },
       error: () => 

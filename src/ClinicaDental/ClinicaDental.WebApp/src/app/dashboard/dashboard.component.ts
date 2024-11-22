@@ -13,7 +13,7 @@ export class DashboardComponent implements OnInit{
   
   ngOnInit(): void 
   {
-    var doctorName = localStorage.getItem("DoctorName");
+    var doctorName = localStorage.getItem("doctorName");
 
     if(doctorName != null)
     {
