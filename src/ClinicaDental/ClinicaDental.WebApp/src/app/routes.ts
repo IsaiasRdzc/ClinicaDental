@@ -4,6 +4,7 @@ import { LoginComponent } from "./login/login.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
 import { InventorySectionComponent } from "./inventory/inventory-section/inventory-section.component";
 import { PatientsSectionComponent } from "./patients/patients-section/patients-section.component";
+import { AppointmentsViewComponent } from "./appointments/appointments-view/appointments-view.component";
 
 
 const routeConfig: Routes=[
@@ -31,6 +32,11 @@ const routeConfig: Routes=[
         path: "patients-section",
         component: PatientsSectionComponent,
         title: "Pacientes"
+    },
+    {
+        path: "appointments-view",
+        component: AppointmentsViewComponent,
+        title: "Citas agendadas"
     } 
 ];
 
