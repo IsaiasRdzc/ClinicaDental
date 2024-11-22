@@ -1,25 +1,33 @@
-<table>
-    <thead>
-      <tr>
-        <th id="title" colspan="5">Pacientes</th>
-      </tr>
-      <tr id="headers">
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Apellido</th>
-        <th>Numero de contacto</th>
-        <th>Ver detalles</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let patient of patients">
-        <td>{{ patient.patientId }}</td>
-        <td>{{ patient.patientNames }}</td>
-        <td>{{ patient.patientSecondNames }}</td>
-        <td>{{ patient.patientPhoneNumber }}</td>
-        <td id="options"><button (click)="viewDetails(patient.patientId)">Ver Detalles</button></td>
-      </tr>
-    </tbody>
-  </table>
+  <div *ngIf="patients.length > 0; else noPatients">
+    <table>
+      <thead>
+        <tr>
+          <th id="title" colspan="5">Pacientes</th>
+        </tr>
+        <tr id="headers">
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Numero de contacto</th>
+          <th>Ver detalles</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let patient of patients">
+          <td>{{ patient.patientId }}</td>
+          <td>{{ patient.patientNames }}</td>
+          <td>{{ patient.patientSecondNames }}</td>
+          <td>{{ patient.patientPhoneNumber }}</td>
+          <td id="options"><button (click)="redirectToDetails(patient.patientId)">Ver Detalles</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   
+  <ng-template #noPatients>
+    <div id="empty">
+      <h1>Pacientes</h1>
+      <p>No se encontraron pacientes para este doctor.</p>
+    </div>
+  </ng-template>
   
