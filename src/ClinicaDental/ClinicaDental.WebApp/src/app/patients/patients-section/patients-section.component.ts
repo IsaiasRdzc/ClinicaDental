@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-patients-section',
@@ -12,9 +13,8 @@ import { CommonModule } from '@angular/common';
 })
 
 export class PatientsSectionComponent implements OnInit{
-  router: any;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router:Router) {}
 
   doctorId : string = ""; 
   patients: any[] = [];
@@ -52,9 +52,8 @@ export class PatientsSectionComponent implements OnInit{
     });
   }
 
-  viewDetails(patientId: string): void {
+  redirectToDetails(patientId: string): void {
     console.log('ID del paciente seleccionado:', patientId);
-    // Ejemplo: Redirigir a otra página con el ID como parámetro
-    this.router.navigate(['/patient-details', patientId]);
+    this.router.navigate(['/patientDetails', patientId]);
   }
 }

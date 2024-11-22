@@ -23,3 +23,9 @@ table {
     font-style: italic;
     text-align: center;
   }
+
+  #empty{
+    font-size: larger;
+    font-style: italic;
+    text-align: center;
+  }

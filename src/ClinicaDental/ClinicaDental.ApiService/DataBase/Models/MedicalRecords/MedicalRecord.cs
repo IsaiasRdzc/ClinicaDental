@@ -22,4 +22,6 @@ public class MedicalRecord
     public ICollection<Teeth> Teeths { get; set; } = new List<Teeth>();
 
     public ICollection<MedicalProcedure> MedicalProcedures { get; set; } = new List<MedicalProcedure>();
+
+    public string? Coment {get; set; }
 }
