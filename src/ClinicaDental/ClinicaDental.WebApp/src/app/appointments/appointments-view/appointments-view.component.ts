@@ -2,25 +2,24 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-appointments-view',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [HttpClientModule, FormsModule, ReactiveFormsModule, CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './appointments-view.component.html',
   styleUrls: ['./appointments-view.component.css'],
 })
 export class AppointmentsViewComponent implements OnInit {
-  appointments: any[] = []; // Aquí se almacenarán las citas obtenidas.
-  dateStart: string = ''; // Fecha de inicio del rango (YYYY-MM-DD).
-  dateEnd: string = ''; // Fecha de fin del rango (YYYY-MM-DD).
-  errorMessage: string = ''; // Para manejar errores en la consulta.
+  appointments: any[] = []; 
+  dateStart: string = ''; 
+  dateEnd: string = ''; 
+  errorMessage: string = ''; 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
-    // Opcional: Realiza una consulta inicial con un rango predefinido.
     const today = new Date();
     this.dateStart = today.toISOString().split('T')[0];
     this.dateEnd = new Date(today.setDate(today.getDate() + 7))
