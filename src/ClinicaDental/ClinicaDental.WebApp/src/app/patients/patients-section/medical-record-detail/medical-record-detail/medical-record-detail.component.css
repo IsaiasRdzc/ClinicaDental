@@ -29,7 +29,20 @@ table {
     font-style: italic;
     text-align: center;
   }
-
-  div{
+  
+  #container{
     margin: 10px;
   }
+
+  .diagnosis-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 20px; 
+  }
+  
+  .treatments ul {
+    list-style: none; /* Opcional: elimina el estilo de lista */
+    padding: 0;
+    margin: 0;
+  }
+  

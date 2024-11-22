@@ -20,8 +20,9 @@ public class ClinicReceptionist
     public async Task<int> ScheduleAppointment(Appointment appointment)
     {
         var appointmentSlotIsAvailable = await this.clinicAgenda.IsAppointmentSlotAvailable(appointment);
+        bool isPatientValid = await this.IsPatientIdValid(appointment.PatientId);
 
-        if (!this.IsPatientIdValid(appointment.PatientId))
+        if (!isPatientValid)
         {
             throw new InvalidOperationException("Patient does not exists");
         }
@@ -77,7 +78,7 @@ public class ClinicReceptionist
         await this.appointmentRegistry.DeleteAppointment(appointmentId);
     }
 
-    private bool IsPatientIdValid(int patientId)
+    private async Task<bool> IsPatientIdValid(int patientId)
     {
         if (patientId == 0)
         {
@@ -85,7 +86,7 @@ public class ClinicReceptionist
         }
         else
         {
-            return this.patientsRegistry.GetPatientByPatientId(patientId) is not null;
+            return await this.patientsRegistry.GetPatientByPatientId(patientId) is not null;
         }
     }
 }

@@ -2,7 +2,6 @@
 .dashboard {
     display: flex;
     flex-direction: column;
-    height: 100vh;
 }
 
 /* Navbar styles */
