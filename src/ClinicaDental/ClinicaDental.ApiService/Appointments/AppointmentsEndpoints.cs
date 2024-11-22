@@ -62,10 +62,10 @@ public static class AppointmentsEndpoints
 
     public static async Task<IResult> ScheduleAppointment(
         Appointment appointment,
-        ClinicReceptionist scheduler)
+        ClinicReceptionist receptionist)
     {
         return await ErrorOrResultHandler.HandleResult(
-            async () => await scheduler.ScheduleAppointment(appointment));
+            async () => await receptionist.ScheduleAppointment(appointment));
     }
 
     public static async Task<IResult> ReScheduleAppointment(
@@ -73,41 +73,41 @@ public static class AppointmentsEndpoints
         DateOnly date,
         TimeOnly time,
         int duration,
-        ClinicReceptionist scheduler)
+        ClinicReceptionist receptionist)
     {
         return await ErrorOrResultHandler.HandleResult(
-            async () => await scheduler.ReScheduleAppointment(appointmentId, date, time, duration));
+            async () => await receptionist.ReScheduleAppointment(appointmentId, date, time, duration));
     }
 
     public static async Task<IResult> UpdateAppointmentPatientId(
         int folio,
         int newPatientId,
-        ClinicReceptionist scheduler)
+        ClinicReceptionist receptionist)
     {
         return await ErrorOrResultHandler.HandleResult(
-            async () => await scheduler.UpdateAppointmentPatientId(folio, newPatientId));
+            async () => await receptionist.UpdateAppointmentPatientId(folio, newPatientId));
     }
 
     public static async Task<IResult> DeleteAppointment(
         int appointmentId,
-        ClinicReceptionist scheduler)
+        ClinicReceptionist receptionist)
     {
         return await ErrorOrResultHandler.HandleResult(
-            async () => await scheduler.CancelAppointment(appointmentId));
+            async () => await receptionist.CancelAppointment(appointmentId));
     }
 
     public static async Task<IResult> SetClinicHours(
         ClinicDayBussinesHours clinicHours,
-        ClinicSchedulingAdmin clinicAdmin)
+        ClinicSchedulingAdmin schedulingAdmin)
     {
         return await ErrorOrResultHandler.HandleResult(
-            async () => await clinicAdmin.SetClinicBussinesHours(clinicHours));
+            async () => await schedulingAdmin.SetClinicBussinesHours(clinicHours));
     }
 
     public static async Task<IResult> GetClinicHours(
-        ClinicSchedulingAdmin clinicAdmin)
+        ClinicSchedulingAdmin schedulingAdmin)
     {
         return await ErrorOrResultHandler.HandleResult(
-            async () => await clinicAdmin.GetClinicBussinesHours());
+            async () => await schedulingAdmin.GetClinicBussinesHours());
     }
 }
