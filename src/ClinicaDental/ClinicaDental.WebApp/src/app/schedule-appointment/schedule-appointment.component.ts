@@ -17,9 +17,9 @@ import { environment } from '../../environments/environment';
   templateUrl: './schedule-appointment.component.html',
   styleUrls: ['./schedule-appointment.component.css']
 })
-export class AppointmentComponent implements OnInit{
-  
-  constructor(private http: HttpClient, private router: Router) {}
+export class AppointmentComponent implements OnInit {
+
+  constructor(private http: HttpClient, private router: Router) { }
   ngOnInit(): void {
     this.cleanupModalState();
     this.getAllDoctors();
@@ -45,10 +45,10 @@ export class AppointmentComponent implements OnInit{
     this.styleButtonDecision(this.isPatientFirstAppointment)
   }
 
-  styleButtonDecision(choice: boolean){
+  styleButtonDecision(choice: boolean) {
     if (choice) {
       this.styleButtonForYes();
-    }else{
+    } else {
       this.styleButtonForNo();
     }
   }
@@ -56,7 +56,7 @@ export class AppointmentComponent implements OnInit{
   scheduleAppointment(form: any): void {
     if (form.valid) {
       const appointment = this.createAppointmentData();
-  
+
       this.saveAppointment(appointment).subscribe({
         next: (response) => this.showAppointmentConfirmationDetailsModal(response, appointment),
         error: (error) => this.handleError(error)
@@ -88,9 +88,9 @@ export class AppointmentComponent implements OnInit{
       date: appointment.date,
       startTime: appointment.startTime
     };
-  
+
     console.log(response);
-  
+
     const modalElement = document.getElementById('appointmentConfirmationModal');
     if (modalElement) {
       const confirmationModal = new Modal(modalElement);
@@ -102,10 +102,10 @@ export class AppointmentComponent implements OnInit{
     console.error('Error registrando la cita:', error);
     alert('Hubo un problema al registrar la cita.');
   }
-  
 
 
-  findAvailableSlots(doctorId:number) {
+
+  findAvailableSlots(doctorId: number) {
     this.getAvailableSlots(doctorId);
     this.continueScheduling();
   }
@@ -116,41 +116,41 @@ export class AppointmentComponent implements OnInit{
     const date = this.appointmentData.date;
     const url = `/api/appointments/availableSlots?doctorId=${doctorId}&date=${date}`;
     this.http.get<string[]>(url)
-      .subscribe((slots) => {this.availableSlots = slots
+      .subscribe((slots) => {
+        this.availableSlots = slots
         if (slots.length > 0) {
-          this.appointmentData.startTime = slots[0]; 
+          this.appointmentData.startTime = slots[0];
         }
       });
-    
+
   }
 
   canDisplayForm: boolean = false;
-  continueScheduling(){
+  continueScheduling() {
     this.canDisplayForm = true;
   }
 
-  resetformVisibility(){
+  resetformVisibility() {
     this.canDisplayForm = false;
   }
 
 
-  styleButtonForYes(){
+  styleButtonForYes() {
     const yesButton = document.getElementById("yesButton");
     yesButton?.classList.add("buttonSelected");
     const noButton = document.getElementById("noButton");
     noButton?.classList.remove("buttonSelected");
   }
 
-  styleButtonForNo(){
+  styleButtonForNo() {
     const noButton = document.getElementById("noButton");
     noButton?.classList.add("buttonSelected");
     const yesButton = document.getElementById("yesButton");
     yesButton?.classList.remove("buttonSelected");
   }
-  
 
-  redirectToHomepage() 
-  {
+
+  redirectToHomepage() {
     // Cierra el modal y redirige al homepage
     const modal = new Modal(document.getElementById('appointmentConfirmationModal')!);
     modal.dispose();
@@ -161,16 +161,16 @@ export class AppointmentComponent implements OnInit{
     this.router.navigate(['/']);
   }
 
-  
-  dentists: Doctor[]=[];
-  getAllDoctors(){
+
+  dentists: Doctor[] = [];
+  getAllDoctors() {
     this.http.get("/api/HR/doctor")
-    .subscribe({
-      next: res=>{
-        this.dentists = res as Doctor[]; 
-      },
-      error: err=>{console.log(err)}
-    })
+      .subscribe({
+        next: res => {
+          this.dentists = res as Doctor[];
+        },
+        error: err => { console.log(err) }
+      })
   }
 
   private cleanupModalState(): void {
