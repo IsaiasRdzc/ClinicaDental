@@ -10,7 +10,7 @@ public static class HREndpoints
     {
         var group = app.MapGroup("api/HR");
 
-        group.MapPost("doctor", SetDoctorSchedule);
+        group.MapPost("doctor/schedule", SetDoctorSchedule);
         group.MapPost("initializeDoctor", CreateDoctorAccount);
 
         group.MapGet("doctor", GetDoctorsList);
