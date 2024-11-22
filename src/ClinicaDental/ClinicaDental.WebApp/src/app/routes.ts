@@ -39,10 +39,7 @@ const routeConfig: Routes=[
         path: "patients-section",
         component: PatientsSectionComponent,
         title: "Pacientes"
-    }
-
-    
-   
+    } 
 ];
 
 export default routeConfig;

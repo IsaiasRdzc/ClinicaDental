@@ -1,12 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
+
 
 @Component({
   selector: 'app-patient-details',
+  standalone: true,
+  imports: [CommonModule,RouterLink],
   templateUrl: './patient-details.component.html',
-  styleUrls: ['./patient-details.component.css']
+  styleUrls: ['./patient-details.component.css','../../../../dashboard/dashboard.component.css']
 })
 export class PatientDetailsComponent implements OnInit {
   patientId: string | null = null;
@@ -14,52 +20,57 @@ export class PatientDetailsComponent implements OnInit {
   records: any[] = [];  
   constructor(
     private route: ActivatedRoute,
-    private http: HttpClient
+    private http: HttpClient,
+    private router:Router
   ) {}
 
   ngOnInit(): void {
-    this.patientId = this.route.snapshot.paramMap.get('id');
+    this.patientId = this.route.snapshot.paramMap.get('patientId');
     console.log('ID del paciente recibido:', this.patientId);
     this.loadPatientDetails(this.patientId);
-    this.getPatientRecords(this.patientId);
+    this.loadPatientRecord(this.patientId);
   }
-
+  
   loadPatientDetails(patientId: string|null): void {
-    if (patientId) {
-      this.getPatientInformation(patientId).subscribe(
-        (data) => {
-          this.patient = data;
+    if(patientId){
+      this.getPatientInformation(patientId).subscribe({
+        next: (data) => {
+          this.patient = data; 
           console.log('Detalles del paciente:', this.patient);
         },
-        (error) => {
-          console.error('Error al obtener los detalles del paciente', error);
+        error: (err) => {
+          console.error('Error al obtener los detalles del paciente', err);
         }
-      );
+      });
     }
   }
 
-  getPatientInformation(patientId:string): Observable<any> {
-    const url = `/api/patientsInformation/PatientById?patientId=1${patientId}`;
+  getPatientInformation(patientId:string|null): Observable<any> {
+    const url = `/api/patientsInformation/PatientById?patientId=${patientId}`;
     return this.http.get<any>(url);
   }
 
-  getRelatedPatientRecords(patientId:string): Observable<any> {
-    const url = `/api/patientsInformation/PatientById?patientId=1${patientId}`;
+  getPatientRecord(patientId:string|null): Observable<any> {
+    const url = `/api/medicalRecords/RecordsByPatientId?patientId=${patientId}`;
     return this.http.get<any>(url);
   }
     
-  // Obtener los registros relacionados con el paciente
-  getPatientRecords(patientId: string | null): void {
-    if (patientId) {
-      this.http.get<any[]>(`/api/records?patientId=${patientId}`).subscribe(
-        (data) => {
-          this.records = data;
-          console.log('Registros relacionados con el paciente:', this.records);
+  loadPatientRecord(patientId: string|null): void {
+    if(patientId){
+      this.getPatientRecord(patientId).subscribe({
+        next: (data) => {
+          this.records = data; 
+          console.log('Registros relacionados con el paciente:', this.patientId);
         },
-        (error) => {
-          console.error('Error al obtener los registros', error);
+        error: (err) => {
+          console.error('Error al obtener los registros', err);
         }
-      );
+      });
     }
+  }
+
+  redirectRecordToDetails(recordId: string): void {
+    console.log('ID del registro seleccionado:', recordId);
+    this.router.navigate(['/medicalRecordDetails', recordId]);
   }
 }

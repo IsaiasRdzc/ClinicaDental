@@ -1,1 +1,57 @@
-<p>patient-details works!</p>
+<div class="dashboard">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <ul class="navbar-links">
+            <li><a routerLink="/">Finanzas</a></li>
+            <li class="insumos"><a routerLink="/inventory-section">Insumos</a></li>
+            <li><a routerLink="/patients-section">Pacientes</a></li>
+            <li><a routerLink="/">Citas</a></li>
+            <li><a routerLink="/">Cerrar Sesión</a></li>
+        </ul>
+    </nav>
+</div>
+  
+<div>
+    <h2>Detalles del Paciente</h2>
+
+    <div class="patient-details">
+        <p><strong>Nombre:</strong> {{ patient.patientNames }}</p>
+        <p><strong>Apellido:</strong> {{ patient.patientSecondNames }}</p>
+        <p><strong>Edad:</strong> {{ patient.patientAge }}</p>
+        <p><strong>Dirección:</strong> {{ patient.patientDirection }}</p>
+        <p><strong>Numero de contacto:</strong> {{ patient.patientPhoneNumber }}</p>
+        <p><strong>E-Mail:</strong> {{ patient.patientEmail }}</p>
+    </div>
+</div>
+
+<div *ngIf="records.length > 0; else noRecords">
+    <table>
+      <thead>
+        <tr>
+          <th id="title" colspan="5">Registros Medicos</th>
+        </tr>
+        <tr id="headers">
+          <th>ID</th>
+          <th>Fecha de creación</th>
+          <th>Comentarios</th>
+          <th>Ver detalles</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let record of records">
+          <td>{{ record.medicalRecordId }}</td>
+          <td>{{ record.dateCreated | date:'short' }}</td>
+          <td>{{ record.coment }}</td>
+          <td id="options"><button button class="btn btn-primary" (click)="redirectRecordToDetails(record.medicalRecordId)">Ver Detalles</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <ng-template #noRecords>
+    <div id="empty">
+      <h1>Registros Medicos</h1>
+      <p>No se encontraron registros para este paciente.</p>
+    </div>
+  </ng-template>
+  
