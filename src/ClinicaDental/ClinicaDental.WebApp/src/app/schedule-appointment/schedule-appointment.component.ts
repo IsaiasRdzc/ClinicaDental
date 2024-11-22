@@ -56,7 +56,6 @@ export class AppointmentComponent implements OnInit{
     }
   }
 
-  
   scheduleAppointment(form: any): void {
     if (form.valid) {
       const appointment = this.createAppointmentData();

@@ -2,11 +2,12 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-appointments-view',
   standalone: true,
-  imports: [HttpClientModule, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [HttpClientModule, FormsModule, ReactiveFormsModule, CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './appointments-view.component.html',
   styleUrls: ['./appointments-view.component.css'],
 })
@@ -16,7 +17,7 @@ export class AppointmentsViewComponent implements OnInit {
   dateEnd: string = ''; // Fecha de fin del rango (YYYY-MM-DD).
   errorMessage: string = ''; // Para manejar errores en la consulta.
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
     // Opcional: Realiza una consulta inicial con un rango predefinido.
