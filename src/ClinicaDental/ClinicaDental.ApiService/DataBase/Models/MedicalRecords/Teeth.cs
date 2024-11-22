@@ -10,7 +10,7 @@ public class Teeth
     public int TeethId { get; private set; }
 
     [Required]
-    public int Name { get; init; }
+    public required string Name { get; init; }
 
     [Required]
     public required string Description { get; set; }

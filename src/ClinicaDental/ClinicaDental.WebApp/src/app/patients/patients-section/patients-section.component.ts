@@ -3,13 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-patients-section',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,RouterLink],
   templateUrl: './patients-section.component.html',
-  styleUrl: './patients-section.component.css'
+  styleUrls: ['./patients-section.component.css','../../dashboard/dashboard.component.css']
 })
 
 export class PatientsSectionComponent implements OnInit{
@@ -37,14 +38,14 @@ export class PatientsSectionComponent implements OnInit{
   }
 
   getPatientsByDoctorId(): Observable<any[]> {
-    const url = `api/patientsInformation/PatientsByDoctorId?doctorId=${1}`; // Adjust the query parameter as per your API
+    const url = `api/patientsInformation/PatientsByDoctorId?doctorId=${1}`; 
     return this.http.get<any[]>(url);
   }
 
   loadPatients(): void {
     this.getPatientsByDoctorId().subscribe({
       next: (data) => {
-        this.patients = data; // Almacena la lista de pacientes
+        this.patients = data; 
       },
       error: (err) => {
         console.error('Error al obtener los pacientes:', err);
@@ -52,7 +53,7 @@ export class PatientsSectionComponent implements OnInit{
     });
   }
 
-  redirectToDetails(patientId: string): void {
+  redirectToPatientDetails(patientId: string): void {
     console.log('ID del paciente seleccionado:', patientId);
     this.router.navigate(['/patientDetails', patientId]);
   }

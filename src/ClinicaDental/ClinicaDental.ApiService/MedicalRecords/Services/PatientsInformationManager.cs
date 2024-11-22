@@ -7,6 +7,20 @@ using Microsoft.EntityFrameworkCore;
 
 public class PatientsInformationManager(PatientsRegistry patientsRegistry)
 {
+    public Task<List<Patient>> GetPatients()
+    {
+        var existingPatients = patientsRegistry.GetPatients();
+
+        if (existingPatients.FirstOrDefault() is not null)
+        {
+            return existingPatients.ToListAsync();
+        }
+        else
+        {
+            throw new KeyNotFoundException("Record not found");
+        }
+    }
+
     public async Task<int> SavePatient(Patient patient)
     {
         if (MedicalRecordInformationChecker.HasValidPatientInfo(patient))
@@ -74,5 +88,4 @@ public class PatientsInformationManager(PatientsRegistry patientsRegistry)
             throw new KeyNotFoundException("Record not found");
         }
     }
-
 }

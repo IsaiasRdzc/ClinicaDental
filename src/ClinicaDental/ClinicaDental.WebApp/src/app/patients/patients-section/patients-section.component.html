@@ -1,4 +1,17 @@
-  <div *ngIf="patients.length > 0; else noPatients">
+<div class="dashboard">
+  <!-- Navbar -->
+  <nav class="navbar">
+      <ul class="navbar-links">
+          <li><a routerLink="/">Finanzas</a></li>
+          <li class="insumos"><a routerLink="/inventory-section">Insumos</a></li>
+          <li><a routerLink="/patients-section">Pacientes</a></li>
+          <li><a routerLink="/">Citas</a></li>
+          <li><a routerLink="/">Cerrar Sesión</a></li>
+      </ul>
+  </nav>
+</div>
+
+<div *ngIf="patients.length > 0; else noPatients">
     <table>
       <thead>
         <tr>
@@ -18,7 +31,7 @@
           <td>{{ patient.patientNames }}</td>
           <td>{{ patient.patientSecondNames }}</td>
           <td>{{ patient.patientPhoneNumber }}</td>
-          <td id="options"><button (click)="redirectToDetails(patient.patientId)">Ver Detalles</button></td>
+          <td id="options"><button class="btn btn-primary" (click)="redirectToPatientDetails(patient.patientId)">Ver Detalles</button></td>
         </tr>
       </tbody>
     </table>
