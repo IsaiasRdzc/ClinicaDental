@@ -1,15 +1,17 @@
-import { AsyncPipe, CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { HttpClient} from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
+
 @Component({
   selector: 'app-appointments-view',
   standalone: true,
-  imports: [HttpClientModule, FormsModule, ReactiveFormsModule, CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
+
+  imports: [ FormsModule, ReactiveFormsModule, CommonModule,RouterLink, RouterOutlet, RouterLinkActive],
   templateUrl: './appointments-view.component.html',
-  styleUrls: ['./appointments-view.component.css'],
+  styleUrls: ['./appointments-view.component.css','../../dashboard/dashboard.component.css'],
 })
 export class AppointmentsViewComponent implements OnInit {
   appointments: any[] = []; // Aquí se almacenarán las citas obtenidas.
@@ -18,7 +20,6 @@ export class AppointmentsViewComponent implements OnInit {
   errorMessage: string = ''; // Para manejar errores en la consulta.
 
   constructor(private http: HttpClient, private router: Router) {}
-
   ngOnInit() {
     // Opcional: Realiza una consulta inicial con un rango predefinido.
     const today = new Date();
@@ -50,8 +51,12 @@ export class AppointmentsViewComponent implements OnInit {
     });
   }
 
-  Tyrone(folio: number) {
-    console.log(`Acción Tyrone llamada para la cita con Folio: ${folio}`);
-    // Aquí puedes implementar la funcionalidad adicional necesaria.
+  saveNewPatient(doctorId:string){
+      this.router.navigate(['/newPatient',doctorId]);
+  }
+
+  addNewRecordToPatient(patientId:string){
+      console.log('ID del paciente seleccionado:', patientId);
+      this.router.navigate(['/newMedicalRecord', patientId]);
   }
 }
