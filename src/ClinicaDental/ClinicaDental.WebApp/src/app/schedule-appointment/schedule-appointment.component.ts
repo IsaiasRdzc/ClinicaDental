@@ -2,7 +2,6 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Appointment } from '../../../models/appointment.model';
 import { AsyncPipe } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -19,13 +18,14 @@ import { environment } from '../../environments/environment';
   styleUrls: ['./schedule-appointment.component.css']
 })
 export class AppointmentComponent implements OnInit{
-  confirmationData: any = {};
+  appointmentConfirmationDetails: any = {};
   isPatientFirstAppointment: boolean | null = null;
   formVisibility: boolean = false;
   availableSlots: string[] = [];
   
   constructor(private http: HttpClient, private router: Router) {}
   ngOnInit(): void {
+    this.cleanupModalState();
     this.getAllDoctors();
   }
 
@@ -67,16 +67,14 @@ export class AppointmentComponent implements OnInit{
       this.http.post('/api/appointments',appointment)
         .subscribe((response: any) => {
           // Manejar el folio recibido del backend
-          this.confirmationData = {
-            folio: response, // Ajusta esto según la estructura de la respuesta
+          this.appointmentConfirmationDetails = {
+            folio: response,
             patientName: appointment.patientName,
             date: appointment.date,
             startTime: appointment.startTime
           };
 
           console.log(response)
-
-
           const confirmationAppointmentWindow = new Modal(document.getElementById('appointmentConfirmationModal')!);
           confirmationAppointmentWindow.show();
         }, (error) => {
@@ -145,11 +143,7 @@ export class AppointmentComponent implements OnInit{
       backdrop.remove();  // Elimina el fondo atenuado
     }
     this.router.navigate(['/']);
-    modal.dispose();
-    const body = document.body;
-    body.classList.remove('modal-open');
-    body.style.overflow = '';
-    body.style.paddingRight = '';
+
   }
 
   url: string=environment.apiBaseUrl+"/appointments";
@@ -163,6 +157,16 @@ export class AppointmentComponent implements OnInit{
       },
       error: err=>{console.log(err)}
     })
+  }
+
+  private cleanupModalState(): void {
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+      backdrop.remove();
+    }
   }
 
 }
