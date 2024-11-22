@@ -149,7 +149,8 @@ export class AppointmentComponent implements OnInit{
   }
   
 
-  redirectToHomepage() {
+  redirectToHomepage() 
+  {
     // Cierra el modal y redirige al homepage
     const modal = new Modal(document.getElementById('appointmentConfirmationModal')!);
     modal.dispose();
@@ -158,8 +159,8 @@ export class AppointmentComponent implements OnInit{
       backdrop.remove();  // Elimina el fondo atenuado
     }
     this.router.navigate(['/']);
-
   }
+
   
   dentists: Doctor[]=[];
   getAllDoctors(){
