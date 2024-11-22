@@ -32,7 +32,7 @@ public static class MedicalRecordInformationChecker
             return false;
         }
 
-        return IsPatientEmptyStrings(patient);
+        return IsPatientEmptyStrings(patient) && IsPatientWhiteSpace(patient) && HasValidAge(patient);
     }
 
     private static bool HasTeethInfo(MedicalRecord medicalRecord)
@@ -49,6 +49,19 @@ public static class MedicalRecordInformationChecker
     {
         return !(string.IsNullOrEmpty(patient.PatientNames)
             && string.IsNullOrEmpty(patient.PatientSecondNames)
-            && string.IsNullOrEmpty(patient.PatientDirection));
+            && string.IsNullOrEmpty(patient.PatientDirection)
+            && string.IsNullOrEmpty(patient.PatientPhoneNumber));
+    }
+
+    private static bool IsPatientWhiteSpace(Patient patient)
+    {
+        return !(string.IsNullOrWhiteSpace(patient.PatientNames)
+            && string.IsNullOrWhiteSpace(patient.PatientSecondNames)
+            && string.IsNullOrWhiteSpace(patient.PatientDirection)
+            && string.IsNullOrWhiteSpace(patient.PatientPhoneNumber));
+    }
+
+    private static bool HasValidAge(Patient patient){
+        return patient.PatientAge > 0 && patient.PatientAge < 100;
     }
 }
