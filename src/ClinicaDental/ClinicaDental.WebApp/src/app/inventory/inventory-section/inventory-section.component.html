@@ -1,0 +1,133 @@
+<div class="dashboard">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <ul class="navbar-links">
+            <li><a routerLink="/">Finanzas</a></li>
+            <li class="insumos"><a routerLink="/inventory-section">Insumos</a></li>
+            <li><a routerLink="/">Expedientes</a></li>
+            <li><a routerLink="/">Citas</a></li>
+            <li><a routerLink="/">Cerrar Sesión</a></li>
+        </ul>
+    </nav>
+</div>
+
+<div class="inventoryContainer">
+
+    <div class="titulos">
+        <h1 *ngIf="supplyType === 'All'">Insumos disponibles</h1>
+        <h1 *ngIf="supplyType === 'Medical'">Insumos médicos disponibles</h1>
+        <h1 *ngIf="supplyType === 'Surgical'">Insumos quirúrgicos disponibles</h1>
+        <h1 *ngIf="supplyType === 'Cleaning'">Insumos de limpieza disponibles</h1>
+    </div>
+
+    <div class="bottonsContainer">
+        <button class="btn btn-primary" (click)="supplyTypeSelected('All')"
+            *ngIf="supplyType === 'Medical' || supplyType === 'Surgical' || supplyType === 'Cleaning'">Detalles
+            insumos</button>
+        <button class="btn btn-primary" (click)="supplyTypeSelected('Medical')"
+            *ngIf="supplyType === 'All' || supplyType === 'Surgical' || supplyType === 'Cleaning'">Detalles
+            insumos médicos </button>
+        <button class="btn btn-primary" (click)="supplyTypeSelected('Surgical')"
+            *ngIf="supplyType === 'All' || supplyType === 'Medical' || supplyType === 'Cleaning'">Detalles insumos
+            quirúrgicos</button>
+        <button class="btn btn-primary" (click)="supplyTypeSelected('Cleaning')"
+            *ngIf="supplyType === 'All' || supplyType === 'Medical' || supplyType === 'Surgical'">Detalles insumos
+            limpieza </button>
+    </div>
+
+    <div class="row">
+
+        <!-- Tabla de Supplies -->
+        <table *ngIf="supplyType === 'All'">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Disponibles</th>
+                    <th>Tipo insumo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let supply of supplies">
+                    <td>{{ supply.id }}</td>
+                    <td>{{ supply.name }}</td>
+                    <td>{{ supply.stock }}</td>
+                    <td>{{ supply.type }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table *ngIf="supplyType === 'Medical'">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Disponibles</th>
+                    <th>Fecha de experición</th>
+                    <th>Tipo de medicación</th>
+                    <th>Lote</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let supply of medicalSupplies">
+                    <td>{{ supply.id }}</td>
+                    <td>{{ supply.name }}</td>
+                    <td>{{ supply.stock }}</td>
+                    <td>{{ supply.expirationDate }}</td>
+                    <td>{{ supply.medicationType }}</td>
+                    <td>{{ supply.lotNumber }}</td>
+
+                </tr>
+            </tbody>
+        </table>
+
+        <table *ngIf="supplyType === 'Surgical'">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Disponibles</th>
+                    <th>Tipo quirúrgico</th>
+                    <th>Método de esterilizado</th>
+                    <th>Facha esterilizado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let supply of surgicalSupplies">
+                    <td>{{ supply.id }}</td>
+                    <td>{{ supply.name }}</td>
+                    <td>{{ supply.stock }}</td>
+                    <td>{{ supply.surgicalType }}</td>
+                    <td>{{ supply.sterilizationMethod}}</td>
+                    <td>{{ supply.sterilizationDate }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table *ngIf="supplyType === 'Cleaning'">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Disponibles</th>
+                    <th>Tipo de limpieza</th>
+                    <th>Método de limpieza</th>
+                    <th>Fecha de limpieza</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let supply of cleaningSupplies">
+                    <td>{{ supply.id }}</td>
+                    <td>{{ supply.name }}</td>
+                    <td>{{ supply.stock }}</td>
+                    <td>{{ supply.cleaningDate }}</td>
+                    <td>{{ supply.cleaningMethod }}</td>
+                    <td>{{ supply.cleaningType }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+
+</div>

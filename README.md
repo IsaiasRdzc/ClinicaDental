@@ -1,11 +1,8 @@
 # Dental Clinic System Project
 
-> **Important:**  
-> Initialize all submodules before proceeding.
->
-> ```bash
-> git submodule update --init --recursive
-> ```
+## General
+
+aqui va la descripsion de nuestro proyecto.
 
 ## Prerequisites
 

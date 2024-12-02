@@ -1,0 +1,91 @@
+<div id="container" class="dashboard">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <ul class="navbar-links">
+            <li><a routerLink="/">Finanzas</a></li>
+            <li class="insumos"><a routerLink="/inventory-section">Insumos</a></li>
+            <li><a routerLink="/patients-section">Pacientes</a></li>
+            <li><a routerLink="/">Citas</a></li>
+            <li><a routerLink="/">Cerrar Sesión</a></li>
+        </ul>
+    </nav>
+</div>
+  
+<div id="container" *ngIf="medicalRecord">
+    <h2>Registro Médico</h2>
+    <p><strong>ID del Registro:</strong> {{ medicalRecord.medicalRecordId }}</p>
+    <p><strong>ID del Paciente:</strong> {{ medicalRecord.patientId }}</p>
+    <p><strong>Nombre del Paciente:</strong> {{ patient.patientNames }} {{ patient.patientSecondNames }} </p>
+    <p><strong>Fecha de Creación:</strong> {{ medicalRecord.dateCreated | date }}</p>
+  
+    <div *ngIf="medicalRecord?.diagnosis?.length > 0">
+        <div *ngFor="let diagnosis of medicalRecord.diagnosis" class="diagnosis-container">
+          <!-- Celda de diagnóstico -->
+          <div>
+            <h4>Diagnósticos</h4>
+            <p><strong>Enfermedad:</strong> {{ diagnosis.name }}</p>
+            <p><strong>Descripción:</strong> {{ diagnosis.description }}</p>
+          </div>
+      
+          <!-- Celda de tratamientos -->
+          <div>
+            <h4>Tratamientos Recetados</h4>
+            <ul>
+              <li *ngFor="let treatment of diagnosis.treatments">
+                <p><strong>Descripción/Nombre:</strong> {{ treatment.description }} </p>
+                <p><strong>Dosis:</strong> {{ treatment.dose }}</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+    <!-- Dientes -->
+    <div *ngIf="medicalRecord?.teeths?.length > 0">
+      <h3>Dientes</h3>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>¿Es supernumerario?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let tooth of medicalRecord.teeths">
+            <td>{{ tooth.name }}</td>
+            <td>{{ tooth.description }}</td>
+            <td>{{ tooth.isSuperNumerary ? 'Sí' : 'No' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Procedimientos Médicos -->
+    <div *ngIf="medicalRecord?.medicalProcedures?.length > 0" style="margin-top: 10px;">
+      <h3>Procedimientos Médicos</h3>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Costo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let procedure of medicalRecord.medicalProcedures">
+            <td>{{ procedure.name }}</td>
+            <td>{{ procedure.description }}</td>
+            <td>{{ procedure.procedureCost | currency }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Comentario -->
+    <div *ngIf="medicalRecord?.coment" style="margin-top: 10px;">
+      <h3>Nota</h3>
+      <p>{{ medicalRecord.coment }}</p>
+    </div>
+  </div>
+  

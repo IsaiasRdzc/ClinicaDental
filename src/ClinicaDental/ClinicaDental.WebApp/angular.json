@@ -3,12 +3,15 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ClinicaDental": {
+    "ClinicaDental.WebApp": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
-        }
+    "skipTests": true
+  },
+  "@schematics/angular:service": {
+    "skipTests": true
+  }
       },
       "root": "",
       "sourceRoot": "src",
@@ -17,14 +20,13 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/clinica-dental",
+            "outputPath": "dist/clinica-dental.web-app",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
@@ -32,9 +34,14 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "src/styles.css",
+              "src/styles.css",
+               "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -64,10 +71,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "ClinicaDental:build:production"
+              "buildTarget": "ClinicaDental.WebApp:build:production"
             },
             "development": {
-              "buildTarget": "ClinicaDental:build:development"
+              "buildTarget": "ClinicaDental.WebApp:build:development"
             }
           },
           "defaultConfiguration": "development",
@@ -86,7 +93,6 @@
               "zone.js/testing"
             ],
             "tsConfig": "tsconfig.spec.json",
-            "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
@@ -94,12 +100,15 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.css"
             ],
             "scripts": []
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "6d16ae8f-4735-45dc-9287-bbf52251105b"
   }
 }

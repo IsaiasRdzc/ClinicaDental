@@ -1,0 +1,54 @@
+<div class="dashboard">
+  <!-- Navbar -->
+  <nav class="navbar">
+      <ul class="navbar-links">
+        <li><a routerLink="/">Finanzas</a></li>
+        <li class="insumos"><a routerLink="/inventory-section">Insumos</a></li>
+        <li><a routerLink="/patients-section">Pacientes</a></li>
+        <li><a routerLink="/appointments-view">Citas</a></li>
+        <li><a routerLink="/">Cerrar Sesión</a></li>
+      </ul>
+  </nav>
+</div>
+
+<div *ngIf="patients.length > 0; else noPatients">
+    <table>
+      <thead>
+        <tr>
+          <th id="title" colspan="5">Pacientes</th>
+        </tr>
+        <tr>
+          <th colspan="5" style="text-align: center;"><button class="btn btn-primary"  (click)="redirectToNewPatient()">Agregar Paciente</button></th>
+        </tr>
+        <tr id="headers">
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Numero de contacto</th>
+          <th>Ver detalles</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let patient of patients">
+          <td>{{ patient.patientId }}</td>
+          <td>{{ patient.patientNames }}</td>
+          <td>{{ patient.patientSecondNames }}</td>
+          <td>{{ patient.patientPhoneNumber }}</td>
+          <td id="options"><div>
+            <button class="btn btn-primary" (click)="redirectToPatientDetails(patient.patientId)">Ver Historial</button>
+            <dd></dd>
+            <button class="btn btn-primary" (click)="redirectToNewRecord(patient.patientId)">Agregar Registro Medico</button>
+          </div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <ng-template #noPatients>
+    <div id="empty">
+      <h1>Pacientes</h1>
+      <p>No se encontraron pacientes para este doctor.</p>
+      <button class="btn btn-primary"  (click)="redirectToNewPatient()">Agregar Paciente</button>
+    </div>
+  </ng-template>
+  
