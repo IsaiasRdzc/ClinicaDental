@@ -96,7 +96,7 @@ export class MedicalRecordCreationComponent implements OnInit{
       this.fb.group({
         name: ['', Validators.required],
         description: ['', Validators.required],
-        procedureCost: [0, Validators.required, Validators.min(0)]
+        procedureCost: [0, [Validators.required,Validators.min(0)] ]
       })
     );
   }
