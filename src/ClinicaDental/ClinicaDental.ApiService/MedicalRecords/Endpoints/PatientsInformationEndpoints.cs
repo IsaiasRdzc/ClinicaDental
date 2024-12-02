@@ -13,7 +13,7 @@ public static class PatientsInformationEndpoints
 
         group.MapGet("PatientById", SearchPatientById);
         group.MapGet("PatientsByDoctorId", SearchPatientsByDoctorId);
-       group.MapGet("Patients", SearchAllPatients);
+        group.MapGet("Patients", SearchAllPatients);
         group.MapGet("PatientById/{patientId}", SearchPatientById);
         group.MapGet("PatientsByDoctorId/{doctorId}", SearchPatientsByDoctorId);
 
