@@ -54,8 +54,4 @@ namespace ClinicaDental.ApiService.Purchases.Services
             await _purchasesRegistry.DeletePurchaseAsync(id);
         }
     }
-
-    public class PurchasesRegistry
-    {
-    }
 }
