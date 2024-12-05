@@ -50,7 +50,7 @@ public class PatientsRegistry(AppDbContext database)
         existingPatient.PatientPhoneNumber = newPatient.PatientPhoneNumber;
         existingPatient.PatientEmail = newPatient.PatientEmail;
 
-        database.Patients.Remove(existingPatient);
+        database.Patients.Update(existingPatient);
         await database.SaveChangesAsync();
     }
 }
